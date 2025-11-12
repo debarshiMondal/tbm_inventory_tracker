@@ -2,8 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  <!-- important for mobile -->
   <title>Sales / POS - TBM Inventory and Sells Tracker</title>
-  <link rel="stylesheet" href="/static/main.css">
+  <link rel="stylesheet" href="/static/main.css?v=3">                    <!-- cache-bust -->
 </head>
 <body>
 
@@ -24,7 +25,7 @@
     <div class="section-nav">
       <a href="#sale-form">Add Sale (POS)</a>
       <a href="#sale-live">Live Tables (SFH)</a>
-      <a href="#sale-list">Sales Records & Report</a>
+      <a href="#sale-list">Sales Records &amp; Report</a>
     </div>
 
     <!-- POS: Add Sale -->
@@ -294,7 +295,6 @@
     let branchesCache = [];
 
     // --- Helpers ---
-
     async function refreshOrderId() {
       try {
         const data = await fetchJSON('/api/sales/next_order');
@@ -402,7 +402,6 @@
     }
 
     // --- Live tables for SFH ---
-
     async function loadLiveTables() {
       const cat = saleCategory.value;
       const branch = branchSelect.value;
@@ -432,7 +431,6 @@
     }
 
     // --- Branch actions ---
-
     addBranchBtn.onclick = async () => {
       const name = newBranchName.value.trim();
       if (!name) return;
@@ -449,7 +447,6 @@
     branchSelect.onchange = loadLiveTables;
 
     // --- Form events ---
-
     saleCategory.addEventListener('change', handleCategoryChange);
     saleItemInput.addEventListener('input', updateItemSuggestions);
     saleItemInput.addEventListener('change', () => {
@@ -462,7 +459,6 @@
     paymentMode.addEventListener('change', handlePaymentModeChange);
 
     // --- Submit sale ---
-
     sForm.onsubmit = async (e) => {
       e.preventDefault();
 
@@ -474,7 +470,6 @@
         date: sForm.date.value || null,
         category,
         branch,
-        // order_id intentionally omitted so server assigns using sequence;
         item: saleItemInput.value.trim(),
         unit: saleUnit.value,
         qty: Number(saleQty.value || 0),
@@ -494,12 +489,10 @@
         body: JSON.stringify(payload)
       });
 
-      // Open bill in new tab if available
       if (res && res.bill_url) {
         window.open(res.bill_url, '_blank');
       }
 
-      // Reset fields, but keep category & branch for fast entry
       const keepCategory = saleCategory.value;
       const keepBranch = branchSelect.value;
 
@@ -517,7 +510,6 @@
     };
 
     // --- Sales report ---
-
     runSalesRptBtn.onclick = runSalesReport;
 
     async function runSalesReport() {
@@ -544,7 +536,6 @@
         <span class="muted">(from ${data.period.start} to ${data.period.end})</span></p>
       `;
 
-      // Summary: by category, item, branch
       const catTbl = document.createElement('table');
       catTbl.innerHTML = '<tr><th>Category</th><th>Sales</th></tr>';
       for (const k in data.by_category) {
@@ -577,7 +568,6 @@
       wrap.appendChild(d1); wrap.appendChild(d2); wrap.appendChild(d3);
       salesRpt.appendChild(wrap);
 
-      // Detailed records
       const detailTbl = document.createElement('table');
       detailTbl.innerHTML = `
         <tr>
