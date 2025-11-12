@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TBM Inventory and Sells Tracker</title>
+  <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">TBM</div>
+    <div class="site-title">TBM Inventory and Sells Tracker</div>
+    <nav class="site-nav">
+      <a href="/" class="nav-home">Dashboard</a>
+      <a href="/ready-products" class="nav-ready">Ready Products</a>
+      <a href="/raw-materials" class="nav-raw">Raw Materials</a>
+      <a href="/sales" class="nav-sales">Sales</a>
+      <a href="/import" class="nav-import">CSV Import/Export</a>
+    </nav>
+  </header>
+
+<div class="page-wrap">
+  <h1>Dashboard</h1>
+  <p class="muted">Quick view of low stock alerts and navigation.</p>
+
+  <div class="section-nav">
+    <a href="#alerts">Low Stock</a>
+  </div>
+
+  <section id="alerts" class="card">
+    <h2>Low Stock Alerts</h2>
+    <div id="alertsContainer"></div>
+  </section>
+
+
+  <div class="footer">
+    TBM Inventory and Sells Tracker &mdash; CSV based, simple, fast. 
+  </div>
+
+</div>
+<script src="/static/ui.js"></script>
+<script>
+async function loadAlerts(){
+  const ready = await fetchJSON('/api/alerts/low/ready');
+  const raw = await fetchJSON('/api/alerts/low/raw');
+  const root = document.getElementById('alertsContainer');
+  root.innerHTML = '';
+  function make(title, rows, qtyKey){
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = '<h3>'+title+'</h3>';
+    if(!rows.length){ card.innerHTML += '<p class="muted">No low stock.</p>'; root.appendChild(card); return; }
+    const t = document.createElement('table');
+    t.innerHTML = '<tr><th>Name</th><th>Category</th><th>Unit</th><th>Qty</th><th>Threshold</th></tr>';
+    rows.forEach(r=>{
+      const tr = document.createElement('tr');
+      tr.classList.add('warn');
+      tr.innerHTML = '<td>'+r.name+'</td><td>'+r.category+'</td><td>'+(r.unit||'')+'</td><td>'+ (r[qtyKey]||'0') +'</td><td>'+ (r.threshold||'') +'</td>';
+      t.appendChild(tr);
+    });
+    card.appendChild(t);
+    root.appendChild(card);
+  }
+  make('Ready Products', ready.rows||[], 'quantity');
+  make('Raw Materials', raw.rows||[], 'stock');
+}
+loadAlerts();
+document.querySelector('.nav-home').classList.add('active');
+</script>
+</body>
+</html>

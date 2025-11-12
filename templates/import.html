@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CSV Import / Export - TBM Inventory and Sells Tracker</title>
+  <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">TBM</div>
+    <div class="site-title">TBM Inventory and Sells Tracker</div>
+    <nav class="site-nav">
+      <a href="/" class="nav-home">Dashboard</a>
+      <a href="/ready-products" class="nav-ready">Ready Products</a>
+      <a href="/raw-materials" class="nav-raw">Raw Materials</a>
+      <a href="/sales" class="nav-sales">Sales</a>
+      <a href="/import" class="nav-import">CSV Import/Export</a>
+    </nav>
+  </header>
+
+<div class="page-wrap">
+  <h1>CSV Import / Export</h1>
+  <section class="card">
+    <h2>Download Today's CSVs</h2>
+    <p>
+      <a class="btn-link" href="/download/ready_products">ready_products.csv</a>
+      <a class="btn-link" href="/download/raw_inventory">raw_inventory.csv</a>
+      <a class="btn-link" href="/download/purchases">purchases.csv</a>
+      <a class="btn-link" href="/download/sales">sales.csv</a>
+    </p>
+  </section>
+  <section class="card">
+    <h2>Import CSV (overwrite today's selected file)</h2>
+    <form id="impForm" enctype="multipart/form-data">
+      <label>Kind
+        <select name="kind">
+          <option value="ready_products">ready_products</option>
+          <option value="raw_inventory">raw_inventory</option>
+          <option value="purchases">purchases</option>
+          <option value="sales">sales</option>
+        </select>
+      </label>
+      <label>CSV File <input type="file" name="file" accept=".csv" required></label>
+      <button type="submit">Upload</button>
+    </form>
+    <p id="impMsg" class="muted"></p>
+  </section>
+
+  <div class="footer">
+    TBM Inventory and Sells Tracker &mdash; CSV based, simple, fast. 
+  </div>
+
+</div>
+<script src="/static/ui.js"></script>
+<script>
+  document.querySelector('.nav-import').classList.add('active');
+  const form = document.getElementById('impForm');
+  const msg = document.getElementById('impMsg');
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const res = await fetch('/import', {method:'POST', body: fd});
+    if(res.ok){
+      const data = await res.json();
+      msg.textContent = 'Imported: ' + data.saved;
+    } else {
+      msg.textContent = 'Error uploading CSV';
+    }
+  };
+</script>
+</body>
+</html>

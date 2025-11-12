@@ -1,0 +1,3 @@
+id,date,category,branch,order_id,item,unit,qty,unit_price,discount,total_price,customer_name,customer_phone,table_no,payment_status,payment_mode,payment_note,notes
+a9117861643f,2025-11-11,Frozen Products,,1,Chicken Momo Basic 25 gm,Pieces,50.000,4.50,0.25,224.75,Sumit,,,Due,,,
+80e4e7596ad6,2025-11-11,Frozen Products,,2,Chicken Momo Basic 25 gm,Pieces,25.000,4.50,0.50,112.00,LDM,000000000,,Due,,,

@@ -1,0 +1,337 @@
+id,name,category,subcategory,unit,unit_cost,stock,threshold
+1,Onion,Home Delivery,Veggies,KG,28.0,0,5
+2,Potato,Home Delivery,Veggies,KG,34.0,10.0,5.0
+3,Tomato,Home Delivery,Veggies,KG,26.0,0,5
+4,Green Chilli,Home Delivery,Veggies,KG,55.0,0,5
+5,Garlic,Home Delivery,Veggies,KG,115.0,0,5
+6,Ginger,Home Delivery,Veggies,KG,90.0,0,5
+7,Capsicum,Home Delivery,Veggies,KG,50.0,0,5
+8,Cabbage,Home Delivery,Veggies,KG,35.0,0,5
+9,Cauliflower,Home Delivery,Veggies,KG,39.0,0,5
+10,Carrot,Home Delivery,Veggies,KG,52.0,0,5
+11,Beans (French Beans),Home Delivery,Veggies,KG,72.0,0,5
+12,Spinach,Home Delivery,Veggies,KG,18.0,0,5
+13,Coriander Leaves,Home Delivery,Veggies,KG,18.0,0,5
+14,Lemon,Home Delivery,Veggies,KG,80.0,0,5
+15,Pumpkin,Home Delivery,Veggies,KG,25.0,0,5
+16,Ridge Gourd,Home Delivery,Veggies,KG,42.0,0,5
+18,Brinjal,Home Delivery,Veggies,KG,48.0,0,5
+19,Onion,SFH,Veggies,KG,28.0,0,5
+20,Potato,SFH,Veggies,KG,34.0,0,5
+21,Tomato,SFH,Veggies,KG,26.0,0,5
+22,Green Chilli,SFH,Veggies,KG,55.0,0,5
+23,Garlic,SFH,Veggies,KG,115.0,0,5
+24,Ginger,SFH,Veggies,KG,90.0,0,5
+25,Capsicum,SFH,Veggies,KG,50.0,0,5
+26,Cabbage,SFH,Veggies,KG,35.0,0,5
+27,Cauliflower,SFH,Veggies,KG,39.0,0,5
+28,Carrot,SFH,Veggies,KG,52.0,0,5
+29,Beans (French Beans),SFH,Veggies,KG,72.0,0,5
+30,Spinach,SFH,Veggies,KG,18.0,0,5
+31,Coriander Leaves,SFH,Veggies,KG,18.0,0,5
+32,Lemon,SFH,Veggies,KG,80.0,0,5
+33,Pumpkin,SFH,Veggies,KG,25.0,0,5
+34,Ridge Gourd,SFH,Veggies,KG,42.0,0,5
+35,Ladies Finger,SFH,Veggies,KG,45.0,0,5
+36,Brinjal,SFH,Veggies,KG,48.0,0,5
+37,Rice (Premium Basmati),Home Delivery,Grocery,KG,120.0,0,3
+38,Rice (Gobindobhog/local fine),Home Delivery,Grocery,KG,70.0,0,3
+39,Atta (Wheat Flour),Home Delivery,Grocery,KG,40.0,0,3
+40,Maida,Home Delivery,Grocery,KG,55.0,0,3
+41,Sugar,Home Delivery,Grocery,KG,48.0,0,3
+42,Salt (Iodised),Home Delivery,Grocery,KG,22.0,0,3
+43,Mustard Oil,Home Delivery,Grocery,Pack,170.0,0,3
+44,Refined Oil (Sunflower/Soya),Home Delivery,Grocery,Pack,150.0,0,3
+45,Soy Sauce,Home Delivery,Grocery,Pack,120.0,0,3
+46,Vinegar,Home Delivery,Grocery,Pack,40.0,0,3
+47,Tomato Ketchup,Home Delivery,Grocery,Pack,110.0,0,3
+48,Chilli Sauce,Home Delivery,Grocery,Pack,110.0,0,3
+49,Green Chilli Sauce,Home Delivery,Grocery,Pack,110.0,0,3
+50,Schezwan Sauce,Home Delivery,Grocery,Pack,140.0,0,3
+51,Maggi / Noodles (500g pack),Home Delivery,Grocery,Pack,70.0,0,3
+52,Cornflour,Home Delivery,Grocery,KG,70.0,0,3
+53,Besan,Home Delivery,Grocery,KG,70.0,0,3
+54,Whole Wheat Pasta (500g),Home Delivery,Grocery,Pack,80.0,0,3
+55,Oats (1kg),Home Delivery,Grocery,KG,80.0,0,3
+56,Tea (CTC),Home Delivery,Grocery,KG,260.0,0,3
+57,Coffee (Instant),Home Delivery,Grocery,KG,600.0,0,3
+58,Cumin Seed,Home Delivery,Grocery,KG,450.0,0,3
+59,Coriander Seed,Home Delivery,Grocery,KG,260.0,0,3
+60,Turmeric Powder,Home Delivery,Grocery,KG,260.0,0,3
+61,Red Chilli Powder,Home Delivery,Grocery,KG,380.0,0,3
+62,Kasuri Methi,Home Delivery,Grocery,KG,800.0,0,3
+63,Garam Masala,Home Delivery,Grocery,KG,600.0,0,3
+64,Black Pepper,Home Delivery,Grocery,KG,650.0,0,3
+65,Mixed Herbs,Home Delivery,Grocery,KG,900.0,0,3
+66,Rice (Premium Basmati),SFH,Grocery,KG,120.0,0,3
+67,Rice (Gobindobhog/local fine),SFH,Grocery,KG,70.0,0,3
+68,Atta (Wheat Flour),SFH,Grocery,KG,40.0,0,3
+69,Maida,SFH,Grocery,KG,55.0,0,3
+70,Sugar,SFH,Grocery,KG,48.0,0,3
+71,Salt (Iodised),SFH,Grocery,KG,22.0,0,3
+72,Mustard Oil,SFH,Grocery,Pack,170.0,0,3
+73,Refined Oil (Sunflower/Soya),SFH,Grocery,Pack,150.0,0,3
+74,Soy Sauce,SFH,Grocery,Pack,120.0,0,3
+75,Vinegar,SFH,Grocery,Pack,40.0,0,3
+76,Tomato Ketchup,SFH,Grocery,Pack,110.0,0,3
+77,Chilli Sauce,SFH,Grocery,Pack,110.0,0,3
+78,Green Chilli Sauce,SFH,Grocery,Pack,110.0,0,3
+79,Schezwan Sauce,SFH,Grocery,Pack,140.0,0,3
+80,Maggi / Noodles (500g pack),SFH,Grocery,Pack,70.0,0,3
+81,Cornflour,SFH,Grocery,KG,70.0,0,3
+82,Besan,SFH,Grocery,KG,70.0,0,3
+83,Whole Wheat Pasta (500g),SFH,Grocery,Pack,80.0,0,3
+84,Oats (1kg),SFH,Grocery,KG,80.0,0,3
+85,Tea (CTC),SFH,Grocery,KG,260.0,0,3
+86,Coffee (Instant),SFH,Grocery,KG,600.0,0,3
+87,Cumin Seed,SFH,Grocery,KG,450.0,0,3
+88,Coriander Seed,SFH,Grocery,KG,260.0,0,3
+89,Turmeric Powder,SFH,Grocery,KG,260.0,0,3
+90,Red Chilli Powder,SFH,Grocery,KG,380.0,0,3
+91,Kasuri Methi,SFH,Grocery,KG,800.0,0,3
+92,Garam Masala,SFH,Grocery,KG,600.0,0,3
+93,Black Pepper,SFH,Grocery,KG,650.0,0,3
+94,Mixed Herbs,SFH,Grocery,KG,900.0,0,3
+95,Toned Milk 1L,Home Delivery,Dairy,L,60.0,0,3
+96,Fresh Cream 1L,Home Delivery,Dairy,L,220.0,0,3
+97,Butter 500g,Home Delivery,Dairy,Pack,260.0,0,3
+98,Paneer 1kg,Home Delivery,Dairy,KG,360.0,0,3
+99,Cheddar Cheese 1kg,Home Delivery,Dairy,KG,550.0,0,3
+100,Mozzarella Cheese 1kg,Home Delivery,Dairy,KG,520.0,0,3
+101,Cheese Slice Pack (750g),Home Delivery,Dairy,Pack,380.0,0,3
+102,Curd 1kg,Home Delivery,Dairy,KG,75.0,0,3
+103,Toned Milk 1L,Frozen Products,Dairy,L,60.0,0,3
+104,Fresh Cream 1L,Frozen Products,Dairy,L,220.0,0,3
+105,Butter 500g,Frozen Products,Dairy,Pack,260.0,0,3
+106,Paneer 1kg,Frozen Products,Dairy,KG,360.0,0,3
+107,Cheddar Cheese 1kg,Frozen Products,Dairy,KG,550.0,0,3
+108,Mozzarella Cheese 1kg,Frozen Products,Dairy,KG,520.0,0,3
+109,Cheese Slice Pack (750g),Frozen Products,Dairy,Pack,380.0,0,3
+110,Curd 1kg,Frozen Products,Dairy,KG,75.0,0,3
+111,Toned Milk 1L,SFH,Dairy,L,60.0,0,3
+112,Fresh Cream 1L,SFH,Dairy,L,220.0,0,3
+113,Butter 500g,SFH,Dairy,Pack,260.0,0,3
+114,Paneer 1kg,SFH,Dairy,KG,360.0,0,3
+115,Cheddar Cheese 1kg,SFH,Dairy,KG,550.0,0,3
+116,Mozzarella Cheese 1kg,SFH,Dairy,KG,520.0,0,3
+117,Cheese Slice Pack (750g),SFH,Dairy,Pack,380.0,0,3
+118,Curd 1kg,SFH,Dairy,KG,75.0,0,3
+119,Chicken Whole (with skin),Home Delivery,Meat and Fish,KG,200.0,0,5
+120,Chicken Breast (Boneless),Home Delivery,Meat and Fish,KG,280.0,0,5
+121,Chicken Leg (Quarter / kg),Home Delivery,Meat and Fish,KG,240.0,0,5
+122,Chicken Wings (kg),Home Delivery,Meat and Fish,KG,220.0,0,5
+123,Mutton (Curry Cut),Home Delivery,Meat and Fish,KG,800.0,0,5
+124,Egg (Piece),Home Delivery,Meat and Fish,Piece,6.5,0,30
+125,Rohu Fish,Home Delivery,Meat and Fish,KG,320.0,0,5
+126,Katla Fish,Home Delivery,Meat and Fish,KG,300.0,0,5
+127,Prawn (Medium),Home Delivery,Meat and Fish,KG,650.0,0,5
+128,Bhetki Fillet,Home Delivery,Meat and Fish,KG,800.0,0,5
+129,Chicken Whole (with skin),SFH,Meat and Fish,KG,200.0,0,5
+130,Chicken Breast (Boneless),SFH,Meat and Fish,KG,280.0,0,5
+131,Chicken Leg (Quarter / kg),SFH,Meat and Fish,KG,240.0,0,5
+132,Chicken Wings (kg),SFH,Meat and Fish,KG,220.0,0,5
+133,Mutton (Curry Cut),SFH,Meat and Fish,KG,800.0,0,5
+134,Egg (Piece),SFH,Meat and Fish,Piece,6.5,0,30
+135,Rohu Fish,SFH,Meat and Fish,KG,320.0,0,5
+136,Katla Fish,SFH,Meat and Fish,KG,300.0,0,5
+137,Prawn (Medium),SFH,Meat and Fish,KG,650.0,0,5
+138,Bhetki Fillet,SFH,Meat and Fish,KG,800.0,0,5
+139,Chicken Whole (with skin),Frozen Products,Meat and Fish,KG,200.0,0,5
+140,Chicken Breast (Boneless),Frozen Products,Meat and Fish,KG,280.0,0,5
+141,Chicken Leg (Quarter / kg),Frozen Products,Meat and Fish,KG,240.0,0,5
+142,Chicken Wings (kg),Frozen Products,Meat and Fish,KG,220.0,0,5
+143,Mutton (Curry Cut),Frozen Products,Meat and Fish,KG,800.0,0,5
+144,Egg (Piece),Frozen Products,Meat and Fish,Piece,6.5,0,30
+145,Rohu Fish,Frozen Products,Meat and Fish,KG,320.0,0,5
+146,Katla Fish,Frozen Products,Meat and Fish,KG,300.0,0,5
+147,Prawn (Medium),Frozen Products,Meat and Fish,KG,650.0,0,5
+148,Bhetki Fillet,Frozen Products,Meat and Fish,KG,800.0,0,5
+149,Burger Bun (Piece),Home Delivery,Bakery,Piece,6.0,0,20
+150,Hot Dog Bun (Piece),Home Delivery,Bakery,Piece,8.0,0,20
+151,Pav (Piece),Home Delivery,Bakery,Piece,4.0,0,20
+152,White Bread Loaf (400g),Home Delivery,Bakery,Pack,40.0,0,5
+153,Brown Bread Loaf (400g),Home Delivery,Bakery,Pack,45.0,0,5
+154,Pizza Base 8 inch,Home Delivery,Bakery,Piece,18.0,0,20
+155,Pizza Base 10 inch,Home Delivery,Bakery,Piece,25.0,0,20
+156,Wrap Tortilla (10 inch),Home Delivery,Bakery,Piece,12.0,0,20
+157,Garlic Bread Stick,Home Delivery,Bakery,Piece,15.0,0,20
+158,Burger Bun (Piece),SFH,Bakery,Piece,6.0,0,20
+159,Hot Dog Bun (Piece),SFH,Bakery,Piece,8.0,0,20
+160,Pav (Piece),SFH,Bakery,Piece,4.0,0,20
+161,White Bread Loaf (400g),SFH,Bakery,Pack,40.0,0,5
+162,Brown Bread Loaf (400g),SFH,Bakery,Pack,45.0,0,5
+163,Pizza Base 8 inch,SFH,Bakery,Piece,18.0,0,20
+164,Pizza Base 10 inch,SFH,Bakery,Piece,25.0,0,20
+165,Wrap Tortilla (10 inch),SFH,Bakery,Piece,12.0,0,20
+166,Garlic Bread Stick,SFH,Bakery,Piece,15.0,0,20
+167,Two Burner Gas Range,Home Delivery,Infrastructure,Piece,12000.0,1,0
+168,Four Burner Gas Range with Oven,Home Delivery,Infrastructure,Piece,45000.0,1,0
+169,Commercial Induction Cooktop,Home Delivery,Infrastructure,Piece,8000.0,1,0
+170,Single Door Refrigerator,Home Delivery,Infrastructure,Piece,18000.0,1,0
+171,Double Door Refrigerator,Home Delivery,Infrastructure,Piece,26000.0,1,0
+172,Deep Freezer 300L,Home Delivery,Infrastructure,Piece,28000.0,1,0
+173,Exhaust Hood + Ducting (per running ft),Home Delivery,Infrastructure,Piece,1800.0,0,0
+174,Water Purifier (RO),Home Delivery,Infrastructure,Piece,12000.0,1,0
+175,Stainless Steel Work Table,Home Delivery,Infrastructure,Piece,9000.0,1,0
+176,Stainless Steel Sink Unit,Home Delivery,Infrastructure,Piece,8000.0,1,0
+177,Commercial Mixer Grinder,Home Delivery,Infrastructure,Piece,6500.0,1,0
+178,Wet Grinder,Home Delivery,Infrastructure,Piece,9000.0,1,0
+179,Momo Steamer (Gas/Electric),Home Delivery,Infrastructure,Piece,6500.0,1,0
+180,Microwave Oven,Home Delivery,Infrastructure,Piece,8000.0,1,0
+181,Storage Rack (5-shelf SS),Home Delivery,Infrastructure,Piece,6000.0,1,0
+182,Two Burner Gas Range,Frozen Products,Infrastructure,Piece,12000.0,1,0
+183,Four Burner Gas Range with Oven,Frozen Products,Infrastructure,Piece,45000.0,1,0
+184,Commercial Induction Cooktop,Frozen Products,Infrastructure,Piece,8000.0,1,0
+185,Single Door Refrigerator,Frozen Products,Infrastructure,Piece,18000.0,1,0
+186,Double Door Refrigerator,Frozen Products,Infrastructure,Piece,26000.0,1,0
+187,Deep Freezer 300L,Frozen Products,Infrastructure,Piece,28000.0,1,0
+188,Exhaust Hood + Ducting (per running ft),Frozen Products,Infrastructure,Piece,1800.0,0,0
+189,Water Purifier (RO),Frozen Products,Infrastructure,Piece,12000.0,1,0
+190,Stainless Steel Work Table,Frozen Products,Infrastructure,Piece,9000.0,1,0
+191,Stainless Steel Sink Unit,Frozen Products,Infrastructure,Piece,8000.0,1,0
+192,Commercial Mixer Grinder,Frozen Products,Infrastructure,Piece,6500.0,1,0
+193,Wet Grinder,Frozen Products,Infrastructure,Piece,9000.0,1,0
+194,Momo Steamer (Gas/Electric),Frozen Products,Infrastructure,Piece,6500.0,1,0
+195,Microwave Oven,Frozen Products,Infrastructure,Piece,8000.0,1,0
+196,Storage Rack (5-shelf SS),Frozen Products,Infrastructure,Piece,6000.0,1,0
+197,Two Burner Gas Range,SFH,Infrastructure,Piece,12000.0,1,0
+198,Four Burner Gas Range with Oven,SFH,Infrastructure,Piece,45000.0,1,0
+199,Commercial Induction Cooktop,SFH,Infrastructure,Piece,8000.0,1,0
+200,Single Door Refrigerator,SFH,Infrastructure,Piece,18000.0,1,0
+201,Double Door Refrigerator,SFH,Infrastructure,Piece,26000.0,1,0
+202,Deep Freezer 300L,SFH,Infrastructure,Piece,28000.0,1,0
+203,Exhaust Hood + Ducting (per running ft),SFH,Infrastructure,Piece,1800.0,0,0
+204,Water Purifier (RO),SFH,Infrastructure,Piece,12000.0,1,0
+205,Stainless Steel Work Table,SFH,Infrastructure,Piece,9000.0,1,0
+206,Stainless Steel Sink Unit,SFH,Infrastructure,Piece,8000.0,1,0
+207,Commercial Mixer Grinder,SFH,Infrastructure,Piece,6500.0,1,0
+208,Wet Grinder,SFH,Infrastructure,Piece,9000.0,1,0
+209,Momo Steamer (Gas/Electric),SFH,Infrastructure,Piece,6500.0,1,0
+210,Microwave Oven,SFH,Infrastructure,Piece,8000.0,1,0
+211,Storage Rack (5-shelf SS),SFH,Infrastructure,Piece,6000.0,1,0
+212,Chef Knife,Home Delivery,Kitchen Tool,Piece,600.0,2,1
+213,Paring Knife,Home Delivery,Kitchen Tool,Piece,250.0,2,1
+214,Chopping Board (Plastic/HDPE),Home Delivery,Kitchen Tool,Piece,450.0,2,1
+215,Tongs,Home Delivery,Kitchen Tool,Piece,150.0,2,1
+216,Ladle,Home Delivery,Kitchen Tool,Piece,180.0,2,1
+217,Spatula (Silicone/Steel),Home Delivery,Kitchen Tool,Piece,200.0,2,1
+218,Whisk,Home Delivery,Kitchen Tool,Piece,120.0,2,1
+219,Skimmer,Home Delivery,Kitchen Tool,Piece,180.0,2,1
+220,Measuring Spoon Set,Home Delivery,Kitchen Tool,Piece,120.0,2,1
+221,Measuring Cup Set,Home Delivery,Kitchen Tool,Piece,180.0,2,1
+222,Mixing Bowl (Steel),Home Delivery,Kitchen Tool,Piece,250.0,2,1
+223,Colander,Home Delivery,Kitchen Tool,Piece,260.0,2,1
+224,Peeler,Home Delivery,Kitchen Tool,Piece,80.0,2,1
+225,Grater,Home Delivery,Kitchen Tool,Piece,160.0,2,1
+226,Gas Lighter,Home Delivery,Kitchen Tool,Piece,120.0,2,1
+227,Weighing Scale (Digital 30kg),Home Delivery,Kitchen Tool,Piece,1800.0,2,1
+228,Chef Knife,Frozen Products,Kitchen Tool,Piece,600.0,2,1
+229,Paring Knife,Frozen Products,Kitchen Tool,Piece,250.0,2,1
+230,Chopping Board (Plastic/HDPE),Frozen Products,Kitchen Tool,Piece,450.0,2,1
+231,Tongs,Frozen Products,Kitchen Tool,Piece,150.0,2,1
+232,Ladle,Frozen Products,Kitchen Tool,Piece,180.0,2,1
+233,Spatula (Silicone/Steel),Frozen Products,Kitchen Tool,Piece,200.0,2,1
+234,Whisk,Frozen Products,Kitchen Tool,Piece,120.0,2,1
+235,Skimmer,Frozen Products,Kitchen Tool,Piece,180.0,2,1
+236,Measuring Spoon Set,Frozen Products,Kitchen Tool,Piece,120.0,2,1
+237,Measuring Cup Set,Frozen Products,Kitchen Tool,Piece,180.0,2,1
+238,Mixing Bowl (Steel),Frozen Products,Kitchen Tool,Piece,250.0,2,1
+239,Colander,Frozen Products,Kitchen Tool,Piece,260.0,2,1
+240,Peeler,Frozen Products,Kitchen Tool,Piece,80.0,2,1
+241,Grater,Frozen Products,Kitchen Tool,Piece,160.0,2,1
+242,Gas Lighter,Frozen Products,Kitchen Tool,Piece,120.0,2,1
+243,Weighing Scale (Digital 30kg),Frozen Products,Kitchen Tool,Piece,1800.0,2,1
+244,Chef Knife,SFH,Kitchen Tool,Piece,600.0,2,1
+245,Paring Knife,SFH,Kitchen Tool,Piece,250.0,2,1
+246,Chopping Board (Plastic/HDPE),SFH,Kitchen Tool,Piece,450.0,2,1
+247,Tongs,SFH,Kitchen Tool,Piece,150.0,2,1
+248,Ladle,SFH,Kitchen Tool,Piece,180.0,2,1
+249,Spatula (Silicone/Steel),SFH,Kitchen Tool,Piece,200.0,2,1
+250,Whisk,SFH,Kitchen Tool,Piece,120.0,2,1
+251,Skimmer,SFH,Kitchen Tool,Piece,180.0,2,1
+252,Measuring Spoon Set,SFH,Kitchen Tool,Piece,120.0,2,1
+253,Measuring Cup Set,SFH,Kitchen Tool,Piece,180.0,2,1
+254,Mixing Bowl (Steel),SFH,Kitchen Tool,Piece,250.0,2,1
+255,Colander,SFH,Kitchen Tool,Piece,260.0,2,1
+256,Peeler,SFH,Kitchen Tool,Piece,80.0,2,1
+257,Grater,SFH,Kitchen Tool,Piece,160.0,2,1
+258,Gas Lighter,SFH,Kitchen Tool,Piece,120.0,2,1
+259,Weighing Scale (Digital 30kg),SFH,Kitchen Tool,Piece,1800.0,2,1
+260,LPG Cylinder 14.2kg (Domestic),Home Delivery,Fuel,Cylinder,879.0,0,1
+261,LPG Cylinder 19kg (Commercial),Home Delivery,Fuel,Cylinder,1694.0,0,1
+262,Charcoal (BBQ) per kg,Home Delivery,Fuel,KG,70.0,0,1
+263,Induction Power (per kWh approx),Home Delivery,Fuel,kWh,10.0,0,1
+264,LPG Cylinder 14.2kg (Domestic),Frozen Products,Fuel,Cylinder,879.0,0,1
+265,LPG Cylinder 19kg (Commercial),Frozen Products,Fuel,Cylinder,1694.0,0,1
+266,Charcoal (BBQ) per kg,Frozen Products,Fuel,KG,70.0,0,1
+267,Induction Power (per kWh approx),Frozen Products,Fuel,kWh,10.0,0,1
+268,LPG Cylinder 14.2kg (Domestic),SFH,Fuel,Cylinder,879.0,0,1
+269,LPG Cylinder 19kg (Commercial),SFH,Fuel,Cylinder,1694.0,0,1
+270,Charcoal (BBQ) per kg,SFH,Fuel,KG,70.0,0,1
+271,Induction Power (per kWh approx),SFH,Fuel,kWh,10.0,0,1
+272,Paper Plate 10 inch,Home Delivery,Serving Dish,Piece,3.0,0,50
+273,Paper Bowl 250ml,Home Delivery,Serving Dish,Piece,2.0,0,50
+274,Paper Cup 150ml,Home Delivery,Serving Dish,Piece,1.5,0,50
+275,Plastic Spoon,Home Delivery,Serving Dish,Piece,0.6,0,50
+276,Plastic Fork,Home Delivery,Serving Dish,Piece,0.6,0,50
+277,Tissue Paper (Dinner Napkin),Home Delivery,Serving Dish,Piece,0.4,0,50
+278,Aluminium Container 500ml with Lid,Home Delivery,Serving Dish,Piece,9.0,0,50
+279,Aluminium Container 750ml with Lid,Home Delivery,Serving Dish,Piece,11.0,0,50
+280,Wooden Skewer,Home Delivery,Serving Dish,Piece,1.0,0,50
+281,Sauce Dip Cup 25ml,Home Delivery,Serving Dish,Piece,0.8,0,50
+282,Paper Plate 10 inch,SFH,Serving Dish,Piece,3.0,0,50
+283,Paper Bowl 250ml,SFH,Serving Dish,Piece,2.0,0,50
+284,Paper Cup 150ml,SFH,Serving Dish,Piece,1.5,0,50
+285,Plastic Spoon,SFH,Serving Dish,Piece,0.6,0,50
+286,Plastic Fork,SFH,Serving Dish,Piece,0.6,0,50
+287,Tissue Paper (Dinner Napkin),SFH,Serving Dish,Piece,0.4,0,50
+288,Aluminium Container 500ml with Lid,SFH,Serving Dish,Piece,9.0,0,50
+289,Aluminium Container 750ml with Lid,SFH,Serving Dish,Piece,11.0,0,50
+290,Wooden Skewer,SFH,Serving Dish,Piece,1.0,0,50
+291,Sauce Dip Cup 25ml,SFH,Serving Dish,Piece,0.8,0,50
+292,Cling Film Roll 300mm x 600m,Home Delivery,Operating Supplies and Packaging,Roll,350.0,0,5
+293,Aluminium Foil Roll 72m,Home Delivery,Operating Supplies and Packaging,Roll,450.0,0,5
+294,Garbage Bag Medium,Home Delivery,Operating Supplies and Packaging,Piece,4.0,0,50
+295,Garbage Bag Large,Home Delivery,Operating Supplies and Packaging,Piece,6.0,0,50
+296,Hand Gloves (Disposable) Piece,Home Delivery,Operating Supplies and Packaging,Piece,1.5,0,50
+297,Hair Net,Home Delivery,Operating Supplies and Packaging,Pack,2.0,0,5
+298,Face Mask,Home Delivery,Operating Supplies and Packaging,Pack,2.0,0,5
+299,Carry Bag Paper (Small),Home Delivery,Operating Supplies and Packaging,Piece,4.0,0,50
+300,Carry Bag Paper (Medium),Home Delivery,Operating Supplies and Packaging,Piece,6.0,0,50
+301,Carry Bag Paper (Large),Home Delivery,Operating Supplies and Packaging,Piece,8.0,0,50
+302,Corrugated Box (Delivery 9x9x3 inch),Home Delivery,Operating Supplies and Packaging,Piece,16.0,0,50
+303,Plastic Container 500ml with Lid,Home Delivery,Operating Supplies and Packaging,Piece,4.0,0,50
+304,Plastic Container 750ml with Lid,Home Delivery,Operating Supplies and Packaging,Piece,5.0,0,50
+305,Zip Lock Pouch 500g (Frozen),Home Delivery,Operating Supplies and Packaging,Piece,4.0,0,50
+306,Label Sticker (Per Piece),Home Delivery,Operating Supplies and Packaging,Piece,1.2,0,50
+307,Cling Film Roll 300mm x 600m,Frozen Products,Operating Supplies and Packaging,Roll,350.0,0,5
+308,Aluminium Foil Roll 72m,Frozen Products,Operating Supplies and Packaging,Roll,450.0,0,5
+309,Garbage Bag Medium,Frozen Products,Operating Supplies and Packaging,Piece,4.0,0,50
+310,Garbage Bag Large,Frozen Products,Operating Supplies and Packaging,Piece,6.0,0,50
+311,Hand Gloves (Disposable) Piece,Frozen Products,Operating Supplies and Packaging,Piece,1.5,0,50
+312,Hair Net,Frozen Products,Operating Supplies and Packaging,Pack,2.0,0,5
+313,Face Mask,Frozen Products,Operating Supplies and Packaging,Pack,2.0,0,5
+314,Carry Bag Paper (Small),Frozen Products,Operating Supplies and Packaging,Piece,4.0,0,50
+315,Carry Bag Paper (Medium),Frozen Products,Operating Supplies and Packaging,Piece,6.0,0,50
+316,Carry Bag Paper (Large),Frozen Products,Operating Supplies and Packaging,Piece,8.0,0,50
+317,Corrugated Box (Delivery 9x9x3 inch),Frozen Products,Operating Supplies and Packaging,Piece,16.0,0,50
+318,Plastic Container 500ml with Lid,Frozen Products,Operating Supplies and Packaging,Piece,4.0,0,50
+319,Plastic Container 750ml with Lid,Frozen Products,Operating Supplies and Packaging,Piece,5.0,0,50
+320,Zip Lock Pouch 500g (Frozen),Frozen Products,Operating Supplies and Packaging,Piece,4.0,0,50
+321,Label Sticker (Per Piece),Frozen Products,Operating Supplies and Packaging,Piece,1.2,0,50
+322,Cling Film Roll 300mm x 600m,SFH,Operating Supplies and Packaging,Roll,350.0,0,5
+323,Aluminium Foil Roll 72m,SFH,Operating Supplies and Packaging,Roll,450.0,0,5
+324,Garbage Bag Medium,SFH,Operating Supplies and Packaging,Piece,4.0,0,50
+325,Garbage Bag Large,SFH,Operating Supplies and Packaging,Piece,6.0,0,50
+326,Hand Gloves (Disposable) Piece,SFH,Operating Supplies and Packaging,Piece,1.5,0,50
+327,Hair Net,SFH,Operating Supplies and Packaging,Pack,2.0,0,5
+328,Face Mask,SFH,Operating Supplies and Packaging,Pack,2.0,0,5
+329,Carry Bag Paper (Small),SFH,Operating Supplies and Packaging,Piece,4.0,0,50
+330,Carry Bag Paper (Medium),SFH,Operating Supplies and Packaging,Piece,6.0,0,50
+331,Carry Bag Paper (Large),SFH,Operating Supplies and Packaging,Piece,8.0,0,50
+332,Corrugated Box (Delivery 9x9x3 inch),SFH,Operating Supplies and Packaging,Piece,16.0,0,50
+333,Plastic Container 500ml with Lid,SFH,Operating Supplies and Packaging,Piece,4.0,0,50
+334,Plastic Container 750ml with Lid,SFH,Operating Supplies and Packaging,Piece,5.0,0,50
+335,Zip Lock Pouch 500g (Frozen),SFH,Operating Supplies and Packaging,Piece,4.0,0,50
+336,Label Sticker (Per Piece),SFH,Operating Supplies and Packaging,Piece,1.2,0,50
+aee73542f95f,Label Sticker (Per Piece),SFH,Operating Supplies,Pieces,2.00,12.000,0

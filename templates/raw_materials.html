@@ -1,0 +1,606 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Raw Materials & Purchases - TBM Inventory and Sells Tracker</title>
+  <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+
+  <!-- Fixed header -->
+  <header class="site-header">
+    <div class="logo">TBM</div>
+    <div class="site-title">TBM Inventory and Sells Tracker</div>
+    <nav class="site-nav">
+      <a href="/" class="nav-home">Dashboard</a>
+      <a href="/ready-products" class="nav-ready">Ready Products</a>
+      <a href="/raw-materials" class="nav-raw">Raw Materials</a>
+      <a href="/sales" class="nav-sales">Sales</a>
+      <a href="/import" class="nav-import">CSV Import/Export</a>
+    </nav>
+  </header>
+
+  <div class="page-wrap">
+    <h1>Raw Materials & Purchases</h1>
+
+    <!-- Sticky section anchors -->
+    <div class="section-nav">
+      <a href="#raw-form">Add / Update Raw Item</a>
+      <a href="#raw-list">Inventory</a>
+      <a href="#purchase-form">Add Purchase</a>
+      <a href="#spend-report">Spend Report</a>
+    </div>
+
+    <!-- Add / Update Raw Item -->
+    <section id="raw-form" class="card">
+      <h2>Add / Update Raw Item</h2>
+      <form id="rawForm">
+        <input name="id" type="hidden">
+
+        <label>Name
+          <input name="name" required>
+        </label>
+
+        <label>Category
+          <select name="category">
+            <option>Home Delivery</option>
+            <option>Frozen Products</option>
+            <option>SFH</option>
+          </select>
+        </label>
+
+        <label>Subcategory
+          <select name="subcategory">
+            <option>Infrastructure</option>
+            <option>Meat and Fish</option>
+            <option>Veggies</option>
+            <option>Grocery</option>
+            <option>Dairy</option>
+            <option>Bakery</option>
+            <option>Kitchen Tool</option>
+            <option>Fuel</option>
+            <option>Serving Dish</option>
+            <option>Operating Supplies</option>
+            <option>Packaging</option>
+          </select>
+        </label>
+
+        <label>Unit
+          <select name="unit">
+            <option>KG</option>
+            <option>GM</option>
+            <option>Pieces</option>
+            <option>Batch</option>
+            <option>Plates</option>
+            <option>Portion</option>
+          </select>
+        </label>
+
+        <label>Unit Cost
+          <input name="unit_cost" type="number" step="0.01">
+        </label>
+
+        <label>Stock
+          <input name="stock" type="number" step="0.001">
+        </label>
+
+        <label>Threshold
+          <input name="threshold" type="number" step="0.001" value="0">
+        </label>
+
+        <button type="submit">Save</button>
+        <button type="button" id="resetRaw">Reset</button>
+      </form>
+
+      <!-- Bulk CSV upload -->
+      <p class="muted">
+        Or bulk update via CSV:
+        <a class="btn-link" href="/static/raw_inventory_template.csv" target="_blank">Download sample template</a>
+      </p>
+      <form id="rawCsvForm" enctype="multipart/form-data">
+        <input type="hidden" name="kind" value="raw_inventory">
+        <label>CSV File
+          <input type="file" name="file" accept=".csv" required>
+        </label>
+        <button type="submit">Upload &amp; Replace Today's Raw Inventory</button>
+      </form>
+      <p class="muted">
+        CSV headers must be: id, name, category, subcategory, unit, unit_cost, stock, threshold.
+      </p>
+      <div id="rawCsvMsg" class="muted"></div>
+    </section>
+
+    <!-- Raw Inventory (collapsed, filterable) -->
+    <section id="raw-list" class="card">
+      <h2>Raw Inventory</h2>
+      <div class="row">
+        <label>Category
+          <select id="rawCatFilter">
+            <option>Home Delivery</option>
+            <option>Frozen Products</option>
+            <option>SFH</option>
+          </select>
+        </label>
+        <label>Subcategory
+          <select id="rawSubFilter">
+            <option>Meat and Fish</option>
+            <option>Infrastructure</option>
+            <option>Veggies</option>
+            <option>Grocery</option>
+            <option>Dairy</option>
+            <option>Bakery</option>
+            <option>Kitchen Tool</option>
+            <option>Fuel</option>
+            <option>Serving Dish</option>
+            <option>Operating Supplies</option>
+            <option>Packaging</option>
+          </select>
+        </label>
+        <button id="rawSearchBtn">Search</button>
+        <button id="toggleRaw">Show Inventory</button>
+      </div>
+      <div id="rawList" data-open="0" style="display:none;"></div>
+    </section>
+
+    <!-- Add Purchase: linked to Raw Items -->
+    <section id="purchase-form" class="card">
+      <h2>Add Purchase</h2>
+      <form id="pForm">
+        <label>Date
+          <input name="date" type="date">
+        </label>
+
+        <label>Category
+          <select name="category">
+            <option>Home Delivery</option>
+            <option>Frozen Products</option>
+            <option>SFH</option>
+          </select>
+        </label>
+
+        <label>Subcategory
+          <select name="subcategory">
+            <option>Infrastructure</option>
+            <option>Meat and Fish</option>
+            <option>Veggies</option>
+            <option>Grocery</option>
+            <option>Dairy</option>
+            <option>Bakery</option>
+            <option>Kitchen Tool</option>
+            <option>Fuel</option>
+            <option>Serving Dish</option>
+            <option>Operating Supplies</option>
+            <option>Packaging</option>
+          </select>
+        </label>
+
+        <label>Item
+          <input
+            name="item"
+            id="purchaseItemInput"
+            list="purchaseItemList"
+            required
+            placeholder="Start typing raw item">
+          <datalist id="purchaseItemList"></datalist>
+        </label>
+
+        <label>Unit
+          <select name="unit">
+            <option>KG</option>
+            <option>GM</option>
+            <option>Pieces</option>
+            <option>Batch</option>
+            <option>Plates</option>
+            <option>Portion</option>
+          </select>
+        </label>
+
+        <label>Qty
+          <input name="qty" type="number" step="0.001" required>
+        </label>
+
+        <label>Unit Cost
+          <input name="unit_cost" type="number" step="0.01" required>
+        </label>
+
+        <label>Notes
+          <input name="notes">
+        </label>
+
+        <button type="submit">Record Purchase</button>
+      </form>
+      <p class="muted">
+        Item suggestions load from Raw Inventory for the chosen Category &amp; Subcategory.
+        Selecting an existing item auto-fills its Unit (case-insensitive match).
+      </p>
+    </section>
+
+    <!-- Spend Report -->
+    <section id="spend-report" class="card">
+      <h2>Spend Report</h2>
+      <div class="row">
+        <label>Period
+          <select id="period">
+            <option value="today">Today</option>
+            <option value="week">Last 7 days</option>
+            <option value="month">This month</option>
+            <option value="last30" selected>Last 30 days</option>
+            <option value="last90">Last 90 days</option>
+            <option value="last180">Last 180 days</option>
+            <option value="daterange">Date range…</option>
+          </select>
+        </label>
+        <label>Start
+          <input id="start" type="date">
+        </label>
+        <label>End
+          <input id="end" type="date">
+        </label>
+        <label>Category
+          <select id="catFilter">
+            <option value="">(All)</option>
+            <option>Home Delivery</option>
+            <option>Frozen Products</option>
+            <option>SFH</option>
+          </select>
+        </label>
+        <label>Item
+          <input id="itemFilter" placeholder="e.g., Onion">
+        </label>
+        <button id="runRpt">Search</button>
+      </div>
+      <div id="rpt"></div>
+    </section>
+
+    <div class="footer">
+      TBM Inventory and Sells Tracker &mdash; CSV based, simple, fast.
+    </div>
+  </div>
+
+  <script src="/static/ui.js"></script>
+  <script>
+    // Highlight nav
+    document.querySelector('.nav-raw')?.classList.add('active');
+
+    // --- DOM refs ---
+    const rawForm = document.getElementById('rawForm');
+    const resetRaw = document.getElementById('resetRaw');
+    const rawCsvForm = document.getElementById('rawCsvForm');
+    const rawCsvMsg = document.getElementById('rawCsvMsg');
+
+    const rawList = document.getElementById('rawList');
+    const toggleRaw = document.getElementById('toggleRaw');
+    const rawSearchBtn = document.getElementById('rawSearchBtn');
+    const rawCatFilter = document.getElementById('rawCatFilter');
+    const rawSubFilter = document.getElementById('rawSubFilter');
+
+    const pForm = document.getElementById('pForm');
+    const purchaseItemInput = document.getElementById('purchaseItemInput');
+    const purchaseItemList = document.getElementById('purchaseItemList');
+
+    const rpt = document.getElementById('rpt');
+    const period = document.getElementById('period');
+    const start = document.getElementById('start');
+    const end = document.getElementById('end');
+    const catFilter = document.getElementById('catFilter');
+    const itemFilter = document.getElementById('itemFilter');
+
+    let rawCache = [];
+
+    // --- Raw Inventory loading & rendering ---
+
+    async function loadRaw() {
+      const data = await fetchJSON('/api/raw_inventory');
+      rawCache = data.rows || [];
+      if (rawList.dataset.open === "1") {
+        renderRawTable();
+      }
+      updatePurchaseSuggestions();
+    }
+
+    function renderRawTable() {
+      const cat = rawCatFilter.value;
+      const sub = rawSubFilter.value;
+      const table = document.createElement('table');
+      table.innerHTML = '<tr><th>Name</th><th>Cat</th><th>Subcat</th><th>Unit</th><th>Unit Cost</th><th>Stock</th><th>Thr</th><th>Actions</th></tr>';
+
+      rawCache.forEach(r => {
+        if (cat && r.category !== cat) return;
+        if (sub && r.subcategory !== sub) return;
+
+        const tr = document.createElement('tr');
+        const low = Number(r.threshold || 0) > 0 && Number(r.stock || 0) <= Number(r.threshold || 0);
+        if (low) tr.classList.add('warn');
+
+        tr.innerHTML = `
+          <td>${r.name}</td>
+          <td>${r.category}</td>
+          <td>${r.subcategory || ''}</td>
+          <td>${r.unit || ''}</td>
+          <td>${r.unit_cost}</td>
+          <td>${r.stock}</td>
+          <td>${r.threshold}</td>
+          <td>
+            <button data-id="${r.id}" class="edit">Edit</button>
+            <button data-id="${r.id}" class="del">Delete</button>
+          </td>`;
+        table.appendChild(tr);
+      });
+
+      rawList.innerHTML = '';
+      rawList.appendChild(table);
+
+      table.onclick = async (e) => {
+        const id = e.target.dataset.id;
+        if (!id) return;
+        const row = rawCache.find(x => x.id === id);
+        if (e.target.classList.contains('edit') && row) {
+          rawForm.id.value = row.id;
+          rawForm.name.value = row.name;
+          rawForm.category.value = row.category;
+          rawForm.subcategory.value = row.subcategory || 'Grocery';
+          rawForm.unit.value = row.unit || 'KG';
+          rawForm.unit_cost.value = row.unit_cost;
+          rawForm.stock.value = row.stock;
+          rawForm.threshold.value = row.threshold;
+          window.scrollTo({ top: rawForm.closest('.card').offsetTop - 80, behavior: 'smooth' });
+        } else if (e.target.classList.contains('del')) {
+          if (confirm('Delete item?')) {
+            await fetchJSON(`/api/raw_inventory/${id}`, { method: 'DELETE' });
+            await loadRaw();
+          }
+        }
+      };
+    }
+
+    toggleRaw.onclick = () => {
+      const isOpen = rawList.dataset.open === "1";
+      if (isOpen) {
+        rawList.style.display = 'none';
+        rawList.dataset.open = "0";
+        toggleRaw.textContent = 'Show Inventory';
+      } else {
+        rawList.style.display = 'block';
+        rawList.dataset.open = "1";
+        toggleRaw.textContent = 'Hide Inventory';
+        renderRawTable();
+      }
+    };
+
+    rawSearchBtn.onclick = () => {
+      if (rawList.dataset.open !== "1") {
+        rawList.style.display = 'block';
+        rawList.dataset.open = "1";
+        toggleRaw.textContent = 'Hide Inventory';
+      }
+      renderRawTable();
+    };
+
+    resetRaw.onclick = () => {
+      rawForm.reset();
+      rawForm.id.value = "";
+    };
+
+    rawForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: rawForm.name.value.trim(),
+        category: rawForm.category.value,
+        subcategory: rawForm.subcategory.value,
+        unit: rawForm.unit.value,
+        unit_cost: Number(rawForm.unit_cost.value || 0),
+        stock: Number(rawForm.stock.value || 0),
+        threshold: Number(rawForm.threshold.value || 0)
+      };
+      if (rawForm.id.value) {
+        await fetchJSON(`/api/raw_inventory/${rawForm.id.value}`, {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+      } else {
+        await fetchJSON('/api/raw_inventory', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+      }
+      rawForm.reset();
+      rawForm.id.value = "";
+      await loadRaw();
+    };
+
+    rawCsvForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const fd = new FormData(rawCsvForm);
+      const res = await fetch('/import', { method: 'POST', body: fd });
+      if (res.ok) {
+        const data = await res.json();
+        rawCsvMsg.textContent = 'Imported: ' + data.saved;
+        await loadRaw();
+      } else {
+        let msg = 'Upload failed';
+        try {
+          const err = await res.json();
+          msg = err.detail || JSON.stringify(err);
+        } catch (e2) {}
+        rawCsvMsg.textContent = 'Error: ' + msg;
+      }
+    };
+
+    // --- Purchase: autocomplete + auto unit ---
+
+    function updatePurchaseSuggestions() {
+      const cat = pForm.category.value;
+      const sub = pForm.subcategory.value;
+      const typed = purchaseItemInput.value.trim().toLowerCase();
+      const seen = new Set();
+      purchaseItemList.innerHTML = '';
+
+      rawCache.forEach(r => {
+        if (r.category !== cat || r.subcategory !== sub) return;
+        const name = (r.name || '').trim();
+        if (!name) return;
+        if (typed && !name.toLowerCase().startsWith(typed)) return;
+        const key = name.toLowerCase();
+        if (seen.has(key)) return;
+        seen.add(key);
+        const opt = document.createElement('option');
+        opt.value = name;
+        purchaseItemList.appendChild(opt);
+      });
+    }
+
+    function applyPurchaseUnitFromItem() {
+      const cat = pForm.category.value;
+      const sub = pForm.subcategory.value;
+      const name = purchaseItemInput.value.trim().toLowerCase();
+      if (!name) return;
+      const match = rawCache.find(r =>
+        (r.name || '').trim().toLowerCase() === name &&
+        r.category === cat &&
+        r.subcategory === sub
+      );
+      if (match && match.unit) {
+        pForm.unit.value = match.unit;
+      }
+    }
+
+    pForm.category.addEventListener('change', () => {
+      updatePurchaseSuggestions();
+      applyPurchaseUnitFromItem();
+    });
+    pForm.subcategory.addEventListener('change', () => {
+      updatePurchaseSuggestions();
+      applyPurchaseUnitFromItem();
+    });
+    purchaseItemInput.addEventListener('input', updatePurchaseSuggestions);
+    purchaseItemInput.addEventListener('change', () => {
+      updatePurchaseSuggestions();
+      applyPurchaseUnitFromItem();
+    });
+    purchaseItemInput.addEventListener('blur', applyPurchaseUnitFromItem);
+
+    pForm.onsubmit = async (e) => {
+      e.preventDefault();
+      applyPurchaseUnitFromItem();
+      const payload = {
+        date: pForm.date.value || null,
+        category: pForm.category.value,
+        subcategory: pForm.subcategory.value,
+        item: pForm.item.value.trim(),
+        unit: pForm.unit.value,
+        qty: Number(pForm.qty.value || 0),
+        unit_cost: Number(pForm.unit_cost.value || 0),
+        notes: pForm.notes.value
+      };
+      await fetchJSON('/api/purchases', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      pForm.reset();
+      await loadRaw();
+      runReport();
+    };
+
+    // --- Spend report (with arrows + delete) ---
+
+    document.getElementById('runRpt').onclick = runReport;
+
+    async function runReport() {
+      let url = `/api/spend?period=${encodeURIComponent(period.value)}`;
+      if (period.value === 'daterange' && start.value && end.value) {
+        url += `&start=${start.value}&end=${end.value}`;
+      }
+      if (catFilter.value) {
+        url += `&category=${encodeURIComponent(catFilter.value)}`;
+      }
+      if (itemFilter.value.trim()) {
+        url += `&item=${encodeURIComponent(itemFilter.value.trim())}`;
+      }
+
+      const data = await fetchJSON(url);
+      rpt.innerHTML = `
+        <p><strong>Total spend:</strong> ₹${data.total_spend}
+        <span class="muted">(from ${data.period.start} to ${data.period.end})</span></p>
+      `;
+
+      // Summary tables
+      const catTbl = document.createElement('table');
+      catTbl.innerHTML = '<tr><th>Category</th><th>Spend</th></tr>';
+      for (const k in data.by_category) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${k}</td><td>₹${data.by_category[k]}</td>`;
+        catTbl.appendChild(tr);
+      }
+
+      const itemTbl = document.createElement('table');
+      itemTbl.innerHTML = '<tr><th>Item</th><th>Spend</th></tr>';
+      for (const k in data.by_item) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${k}</td><td>₹${data.by_item[k]}</td>`;
+        itemTbl.appendChild(tr);
+      }
+
+      const wrap = document.createElement('div');
+      wrap.className = 'row';
+      const d1 = document.createElement('div'); d1.appendChild(catTbl);
+      const d2 = document.createElement('div'); d2.appendChild(itemTbl);
+      wrap.appendChild(d1); wrap.appendChild(d2);
+      rpt.appendChild(wrap);
+
+      // Detailed table with arrows + delete
+      const detailTbl = document.createElement('table');
+      detailTbl.innerHTML = '<tr><th>Date</th><th>Category</th><th>Subcat</th><th>Item</th><th>Unit</th><th>Qty</th><th>Unit Cost</th><th>Total</th><th>Notes</th><th>Actions</th></tr>';
+
+      const lastUnitCost = {};
+
+      (data.rows || []).forEach(r => {
+        const key = ((r.item || '').toLowerCase()) + '|' + (r.category || '') + '|' + (r.subcategory || '');
+        const cost = parseFloat(r.unit_cost || 0);
+        let arrowHTML = '';
+        if (key in lastUnitCost) {
+          if (cost > lastUnitCost[key]) {
+            arrowHTML = '<span class="arrow-up">▲</span>';
+          } else if (cost < lastUnitCost[key]) {
+            arrowHTML = '<span class="arrow-down">▼</span>';
+          }
+        }
+        lastUnitCost[key] = cost;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${r.date}</td>
+          <td>${r.category}</td>
+          <td>${r.subcategory || ''}</td>
+          <td>${r.item}</td>
+          <td>${r.unit || ''}</td>
+          <td>${r.qty}</td>
+          <td>${r.unit_cost}${arrowHTML}</td>
+          <td>${r.total_cost}</td>
+          <td>${r.notes || ''}</td>
+          <td><button data-id="${r.id}" class="delPurchase">Delete</button></td>
+        `;
+        detailTbl.appendChild(tr);
+      });
+
+      rpt.appendChild(detailTbl);
+
+      detailTbl.onclick = async (e) => {
+        if (!e.target.classList.contains('delPurchase')) return;
+        const id = e.target.dataset.id;
+        if (!id) return;
+        if (!confirm('Delete this purchase record?')) return;
+        await fetchJSON(`/api/purchases/${id}`, { method: 'DELETE' });
+        runReport();
+      };
+    }
+
+    // --- Init ---
+    // Defaults requested: Home Delivery + Meat and Fish for inventory filters
+    rawCatFilter.value = "Home Delivery";
+    rawSubFilter.value = "Meat and Fish";
+
+    loadRaw();
+    runReport();
+  </script>
+</body>
+</html>
