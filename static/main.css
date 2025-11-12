@@ -234,3 +234,74 @@ tr.warn {
   color: #777;
   text-align: center;
 }
+
+/* ---------- Mobile-first enhancements ---------- */
+
+/* Make controls fill their column and never overflow */
+.field label { display:block; }
+.field input,
+.field select,
+.field textarea,
+.field button { width:100%; box-sizing:border-box; }
+
+/* Tables scroll inside cards on small screens */
+.card table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.card table thead, .card table tbody, .card table tr { display:table; width:100%; table-layout:fixed; }
+
+/* Slightly tighter card padding on very small screens */
+@media (max-width: 420px){
+  .card{ padding:12px 12px 8px; }
+}
+
+/* Phone & small tablet layout */
+@media (max-width: 900px){
+
+  /* Larger text for readability */
+  body{ font-size:16px; }
+  .site-title{ font-size:18px; }
+  label{ font-size:14px; }
+  input, select, button, textarea{ font-size:16px; padding:10px 12px; }
+  h1{ font-size:22px; }
+  h2{ font-size:18px; }
+
+  .page-wrap{ padding:16px 14px 24px; }
+
+  /* POS grid: at most 3 boxes per row; subsequent boxes wrap down */
+  .pos-grid{
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap:10px 10px;
+  }
+
+  /* Default field size: one column (smaller boxes) */
+  .pos-grid > .field{
+    grid-column: span 1;
+    min-width: 0; /* allow shrink within grid */
+  }
+
+  /* Long fields expand to full width */
+  .pos-grid .field.w4,
+  .pos-grid .field.w6,
+  .pos-grid .field.w12{
+    grid-column: span 3;
+  }
+
+  /* Ensure w2/w3 don’t force width—keep them one column */
+  .pos-grid .field.w2,
+  .pos-grid .field.w3{
+    grid-column: span 1;
+  }
+
+  /* Submit button—big & tappable */
+  .pos-grid .field.w12 button{
+    height:44px;
+    border-radius:8px;
+    font-weight:600;
+  }
+
+  .row{ gap:12px; }
+}
+
+/* Ultra-small phones */
+@media (max-width: 360px){
+  .pos-grid{ gap:8px 8px; }
+}
