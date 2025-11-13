@@ -1,8 +1,9 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Ready Products - TBM Inventory and Sells Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="stylesheet" href="/static/main.css">
 </head>
 <body>
@@ -19,134 +20,279 @@
     </nav>
   </header>
 
-<div class="page-wrap">
-  <h1>Ready Products</h1>
-  <div class="section-nav">
-    <a href="#ready-form">Add / Update</a>
-    <a href="#ready-list">Inventory</a>
+  <div class="page-wrap">
+    <h1>Ready Products</h1>
+    <div class="section-nav">
+      <a href="#ready-form">Add / Update</a>
+      <a href="#ready-list">Inventory</a>
+    </div>
+
+    <section id="ready-form" class="card">
+      <h2>Add / Update Ready Product</h2>
+      <form id="rForm" autocomplete="off">
+        <input name="id" type="hidden">
+
+        <label>
+          Name
+          <input name="name" required>
+        </label>
+
+        <label>
+          Item Category
+          <input name="item_category" id="item_category" list="itemCatList" placeholder="e.g. MOMO, PIZZA, ROLL">
+          <datalist id="itemCatList"></datalist>
+        </label>
+
+        <label>
+          Code (1 digit + 2 letters)
+          <input name="code" id="code" placeholder="Auto (e.g. 1CM)" readonly>
+        </label>
+
+        <label>
+          Category
+          <select name="category">
+            <option>Home Delivery</option>
+            <option>Frozen Products</option>
+            <option>SFH</option>
+          </select>
+        </label>
+
+        <label>
+          Unit
+          <select name="unit">
+            <option>KG</option><option>GM</option><option>Pieces</option>
+            <option>Batch</option><option>Plates</option><option>Portion</option>
+          </select>
+        </label>
+
+        <label>
+          Unit Cost
+          <input name="unit_cost" type="number" step="0.01">
+        </label>
+
+        <label>
+          Selling Price
+          <input name="price" type="number" step="0.01">
+        </label>
+
+        <label>
+          Stock
+          <input name="quantity" type="number" step="0.001">
+        </label>
+
+        <label>
+          Threshold
+          <input name="threshold" type="number" step="0.001" value="0">
+        </label>
+
+        <button type="submit">Save</button>
+        <button type="button" id="resetR">Reset</button>
+      </form>
+      <p class="muted">
+        Codes are auto-generated as <strong>1 digit + 2 letters</strong> (e.g. <code>1CM</code>) and stay fixed for an item.
+      </p>
+    </section>
+
+    <section id="ready-list" class="card">
+      <h2>Ready Product Inventory</h2>
+      <div id="readyList"></div>
+    </section>
+
+    <div class="footer">
+      TBM Inventory and Sells Tracker &mdash; CSV based, simple, fast.
+    </div>
+
   </div>
 
-  <section id="ready-form" class="card">
-    <h2>Add / Update Ready Product</h2>
-    <form id="rForm">
-      <input name="id" type="hidden">
-      <label>Name <input name="name" required></label>
-      <label>Category
-        <select name="category">
-          <option>Home Delivery</option>
-          <option>Frozen Products</option>
-          <option>SFH</option>
-        </select>
-      </label>
-      <label>Unit
-        <select name="unit">
-          <option>KG</option><option>GM</option><option>Pieces</option>
-          <option>Batch</option><option>Plates</option><option>Portion</option>
-        </select>
-      </label>
-      <label>Unit Cost <input name="unit_cost" type="number" step="0.01"></label>
-      <label>Selling Price <input name="price" type="number" step="0.01"></label>
-      <label>Stock <input name="quantity" type="number" step="0.001"></label>
-      <label>Threshold <input name="threshold" type="number" step="0.001" value="0"></label>
-      <button type="submit">Save</button>
-      <button type="button" id="resetR">Reset</button>
-    </form>
-  </section>
+  <script src="/static/ui.js"></script>
+  <script>
+    document.querySelector('.nav-ready').classList.add('active');
 
-  <section id="ready-list" class="card">
-    <h2>Ready Product Inventory</h2>
-    <div id="readyList"></div>
-  </section>
+    const rForm      = document.getElementById('rForm');
+    const resetR     = document.getElementById('resetR');
+    const readyList  = document.getElementById('readyList');
+    const itemCatInp = document.getElementById('item_category');
+    const itemCatList= document.getElementById('itemCatList');
+    const codeInput  = document.getElementById('code');
 
+    // Track used 3-char codes so we don't collide
+    let usedCodes = new Set();
 
-  <div class="footer">
-    TBM Inventory and Sells Tracker &mdash; CSV based, simple, fast. 
-  </div>
-
-</div>
-<script src="/static/ui.js"></script>
-<script>
-  document.querySelector('.nav-ready').classList.add('active');
-
-  const rForm = document.getElementById('rForm');
-  const resetR = document.getElementById('resetR');
-  const readyList = document.getElementById('readyList');
-
-  resetR.onclick = () => { rForm.reset(); rForm.id.value = ''; };
-
-  async function loadReady(){
-    const data = await fetchJSON('/api/ready_products');
-    const rows = data.rows || [];
-    const table = document.createElement('table');
-    table.innerHTML = '<tr><th>Name</th><th>Category</th><th>Unit</th><th>Unit Cost</th><th>Price</th><th>Stock</th><th>Thr</th><th>Actions</th></tr>';
-    rows.forEach(r => {
-      const tr = document.createElement('tr');
-      const low = Number(r.threshold||0) > 0 && Number(r.quantity||0) <= Number(r.threshold||0);
-      if(low) tr.classList.add('warn');
-      tr.innerHTML = `
-        <td>${r.name}</td>
-        <td>${r.category}</td>
-        <td>${r.unit || ''}</td>
-        <td>${r.unit_cost}</td>
-        <td>${r.price}</td>
-        <td>${r.quantity}</td>
-        <td>${r.threshold}</td>
-        <td>
-          <button data-id="${r.id}" class="edit">Edit</button>
-          <button data-id="${r.id}" class="del">Delete</button>
-        </td>`;
-      table.appendChild(tr);
-    });
-    readyList.innerHTML = '';
-    readyList.appendChild(table);
-
-    table.onclick = async (e) => {
-      const id = e.target.dataset.id;
-      if(!id) return;
-      if(e.target.classList.contains('edit')){
-        const r = (rows||[]).find(x => x.id === id);
-        if(!r) return;
-        rForm.id.value = r.id;
-        rForm.name.value = r.name;
-        rForm.category.value = r.category;
-        rForm.unit.value = r.unit || 'KG';
-        rForm.unit_cost.value = r.unit_cost;
-        rForm.price.value = r.price;
-        rForm.quantity.value = r.quantity;
-        rForm.threshold.value = r.threshold;
-      } else if(e.target.classList.contains('del')) {
-        if(confirm('Delete product?')){
-          await fetchJSON('/api/ready_products/' + id, {method:'DELETE'});
-          loadReady();
-        }
-      }
+    resetR.onclick = () => {
+      rForm.reset();
+      rForm.id.value = '';
+      codeInput.value = '';
     };
-  }
 
-  rForm.onsubmit = async (e) => {
-    e.preventDefault();
-    const payload = {
-      name: rForm.name.value.trim(),
-      category: rForm.category.value,
-      unit: rForm.unit.value,
-      unit_cost: Number(rForm.unit_cost.value || 0),
-      price: Number(rForm.price.value || 0),
-      quantity: Number(rForm.quantity.value || 0),
-      threshold: Number(rForm.threshold.value || 0)
-    };
-    if(rForm.id.value){
-      await fetchJSON('/api/ready_products/' + rForm.id.value, {
-        method:'PUT', body: JSON.stringify(payload)
+    function buildItemCatDatalist(rows){
+      const set = new Set();
+      rows.forEach(r => {
+        const ic = (r.item_category || '').trim();
+        if(ic) set.add(ic);
       });
-    } else {
-      await fetchJSON('/api/ready_products', {
-        method:'POST', body: JSON.stringify(payload)
+      itemCatList.innerHTML = '';
+      Array.from(set).sort().forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        itemCatList.appendChild(opt);
       });
     }
-    rForm.reset(); rForm.id.value=''; loadReady();
-  };
 
-  loadReady();
-</script>
+    function makeLetterPair(name, itemCat){
+      const src = ((itemCat || '') + ' ' + (name || '')).toUpperCase().replace(/[^A-Z\s]/g, ' ');
+      const words = src.split(/\s+/).filter(Boolean);
+      let a = 'X', b = 'Y';
+      if (words[0]) a = words[0][0];
+      if (words[1]) b = words[1][0];
+      else if (words[0] && words[0].length > 1) b = words[0][1];
+      return a + b;
+    }
+
+    function generateCode(name, category, itemCat){
+      const letters = makeLetterPair(name, itemCat); // 2 letters
+      const cats = ['Home Delivery', 'Frozen Products', 'SFH'];
+      let baseDigit = cats.indexOf(category);
+      if (baseDigit < 0) baseDigit = 0;
+      baseDigit = (baseDigit + 1); // 1..n
+
+      // Try 1..9 with the same letter pair
+      for (let d = baseDigit; d <= 9; d++){
+        const c = String(d) + letters;
+        if (!usedCodes.has(c)){
+          usedCodes.add(c);
+          return c;
+        }
+      }
+      // Fallback: random digit until unique
+      while (true){
+        const d = Math.floor(Math.random() * 10);
+        const c = String(d) + letters;
+        if (!usedCodes.has(c)){
+          usedCodes.add(c);
+          return c;
+        }
+      }
+    }
+
+    async function loadReady(){
+      const data = await fetchJSON('/api/ready_products');
+      const rows = data.rows || [];
+      usedCodes = new Set();
+      rows.forEach(r => {
+        if (r.code) usedCodes.add(String(r.code).toUpperCase());
+      });
+      buildItemCatDatalist(rows);
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Item Category</th>
+          <th>Category</th>
+          <th>Unit</th>
+          <th>Unit Cost</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Thr</th>
+          <th>Actions</th>
+        </tr>`;
+
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        const low = Number(r.threshold || 0) > 0 &&
+                    Number(r.quantity || 0) <= Number(r.threshold || 0);
+        if (low) tr.classList.add('warn');
+        tr.innerHTML = `
+          <td>${r.code || ''}</td>
+          <td>${r.name}</td>
+          <td>${r.item_category || ''}</td>
+          <td>${r.category}</td>
+          <td>${r.unit || ''}</td>
+          <td>${r.unit_cost}</td>
+          <td>${r.price}</td>
+          <td>${r.quantity}</td>
+          <td>${r.threshold}</td>
+          <td>
+            <button data-id="${r.id}" class="edit">Edit</button>
+            <button data-id="${r.id}" class="del">Delete</button>
+          </td>`;
+        table.appendChild(tr);
+      });
+
+      readyList.innerHTML = '';
+      readyList.appendChild(table);
+
+      table.onclick = async (e) => {
+        const id = e.target.dataset.id;
+        if (!id) return;
+
+        if (e.target.classList.contains('edit')) {
+          const r = (rows || []).find(x => x.id === id);
+          if (!r) return;
+          rForm.id.value           = r.id;
+          rForm.name.value         = r.name;
+          rForm.item_category.value= r.item_category || '';
+          rForm.code.value         = r.code || '';
+          rForm.category.value     = r.category;
+          rForm.unit.value         = r.unit || 'KG';
+          rForm.unit_cost.value    = r.unit_cost;
+          rForm.price.value        = r.price;
+          rForm.quantity.value     = r.quantity;
+          rForm.threshold.value    = r.threshold;
+        } else if (e.target.classList.contains('del')) {
+          if (confirm('Delete product?')) {
+            await fetchJSON('/api/ready_products/' + id, { method:'DELETE' });
+            loadReady();
+          }
+        }
+      };
+    }
+
+    rForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const isNew = !rForm.id.value;
+
+      let code = (rForm.code.value || '').trim().toUpperCase();
+      const name = rForm.name.value.trim();
+      const category = rForm.category.value;
+      const itemCat = rForm.item_category.value.trim();
+
+      if (isNew || !code) {
+        code = generateCode(name, category, itemCat);
+        rForm.code.value = code; // reflect in form
+      }
+
+      const payload = {
+        name: name,
+        item_category: itemCat,
+        code: code,
+        category: category,
+        unit: rForm.unit.value,
+        unit_cost: Number(rForm.unit_cost.value || 0),
+        price: Number(rForm.price.value || 0),
+        quantity: Number(rForm.quantity.value || 0),
+        threshold: Number(rForm.threshold.value || 0)
+      };
+
+      if (rForm.id.value) {
+        await fetchJSON('/api/ready_products/' + rForm.id.value, {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+      } else {
+        await fetchJSON('/api/ready_products', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+      }
+      rForm.reset();
+      rForm.id.value = '';
+      rForm.code.value = '';
+      loadReady();
+    };
+
+    loadReady();
+  </script>
 </body>
 </html>
