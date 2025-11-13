@@ -1,13 +1,131 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">  <!-- important for mobile -->
   <title>Sales / POS - TBM Inventory and Sells Tracker</title>
-  <link rel="stylesheet" href="/static/main.css?v=3">                    <!-- cache-bust -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="stylesheet" href="/static/main.css">
+  <style>
+    /* ======== Mobile-first page styles (overrides & additions) ======== */
+    :root{
+      --accent:#c62828;
+      --ink:#111;
+      --muted:#666;
+      --bg:#f5f5f5;
+      --card:#fff;
+      --ok:#2e7d32;
+      --info:#1976d2;
+      --warn:#ef6c00;
+    }
+
+    /* tighten header on phones */
+    .site-header{ padding:10px 12px; gap:12px; }
+    .site-title{ font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .site-nav{ overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; }
+    .site-nav a{ padding-bottom:2px; }
+
+    /* sticky section nav under header */
+    .section-nav{
+      position:sticky; top:56px; z-index:15; background:var(--bg);
+      padding:8px 0; margin:8px 0 12px; border-bottom:1px dashed #ddd;
+      overflow-x:auto; white-space:nowrap;
+    }
+    .section-nav a{
+      display:inline-block; margin-right:8px; font-size:12px; padding:6px 10px;
+      border:1px solid #e0e0e0; border-radius:999px; background:#fff;
+    }
+    .section-nav a:hover{ border-color:var(--accent); color:var(--accent); }
+
+    /* card extras */
+    .card h2{ display:flex; align-items:center; gap:8px; }
+    .hint{ color:var(--muted); font-size:11px; }
+
+    /* grid: start stacked, grow as viewport widens */
+    .pos-grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:10px 12px; }
+    .field{ grid-column:span 12; }
+    .field.w2{ grid-column:span 6; }
+    .field.w3{ grid-column:span 12; }
+    .field.w4{ grid-column:span 12; }
+    .field.w6{ grid-column:span 12; }
+    .field.w8{ grid-column:span 12; }
+    .field.w12{ grid-column:span 12; }
+    .field label{ display:block; margin:0 0 4px 2px; font-size:12px; color:#444; }
+    .field input,.field select,.field textarea{ width:100%; height:44px; font-size:15px; }
+
+    /* quick rows */
+    .chipbar{ display:flex; flex-wrap:wrap; gap:6px; }
+    .chip{
+      font-size:13px; padding:8px 12px; border:1px solid #ddd; border-radius:999px;
+      background:#fff; cursor:pointer; user-select:none;
+    }
+    .chip.active{ border-color:var(--accent); color:#fff; background:var(--accent); }
+
+    .qty-row{ display:flex; gap:8px; flex-wrap:wrap; }
+    .qty-row .btn{ padding:10px 12px; border-radius:8px; border:1px solid #ddd; background:#fff; }
+    .qty-row .btn:active{ transform:scale(.98); }
+
+    .kpi{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid #eee; font-size:12px; }
+    .kpi b{ color:var(--accent); }
+
+    /* live preview box */
+    .totals{
+      display:grid; grid-template-columns:1fr auto; gap:6px; background:#fafafa; border:1px dashed #ddd; border-radius:8px; padding:10px 12px;
+    }
+    .totals .v{ text-align:right; font-weight:600; }
+    .totals .grand{ color:#000; font-size:18px; }
+
+    /* floating submit bar (mobile) */
+    .float-bar{
+      position:sticky; bottom:0; z-index:20; background:rgba(255,255,255,.95);
+      border-top:1px solid #eee; backdrop-filter: blur(5px);
+      padding:8px 10px; display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .float-bar .summary{ font-size:14px; color:#333; }
+    .float-bar .summary b{ color:#000; }
+    .float-bar button{ height:44px; padding:0 16px; border-radius:8px; }
+
+    /* table scrolling on phones */
+    .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .table-scroll table{ min-width:820px; }
+
+    /* live tables: card layout on phones */
+    .table-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .tcard{ border:1px solid #eee; border-radius:10px; padding:10px 12px; background:#fff; }
+    .tcard h3{ margin:0 0 6px; font-size:14px; }
+    .tcard .count{ font-size:18px; font-weight:700; color:var(--accent); }
+
+    /* mobile/desktop visibility helpers */
+    .hide-on-mobile{ display:none; }
+    .show-on-mobile{ display:block; }
+
+    /* read-only input look (unit price) */
+    .ro{
+      background:#f7f7f7 !important; color:#333;
+      border-color:#e0e0e0 !important;
+      pointer-events:none;
+    }
+
+    /* breakpoints */
+    @media (min-width:768px){
+      .field.w2{ grid-column:span 2; }
+      .field.w3{ grid-column:span 3; }
+      .field.w4{ grid-column:span 4; }
+      .field.w6{ grid-column:span 6; }
+      .field.w8{ grid-column:span 8; }
+      .table-cards{ grid-template-columns:repeat(4,1fr); }
+      .hide-on-mobile{ display:block; }
+      .show-on-mobile{ display:none; }
+    }
+
+    /* nicer buttons */
+    button{ height:44px; border-radius:8px; }
+    .btn-plain{ background:#fff; color:var(--accent); border:1px solid var(--accent); }
+    .btn-plain:hover{ background:var(--accent); color:#fff; }
+  </style>
 </head>
 <body>
 
+  <!-- Top header / global nav (from main.css) -->
   <header class="site-header">
     <div class="logo">TBM</div>
     <div class="site-title">TBM Inventory and Sells Tracker</div>
@@ -22,597 +140,666 @@
 
   <div class="page-wrap">
     <h1>Sales / POS</h1>
+
     <div class="section-nav">
-      <a href="#sale-form">Add Sale (POS)</a>
-      <a href="#sale-live">Live Tables (SFH)</a>
-      <a href="#sale-list">Sales Records &amp; Report</a>
+      <a href="#add">Add Sale</a>
+      <a href="#live">Live Tables</a>
+      <a href="#report">Sales Report</a>
     </div>
 
-    <!-- POS: Add Sale -->
-    <section id="sale-form" class="card">
-      <h2>Add Sale</h2>
+    <!-- =================== ADD SALE =================== -->
+    <section id="add" class="card">
+      <h2>Add Sale <span class="kpi">Next Order: <b id="nextOrderKpi">#–</b></span></h2>
 
-      <!-- Top-level category -->
-      <div class="row" style="margin-bottom:8px;">
-        <label>
-          Category
+      <!-- category + branch -->
+      <div class="pos-grid" style="margin-bottom:8px;">
+        <div class="field w4">
+          <label>Category</label>
           <select id="saleCategory">
-            <option value="Home Delivery">Home Delivery</option>
-            <option value="Frozen Products">Frozen Products</option>
-            <option value="SFH">SFH</option>
+            <option>Home Delivery</option>
+            <option>Frozen Products</option>
+            <option>SFH</option>
           </select>
-        </label>
+        </div>
 
-        <label>
-          Next Order ID
-          <input id="orderIdDisplay" type="text" readonly>
-        </label>
+        <div class="field w4" id="sfhBranchWrap" style="display:none;">
+          <label>Branch (SFH)</label>
+          <div style="display:flex; gap:8px;">
+            <select id="branchSelect" style="flex:1 1 auto"></select>
+            <button class="btn-plain" type="button" id="addBranchBtn">Add</button>
+          </div>
+          <div class="hint">Tap “Add” to create a new branch quickly.</div>
+        </div>
+
+        <div class="field w4">
+          <label>Date</label>
+          <input id="saleDate" type="date">
+        </div>
       </div>
 
-      <!-- SFH branch controls -->
-      <div id="sfhBranchArea" class="row" style="display:none; margin-bottom:8px;">
-        <label>
-          Select Branch
-          <select id="branchSelect">
-            <option value="">(Select branch)</option>
+      <form id="sForm" class="pos-grid" autocomplete="off">
+        <div class="field w8">
+          <label>Item (from Ready Products)</label>
+          <input id="saleItem" list="readyList" placeholder="Type to search…" required>
+          <datalist id="readyList"></datalist>
+          <div class="hint" id="autoMapHint">Unit &amp; price auto-fill from Ready Products (no manual override).</div>
+        </div>
+
+        <div class="field w2">
+          <label>Unit</label>
+          <select id="saleUnit">
+            <option>KG</option><option>GM</option><option>Pieces</option>
+            <option>Batch</option><option>Plates</option><option>Portion</option>
           </select>
-        </label>
-        <label>
-          Add Branch
-          <input type="text" id="newBranchName" placeholder="New branch name">
-          <button type="button" id="addBranchBtn">Add</button>
-        </label>
-      </div>
+        </div>
 
-      <form id="sForm">
-        <div class="pos-grid">
-          <div class="field w3">
-            <label>Date
-              <input name="date" type="date">
-            </label>
-          </div>
+        <div class="field w2">
+          <label>Qty</label>
+          <input id="saleQty" type="number" inputmode="decimal" step="0.001" placeholder="0">
+        </div>
 
-          <div class="field w4">
-            <label>Item
-              <input
-                name="item"
-                id="saleItemInput"
-                list="saleItemList"
-                required
-                placeholder="Start typing ready product name">
-              <datalist id="saleItemList"></datalist>
-            </label>
+        <div class="field w12">
+          <div class="qty-row">
+            <button class="btn" type="button" data-q="0.25">+0.25</button>
+            <button class="btn" type="button" data-q="0.5">+0.5</button>
+            <button class="btn" type="button" data-q="1">+1</button>
+            <button class="btn" type="button" id="qtyMinus">–</button>
+            <button class="btn" type="button" id="qtyPlus">+</button>
+            <button class="btn" type="button" id="qtyClear">Clear</button>
+            <span class="hint">Quick qty buttons for faster entry.</span>
           </div>
+        </div>
 
-          <div class="field w2">
-            <label>Unit
-              <select name="unit" id="saleUnit">
-                <option>KG</option>
-                <option>GM</option>
-                <option>Pieces</option>
-                <option>Batch</option>
-                <option>Plates</option>
-                <option>Portion</option>
-              </select>
-            </label>
-          </div>
+        <div class="field w4">
+          <label>Unit Price (auto)</label>
+          <input id="saleUnitPrice" class="ro" type="number" inputmode="decimal" step="0.01" placeholder="auto" readonly>
+          <div class="hint">Locked to Ready Products price.</div>
+        </div>
 
-          <div class="field w2">
-            <label>Qty
-              <input name="qty" id="saleQty" type="number" step="0.001" required>
-            </label>
+        <div class="field w4">
+          <label>Discount (₹)</label>
+          <input id="saleDiscount" type="number" inputmode="decimal" step="0.01" value="0">
+          <div class="chipbar" style="margin-top:6px;">
+            <div class="chip" data-disc="0">0</div>
+            <div class="chip" data-disc="5">5</div>
+            <div class="chip" data-disc="10">10</div>
+            <div class="chip" data-disc="20">20</div>
+            <div class="chip" data-disc="50">50</div>
           </div>
+        </div>
 
-          <div class="field w2">
-            <label>Unit Price (override)
-              <input name="unit_price" id="saleUnitPrice" type="number" step="0.01">
-            </label>
-          </div>
+        <div class="field w4">
+          <label>Table Number</label>
+          <input id="saleTable" placeholder="">
+        </div>
 
-          <div class="field w2">
-            <label>Discount (₹)
-              <input name="discount" id="saleDiscount" type="number" step="0.01" value="0">
-            </label>
-          </div>
+        <div class="field w6">
+          <label>Customer Name</label>
+          <input id="saleCustName" placeholder="">
+        </div>
 
-          <div class="field w3">
-            <label>Customer Name
-              <input name="customer_name" id="saleCustomerName" placeholder="">
-            </label>
-          </div>
+        <div class="field w6">
+          <label>Customer Phone</label>
+          <input id="saleCustPhone" placeholder="" inputmode="tel">
+        </div>
 
-          <div class="field w3">
-            <label>Customer Number
-              <input name="customer_phone" id="saleCustomerPhone" placeholder="">
-            </label>
+        <div class="field w12">
+          <label>Payment Status</label>
+          <div class="chipbar" id="payChips">
+            <div class="chip active" data-status="Live">Live</div>
+            <div class="chip" data-status="Due">Due</div>
+            <div class="chip" data-status="Paid">Paid</div>
           </div>
+        </div>
 
-          <div class="field w2">
-            <label>Table Number
-              <input name="table_no" id="saleTableNo" placeholder="">
-            </label>
-          </div>
+        <div class="field w6" id="payModeRow" style="display:none;">
+          <label>Payment Mode (if Paid)</label>
+          <select id="payMode">
+            <option value="">Select</option>
+            <option value="CurrentUPI">Current a/c UPI</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="PersonalUPI">Personal UPI</option>
+            <option value="PersonalCash">Personal Cash</option>
+          </select>
+        </div>
 
-          <div class="field w3">
-            <label>Payment Status
-              <select id="paymentStatus">
-                <option value="Live">Live Order</option>
-                <option value="Due">Due</option>
-                <option value="Paid">Paid</option>
-              </select>
-            </label>
-          </div>
+        <div class="field w6" id="payNoteRow" style="display:none;">
+          <label>Payment Note</label>
+          <input id="payNote" placeholder="Owner / keeper (for Personal)">
+        </div>
 
-          <div class="field w3" id="paymentModeWrap" style="display:none;">
-            <label>Payment Mode (if Paid)
-              <select id="paymentMode">
-                <option value="">Select</option>
-                <option value="CurrentUPI">Current A/c UPI</option>
-                <option value="Cash">Cash</option>
-                <option value="Card">Card</option>
-                <option value="PersonalUPI">Personal UPI</option>
-                <option value="PersonalCash">Personal Cash</option>
-              </select>
-            </label>
-          </div>
+        <div class="field w12">
+          <label>Notes</label>
+          <input id="saleNotes" placeholder="Any remarks…">
+        </div>
 
-          <div class="field w4" id="paymentNoteWrap" style="display:none;">
-            <label>Payment Note
-              <input id="paymentNote" placeholder="For Personal UPI/Cash, enter owner name">
-            </label>
+        <!-- Live bill preview -->
+        <div class="field w12">
+          <div class="totals">
+            <div>Subtotal</div><div class="v" id="tSubtotal">₹0.00</div>
+            <div>Discount</div><div class="v" id="tDiscount">₹0.00</div>
+            <div class="grand">Total</div><div class="v grand" id="tTotal">₹0.00</div>
           </div>
+        </div>
 
-          <div class="field w6">
-            <label>Notes
-              <input name="notes" id="saleNotes" placeholder="">
-            </label>
-          </div>
-
-          <div class="field w12">
-            <button type="submit">Record Sale &amp; Generate Bill</button>
-          </div>
+        <div class="field w12">
+          <button id="submitSale" type="submit">Record Sale &amp; Generate Bill</button>
         </div>
       </form>
 
-      <p class="muted">
-        Item list, unit &amp; pricing are mapped from Ready Products. On submit, stock is reduced and a simple bill opens in a new tab (you can save/print as PDF or share).
-      </p>
+      <div class="float-bar" id="floatBar">
+        <div class="summary">Order <b id="floatOrder">#–</b> • Total <b id="floatTotal">₹0.00</b></div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-plain" type="button" id="clearFormBtn">Clear</button>
+          <button type="button" id="submitBarBtn">Save &amp; Bill</button>
+        </div>
+      </div>
+
+      <p class="hint">Stock reduces from <b>Ready Products</b> instantly. The bill opens in a new tab (you can print/share PDF).</p>
     </section>
 
-    <!-- Live table summary for SFH -->
-    <section id="sale-live" class="card">
+    <!-- =================== LIVE TABLES (SFH) =================== -->
+    <section id="live" class="card">
       <h2>Live Tables (SFH)</h2>
-      <p class="muted">
-        Shows active <strong>Live</strong> orders per table for the selected SFH branch.
-      </p>
-      <div id="liveTables"></div>
+      <div class="pos-grid" style="margin-bottom:8px;">
+        <div class="field w6">
+          <label>Branch</label>
+          <select id="liveBranch"></select>
+        </div>
+        <div class="field w6">
+          <label>&nbsp;</label>
+          <button id="refreshLive" class="btn-plain" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="liveWrap">
+        <div class="hint">Pick an SFH branch to see current live orders per table.</div>
+      </div>
     </section>
 
-    <!-- Sales history + report -->
-    <section id="sale-list" class="card">
+    <!-- =================== SALES REPORT =================== -->
+    <section id="report" class="card">
       <h2>Sales Records &amp; Report</h2>
-      <div class="row">
-        <label>
-          Period
-          <select id="salesPeriod">
-            <option value="today">Today</option>
-            <option value="week">Last 7 days</option>
-            <option value="month">This month</option>
-            <option value="last30" selected>Last 30 days</option>
+
+      <!-- Mobile notice -->
+      <div class="show-on-mobile hint" style="margin-bottom:8px;">
+        Mobile view shows <b>Today</b> only. Detailed record table is hidden for a faster POS workflow.
+      </div>
+
+      <div class="pos-grid">
+        <div class="field w3">
+          <label>Period</label>
+          <select id="rPeriod">
+            <option value="last30">Last 30 days</option>
             <option value="last90">Last 90 days</option>
             <option value="last180">Last 180 days</option>
+            <option value="month">This month</option>
+            <option value="week">This week</option>
+            <option value="today" selected>Today</option>
             <option value="daterange">Date range…</option>
           </select>
-        </label>
-        <label>
-          Start
-          <input id="salesStart" type="date">
-        </label>
-        <label>
-          End
-          <input id="salesEnd" type="date">
-        </label>
-        <label>
-          Category
-          <select id="salesCatFilter">
+        </div>
+        <div class="field w3 hide-on-mobile">
+          <label>Start</label>
+          <input id="rStart" type="date">
+        </div>
+        <div class="field w3 hide-on-mobile">
+          <label>End</label>
+          <input id="rEnd" type="date">
+        </div>
+        <div class="field w3 hide-on-mobile">
+          <label>Category</label>
+          <select id="rCategory">
             <option value="">(All)</option>
             <option>Home Delivery</option>
             <option>Frozen Products</option>
             <option>SFH</option>
           </select>
-        </label>
-        <label>
-          Branch (SFH)
-          <input id="salesBranchFilter" placeholder="Branch name">
-        </label>
-        <label>
-          Item
-          <input id="salesItemFilter" placeholder="Item name">
-        </label>
-        <label>
-          Status
-          <select id="salesStatusFilter">
+        </div>
+        <div class="field w4 hide-on-mobile">
+          <label>Branch (SFH)</label>
+          <input id="rBranch" placeholder="">
+        </div>
+        <div class="field w4 hide-on-mobile">
+          <label>Item</label>
+          <input id="rItem" placeholder="">
+        </div>
+        <div class="field w4 hide-on-mobile">
+          <label>Status</label>
+          <select id="rStatus">
             <option value="">(All)</option>
-            <option value="Live">Live</option>
-            <option value="Due">Due</option>
-            <option value="Paid">Paid</option>
+            <option>Live</option>
+            <option>Due</option>
+            <option>Paid</option>
           </select>
-        </label>
-        <button id="runSalesRpt">Run</button>
+        </div>
+        <div class="field w12">
+          <button id="runReport" type="button">Run</button>
+        </div>
+
+        <div class="field w12">
+          <div class="kpi" id="reportSummary">Total: ₹0.00</div>
+        </div>
+
+        <div class="field w12">
+          <div class="row" style="gap:14px; flex-wrap:wrap;">
+            <div>
+              <h3 style="margin:0 0 6px;">By Category</h3>
+              <div class="table-scroll"><table id="tblCat"><tr><th>Category</th><th>Sales</th></tr></table></div>
+            </div>
+            <div>
+              <h3 style="margin:0 0 6px;">By Item</h3>
+              <div class="table-scroll"><table id="tblItem"><tr><th>Item</th><th>Sales</th></tr></table></div>
+            </div>
+            <div>
+              <h3 style="margin:0 0 6px;">By Branch</h3>
+              <div class="table-scroll"><table id="tblBranch"><tr><th>Branch</th><th>Sales</th></tr></table></div>
+            </div>
+            <!-- Mobile-only: By Payment Mode -->
+            <div class="show-on-mobile">
+              <h3 style="margin:0 0 6px;">By Payment Mode (Today)</h3>
+              <div class="table-scroll"><table id="tblPayMode"><tr><th>Mode</th><th>Sales</th><th>Count</th></tr></table></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Records (hidden on mobile) -->
+        <div class="field w12 hide-on-mobile" id="detailBlock">
+          <h3 style="margin:10px 0 6px;">Detailed Records</h3>
+          <div class="table-scroll">
+            <table id="tblDetail">
+              <tr>
+                <th>Date</th><th>Category</th><th>Branch</th><th>Order</th>
+                <th>Item</th><th>Unit</th><th>Qty</th><th>Unit Price</th>
+                <th>Discount</th><th>Total</th><th>Customer</th><th>Phone</th>
+                <th>Table</th><th>Status</th><th>Mode</th><th>Pay Note</th><th>Notes</th>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
-      <div id="salesRpt"></div>
     </section>
 
-    <div class="footer">
-      TBM Inventory and Sells Tracker &mdash; CSV based, simple, fast.
-    </div>
+    <div class="footer">TBM Inventory and Sells Tracker — CSV based, simple, fast.</div>
   </div>
 
   <script src="/static/ui.js"></script>
   <script>
     document.querySelector('.nav-sales')?.classList.add('active');
 
-    // --- DOM refs ---
+    // ---------- Elements ----------
+    const nextOrderKpi = document.getElementById('nextOrderKpi');
+    const floatOrder   = document.getElementById('floatOrder');
+    const floatTotal   = document.getElementById('floatTotal');
+
     const saleCategory = document.getElementById('saleCategory');
-    const orderIdDisplay = document.getElementById('orderIdDisplay');
-
-    const sfhBranchArea = document.getElementById('sfhBranchArea');
+    const sfhBranchWrap= document.getElementById('sfhBranchWrap');
     const branchSelect = document.getElementById('branchSelect');
-    const newBranchName = document.getElementById('newBranchName');
     const addBranchBtn = document.getElementById('addBranchBtn');
+    const saleDate     = document.getElementById('saleDate');
 
-    const sForm = document.getElementById('sForm');
-    const saleItemInput = document.getElementById('saleItemInput');
-    const saleItemList = document.getElementById('saleItemList');
-    const saleUnit = document.getElementById('saleUnit');
-    const saleQty = document.getElementById('saleQty');
-    const saleUnitPrice = document.getElementById('saleUnitPrice');
+    const saleItem     = document.getElementById('saleItem');
+    const readyList    = document.getElementById('readyList');
+    const saleUnit     = document.getElementById('saleUnit');
+    const saleQty      = document.getElementById('saleQty');
+    const saleUnitPrice= document.getElementById('saleUnitPrice');
     const saleDiscount = document.getElementById('saleDiscount');
-    const saleCustomerName = document.getElementById('saleCustomerName');
-    const saleCustomerPhone = document.getElementById('saleCustomerPhone');
-    const saleTableNo = document.getElementById('saleTableNo');
-    const saleNotes = document.getElementById('saleNotes');
+    const saleTable    = document.getElementById('saleTable');
+    const saleCustName = document.getElementById('saleCustName');
+    const saleCustPhone= document.getElementById('saleCustPhone');
+    const saleNotes    = document.getElementById('saleNotes');
 
-    const paymentStatus = document.getElementById('paymentStatus');
-    const paymentModeWrap = document.getElementById('paymentModeWrap');
-    const paymentMode = document.getElementById('paymentMode');
-    const paymentNoteWrap = document.getElementById('paymentNoteWrap');
-    const paymentNote = document.getElementById('paymentNote');
+    const payChips     = document.getElementById('payChips');
+    const payModeRow   = document.getElementById('payModeRow');
+    const payNoteRow   = document.getElementById('payNoteRow');
+    const payMode      = document.getElementById('payMode');
+    const payNote      = document.getElementById('payNote');
 
-    const liveTablesDiv = document.getElementById('liveTables');
+    const chipDiscBtns = document.querySelectorAll('.chip[data-disc]');
+    const qtyRow       = document.querySelector('.qty-row');
 
-    const salesPeriod = document.getElementById('salesPeriod');
-    const salesStart = document.getElementById('salesStart');
-    const salesEnd = document.getElementById('salesEnd');
-    const salesCatFilter = document.getElementById('salesCatFilter');
-    const salesBranchFilter = document.getElementById('salesBranchFilter');
-    const salesItemFilter = document.getElementById('salesItemFilter');
-    const salesStatusFilter = document.getElementById('salesStatusFilter');
-    const runSalesRptBtn = document.getElementById('runSalesRpt');
-    const salesRpt = document.getElementById('salesRpt');
+    const tSub   = document.getElementById('tSubtotal');
+    const tDisc  = document.getElementById('tDiscount');
+    const tTotal = document.getElementById('tTotal');
 
-    let readyCache = [];
-    let branchesCache = [];
+    const floatBar     = document.getElementById('floatBar');
+    const submitBarBtn = document.getElementById('submitBarBtn');
+    const clearFormBtn = document.getElementById('clearFormBtn');
+    const sForm        = document.getElementById('sForm');
 
-    // --- Helpers ---
-    async function refreshOrderId() {
-      try {
-        const data = await fetchJSON('/api/sales/next_order');
-        if (data && typeof data.next_order_id !== 'undefined') {
-          orderIdDisplay.value = '#' + data.next_order_id;
-        }
-      } catch (e) {
-        orderIdDisplay.value = '';
-      }
-    }
+    // Live tables
+    const liveBranch   = document.getElementById('liveBranch');
+    const refreshLive  = document.getElementById('refreshLive');
+    const liveWrap     = document.getElementById('liveWrap');
 
-    async function loadReadyProducts() {
-      const data = await fetchJSON('/api/ready_products');
-      readyCache = data.rows || [];
-      updateItemSuggestions();
-    }
+    // Report
+    const rPeriod  = document.getElementById('rPeriod');
+    const rStart   = document.getElementById('rStart');
+    const rEnd     = document.getElementById('rEnd');
+    const rCategory= document.getElementById('rCategory');
+    const rBranch  = document.getElementById('rBranch');
+    const rItem    = document.getElementById('rItem');
+    const rStatus  = document.getElementById('rStatus');
+    const runReportBtn = document.getElementById('runReport');
+    const reportSummary= document.getElementById('reportSummary');
+    const tblCat   = document.getElementById('tblCat');
+    const tblItem  = document.getElementById('tblItem');
+    const tblBranch= document.getElementById('tblBranch');
+    const tblDetail= document.getElementById('tblDetail');
+    const tblPayMode = document.getElementById('tblPayMode');
 
-    async function loadBranches() {
-      try {
-        const data = await fetchJSON('/api/branches');
-        branchesCache = data.rows || [];
-      } catch {
-        branchesCache = [];
-      }
-      branchSelect.innerHTML = '<option value="">(Select branch)</option>';
-      branchesCache.forEach(b => {
-        const active = (b.is_active === '1' || b.is_active === 1 || b.is_active === true || b.is_active === 'true');
-        if (!active) return;
-        const opt = document.createElement('option');
-        opt.value = b.name;
-        opt.textContent = b.name;
-        branchSelect.appendChild(opt);
+    // ---------- State ----------
+    let readyIndex = {}; // name_lower -> {unit, price, category}
+    let payStatus  = 'Live';
+
+    // ---------- Utils ----------
+    const toMoney = (n)=> '₹' + (Number(n||0).toFixed(2));
+    const isMobile = ()=> window.matchMedia('(max-width: 767px)').matches;
+
+    function setChipsActive(container, value, keyAttr){
+      container.querySelectorAll('.chip').forEach(ch=>{
+        ch.classList.toggle('active', ch.getAttribute(keyAttr) === value);
       });
     }
 
-    function handleCategoryChange() {
-      const cat = saleCategory.value;
-      if (cat === 'SFH') {
-        sfhBranchArea.style.display = 'flex';
-      } else {
-        sfhBranchArea.style.display = 'none';
-      }
-      updateItemSuggestions();
-      loadLiveTables();
+    // ---------- Loaders ----------
+    async function loadNextOrder(){
+      try{
+        const d = await fetchJSON('/api/sales/next_order');
+        nextOrderKpi.textContent = '#' + d.next_order_id;
+        floatOrder.textContent   = '#' + d.next_order_id;
+      }catch{}
     }
 
-    function updateItemSuggestions() {
-      const cat = saleCategory.value;
-      const typed = saleItemInput.value.trim().toLowerCase();
-      const seen = new Set();
-      saleItemList.innerHTML = '';
-      readyCache.forEach(r => {
-        if (cat && r.category !== cat) return;
-        const name = (r.name || '').trim();
-        if (!name) return;
-        if (typed && !name.toLowerCase().startsWith(typed)) return;
-        const key = name.toLowerCase();
-        if (seen.has(key)) return;
-        seen.add(key);
+    async function loadReadyProducts(){
+      const d = await fetchJSON('/api/ready_products');
+      readyIndex = {};
+      readyList.innerHTML = '';
+      (d.rows||[]).forEach(r=>{
+        const name = (r.name||'').trim();
+        if(!name) return;
+        readyIndex[name.toLowerCase()] = {unit:r.unit, price:parseFloat(r.price||0), category:r.category};
         const opt = document.createElement('option');
         opt.value = name;
-        saleItemList.appendChild(opt);
+        opt.label = `${name} — ${r.unit} @ ₹${Number(r.price||0).toFixed(2)}`;
+        readyList.appendChild(opt);
       });
     }
 
-    function applyUnitFromItem() {
-      const cat = saleCategory.value;
-      const name = saleItemInput.value.trim().toLowerCase();
-      if (!name) return;
-      const match = readyCache.find(r =>
-        (r.name || '').trim().toLowerCase() === name &&
-        (!cat || r.category === cat)
-      );
-      if (match && match.unit) {
-        saleUnit.value = match.unit;
-      }
-      if (match && !saleUnitPrice.value && match.price != null) {
-        const p = parseFloat(match.price);
-        if (!isNaN(p) && p > 0) {
-          saleUnitPrice.value = p;
-        }
-      }
-    }
-
-    function handlePaymentStatusChange() {
-      const st = paymentStatus.value;
-      if (st === 'Paid') {
-        paymentModeWrap.style.display = 'inline-block';
-      } else {
-        paymentModeWrap.style.display = 'none';
-        paymentMode.value = '';
-        paymentNoteWrap.style.display = 'none';
-        paymentNote.value = '';
-      }
-    }
-
-    function handlePaymentModeChange() {
-      const mode = paymentMode.value;
-      if (mode === 'PersonalUPI' || mode === 'PersonalCash') {
-        paymentNoteWrap.style.display = 'inline-block';
-      } else {
-        paymentNoteWrap.style.display = 'none';
-        paymentNote.value = '';
-      }
-    }
-
-    // --- Live tables for SFH ---
-    async function loadLiveTables() {
-      const cat = saleCategory.value;
-      const branch = branchSelect.value;
-      if (cat !== 'SFH' || !branch) {
-        liveTablesDiv.innerHTML = '<p class="muted">Select SFH + Branch to view live tables.</p>';
-        return;
-      }
-      try {
-        const data = await fetchJSON(`/api/branch_tables?branch=${encodeURIComponent(branch)}&status=Live`);
-        const rows = data.rows || [];
-        if (!rows.length) {
-          liveTablesDiv.innerHTML = '<p class="muted">No live orders for this branch.</p>';
-          return;
-        }
-        const tbl = document.createElement('table');
-        tbl.innerHTML = '<tr><th>Table</th><th>Open Orders</th></tr>';
-        rows.forEach(r => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${r.table_no}</td><td>${r.open_orders}</td>`;
-          tbl.appendChild(tr);
-        });
-        liveTablesDiv.innerHTML = '';
-        liveTablesDiv.appendChild(tbl);
-      } catch (e) {
-        liveTablesDiv.innerHTML = '<p class="muted">Unable to load live tables.</p>';
-      }
-    }
-
-    // --- Branch actions ---
-    addBranchBtn.onclick = async () => {
-      const name = newBranchName.value.trim();
-      if (!name) return;
-      await fetchJSON('/api/branches', {
-        method: 'POST',
-        body: JSON.stringify({ name, is_active: true })
+    async function loadBranches(){
+      const d = await fetchJSON('/api/branches');
+      const rows = d.rows||[];
+      [branchSelect, liveBranch].forEach(sel=>{
+        sel.innerHTML='';
+        const ph = document.createElement('option');
+        ph.value=''; ph.textContent='(Select)';
+        sel.appendChild(ph);
       });
-      newBranchName.value = '';
-      await loadBranches();
-      branchSelect.value = name;
-      loadLiveTables();
-    };
+      rows.forEach(r=>{
+        const opt = document.createElement('option');
+        opt.value = r.name; opt.textContent = r.name + (r.is_active==='0'?' (inactive)':'');
+        branchSelect.appendChild(opt.cloneNode(true));
+        liveBranch.appendChild(opt);
+      });
+    }
 
-    branchSelect.onchange = loadLiveTables;
+    // ---------- UI logic ----------
+    function applyItemDefaults(){
+      const key = saleItem.value.trim().toLowerCase();
+      const info = readyIndex[key];
+      if(!info) return;
+      saleUnit.value = info.unit || saleUnit.value;
+      // Lock price to Ready Products (no override)
+      saleUnitPrice.value = Number(info.price||0).toFixed(2);
+      // If category not chosen yet, pick the product's category
+      if(!saleCategory.value) saleCategory.value = info.category || 'Home Delivery';
+      updateTotals();
+    }
 
-    // --- Form events ---
-    saleCategory.addEventListener('change', handleCategoryChange);
-    saleItemInput.addEventListener('input', updateItemSuggestions);
-    saleItemInput.addEventListener('change', () => {
-      updateItemSuggestions();
-      applyUnitFromItem();
+    function updateTotals(){
+      const qty = Number(saleQty.value || 0);
+      const up  = Number(saleUnitPrice.value || 0);
+      const disc= Number(saleDiscount.value || 0);
+      const sub = qty * up;
+      const tot = Math.max(0, sub - disc);
+
+      tSub.textContent   = toMoney(sub);
+      tDisc.textContent  = toMoney(disc);
+      tTotal.textContent = toMoney(tot);
+      floatTotal.textContent = toMoney(tot);
+    }
+
+    function toggleSFH(){
+      const isSFH = (saleCategory.value === 'SFH');
+      sfhBranchWrap.style.display = isSFH ? '' : 'none';
+    }
+
+    function togglePay(){
+      const paid = (payStatus === 'Paid');
+      payModeRow.style.display = paid ? '' : 'none';
+      const needsNote = paid && (payMode.value==='PersonalUPI' || payMode.value==='PersonalCash');
+      payNoteRow.style.display = needsNote ? '' : 'none';
+    }
+
+    // quick qty handlers
+    qtyRow?.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.btn');
+      if(!btn) return;
+      if(btn.id==='qtyPlus'){ saleQty.value = Number(saleQty.value||0) + 1; updateTotals(); return; }
+      if(btn.id==='qtyMinus'){ saleQty.value = Math.max(0, Number(saleQty.value||0) - 1); updateTotals(); return; }
+      if(btn.id==='qtyClear'){ saleQty.value=''; updateTotals(); return; }
+      const inc = Number(btn.dataset.q||0);
+      saleQty.value = Number(saleQty.value||0) + inc;
+      updateTotals();
     });
-    saleItemInput.addEventListener('blur', applyUnitFromItem);
 
-    paymentStatus.addEventListener('change', handlePaymentStatusChange);
-    paymentMode.addEventListener('change', handlePaymentModeChange);
+    // discount chips
+    chipDiscBtns.forEach(b=> b.addEventListener('click', ()=>{
+      chipDiscBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      saleDiscount.value = b.dataset.disc;
+      updateTotals();
+    }));
 
-    // --- Submit sale ---
-    sForm.onsubmit = async (e) => {
-      e.preventDefault();
+    // pay chips
+    payChips.addEventListener('click', (e)=>{
+      const c = e.target.closest('.chip'); if(!c) return;
+      payStatus = c.dataset.status;
+      setChipsActive(payChips, payStatus, 'data-status');
+      togglePay();
+    });
+    payMode.addEventListener('change', togglePay);
 
-      applyUnitFromItem();
-      const category = saleCategory.value;
-      const branch = (category === 'SFH') ? (branchSelect.value || '') : '';
+    // SFH toggle
+    saleCategory.addEventListener('change', ()=>{
+      toggleSFH();
+      // If SFH, mirror branch into live section dropdown for quick look
+      if(saleCategory.value==='SFH' && branchSelect.value){
+        liveBranch.value = branchSelect.value;
+        loadLiveTables();
+      }
+    });
 
+    // item auto map
+    saleItem.addEventListener('change', applyItemDefaults);
+    saleQty.addEventListener('input', updateTotals);
+    saleDiscount.addEventListener('input', ()=>{ chipDiscBtns.forEach(x=>x.classList.remove('active')); updateTotals(); });
+
+    // add branch
+    addBranchBtn.addEventListener('click', async ()=>{
+      const name = prompt('New branch name?'); if(!name) return;
+      await fetchJSON('/api/branches', {method:'POST', body: JSON.stringify({name, is_active:true})});
+      await loadBranches();
+      branchSelect.value = name; liveBranch.value = name;
+      loadLiveTables();
+    });
+
+    // Live tables
+    async function loadLiveTables(){
+      const br = liveBranch.value || branchSelect.value || '';
+      if(!br){ liveWrap.innerHTML = '<div class="hint">Select branch to view tables.</div>'; return; }
+      const d = await fetchJSON(`/api/branch_tables?branch=${encodeURIComponent(br)}&status=Live`);
+      const rows = d.rows||[];
+      if(!rows.length){ liveWrap.innerHTML = '<div class="hint">No live orders right now.</div>'; return; }
+      // card view on phones
+      const grid = document.createElement('div');
+      grid.className = 'table-cards';
+      rows.forEach(r=>{
+        const card = document.createElement('div');
+        card.className = 'tcard';
+        card.innerHTML = `<h3>Table ${r.table_no}</h3><div class="count">${r.open_orders}</div>`;
+        grid.appendChild(card);
+      });
+      liveWrap.innerHTML=''; liveWrap.appendChild(grid);
+    }
+    refreshLive.addEventListener('click', loadLiveTables);
+    liveBranch.addEventListener('change', loadLiveTables);
+
+    // Submit
+    async function submitSale(){
+      applyItemDefaults(); updateTotals();
+      const category = saleCategory.value || 'Home Delivery';
       const payload = {
-        date: sForm.date.value || null,
+        date: saleDate.value || null,
         category,
-        branch,
-        item: saleItemInput.value.trim(),
+        branch: category==='SFH' ? (branchSelect.value||'') : '',
+        item: (saleItem.value||'').trim(),
         unit: saleUnit.value,
-        qty: Number(saleQty.value || 0),
-        unit_price: saleUnitPrice.value ? Number(saleUnitPrice.value) : null,
-        discount: Number(saleDiscount.value || 0),
-        customer_name: saleCustomerName.value.trim(),
-        customer_phone: saleCustomerPhone.value.trim(),
-        table_no: saleTableNo.value.trim(),
-        payment_status: paymentStatus.value,
-        payment_mode: paymentStatus.value === 'Paid' ? (paymentMode.value || '') : '',
-        payment_note: paymentNote.value.trim(),
-        notes: saleNotes.value.trim()
+        qty: Number(saleQty.value||0),
+        // Do not send unit_price -> backend will use Ready Products price
+        unit_price: null,
+        discount: Number(saleDiscount.value||0),
+        customer_name: (saleCustName.value||'').trim(),
+        customer_phone: (saleCustPhone.value||'').trim(),
+        table_no: (saleTable.value||'').trim(),
+        payment_status: payStatus,
+        payment_mode: payStatus==='Paid' ? (payMode.value||'') : '',
+        payment_note: (payNote.value||'').trim(),
+        notes: (saleNotes.value||'').trim()
       };
+      if(!payload.item){ alert('Please choose an item.'); return; }
+      if(payload.qty<=0){ alert('Quantity must be > 0'); return; }
 
-      const res = await fetchJSON('/api/sales', {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      });
-
-      if (res && res.bill_url) {
-        window.open(res.bill_url, '_blank');
-      }
-
-      const keepCategory = saleCategory.value;
-      const keepBranch = branchSelect.value;
-
+      const res = await fetchJSON('/api/sales', {method:'POST', body: JSON.stringify(payload)});
+      if(res.bill_url){ window.open(res.bill_url, '_blank'); }
+      await Promise.all([loadNextOrder(), runReport()]);
+      // keep category/branch for speed; clear rest
+      const keepCat = saleCategory.value;
+      const keepBr  = branchSelect.value;
       sForm.reset();
-      saleCategory.value = keepCategory;
-      if (keepCategory === 'SFH') {
-        sfhBranchArea.style.display = 'flex';
-        branchSelect.value = keepBranch;
-      }
+      saleCategory.value = keepCat;
+      branchSelect.value = keepBr;
+      toggleSFH(); setChipsActive(payChips,'Live','data-status'); payStatus='Live'; togglePay();
+      updateTotals();
+      loadLiveTables();
+    }
+    sForm.addEventListener('submit', (e)=>{ e.preventDefault(); submitSale(); });
+    submitBarBtn.addEventListener('click', submitSale);
+    clearFormBtn.addEventListener('click', ()=>{ sForm.reset(); updateTotals(); });
 
-      handlePaymentStatusChange();
-      await refreshOrderId();
-      await runSalesReport();
-      await loadLiveTables();
-    };
-
-    // --- Sales report ---
-    runSalesRptBtn.onclick = runSalesReport;
-
-    async function runSalesReport() {
-      let url = `/api/sales/report?period=${encodeURIComponent(salesPeriod.value)}`;
-      if (salesPeriod.value === 'daterange' && salesStart.value && salesEnd.value) {
-        url += `&start=${salesStart.value}&end=${salesEnd.value}`;
-      }
-      if (salesCatFilter.value) {
-        url += `&category=${encodeURIComponent(salesCatFilter.value)}`;
-      }
-      if (salesBranchFilter.value.trim()) {
-        url += `&branch=${encodeURIComponent(salesBranchFilter.value.trim())}`;
-      }
-      if (salesItemFilter.value.trim()) {
-        url += `&item=${encodeURIComponent(salesItemFilter.value.trim())}`;
-      }
-      if (salesStatusFilter.value) {
-        url += `&payment_status=${encodeURIComponent(salesStatusFilter.value)}`;
-      }
-
-      const data = await fetchJSON(url);
-      salesRpt.innerHTML = `
-        <p><strong>Total sales:</strong> ₹${data.total_sales}
-        <span class="muted">(from ${data.period.start} to ${data.period.end})</span></p>
-      `;
-
-      const catTbl = document.createElement('table');
-      catTbl.innerHTML = '<tr><th>Category</th><th>Sales</th></tr>';
-      for (const k in data.by_category) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${k || '—'}</td><td>₹${data.by_category[k]}</td>`;
-        catTbl.appendChild(tr);
-      }
-
-      const itemTbl = document.createElement('table');
-      itemTbl.innerHTML = '<tr><th>Item</th><th>Sales</th></tr>';
-      for (const k in data.by_item) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${k || '—'}</td><td>₹${data.by_item[k]}</td>`;
-        itemTbl.appendChild(tr);
-      }
-
-      const branchTbl = document.createElement('table');
-      branchTbl.innerHTML = '<tr><th>Branch</th><th>Sales</th></tr>';
-      for (const k in data.by_branch) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${k || '—'}</td><td>₹${data.by_branch[k]}</td>`;
-        branchTbl.appendChild(tr);
-      }
-
-      const wrap = document.createElement('div');
-      wrap.className = 'row';
-      const d1 = document.createElement('div'); d1.appendChild(catTbl);
-      const d2 = document.createElement('div'); d2.appendChild(itemTbl);
-      const d3 = document.createElement('div'); d3.appendChild(branchTbl);
-      wrap.appendChild(d1); wrap.appendChild(d2); wrap.appendChild(d3);
-      salesRpt.appendChild(wrap);
-
-      const detailTbl = document.createElement('table');
-      detailTbl.innerHTML = `
-        <tr>
-          <th>Date</th><th>Category</th><th>Branch</th><th>Order</th>
-          <th>Item</th><th>Unit</th><th>Qty</th><th>Unit Price</th>
-          <th>Discount</th><th>Total</th>
-          <th>Customer</th><th>Phone</th><th>Table</th>
-          <th>Status</th><th>Mode</th><th>Pay Note</th><th>Notes</th>
-        </tr>`;
-
-      (data.rows || []).forEach(r => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${r.date}</td>
-          <td>${r.category || ''}</td>
-          <td>${r.branch || ''}</td>
-          <td>${r.order_id || ''}</td>
-          <td>${r.item || ''}</td>
-          <td>${r.unit || ''}</td>
-          <td>${r.qty || ''}</td>
-          <td>${r.unit_price || ''}</td>
-          <td>${r.discount || ''}</td>
-          <td>${r.total_price || ''}</td>
-          <td>${r.customer_name || ''}</td>
-          <td>${r.customer_phone || ''}</td>
-          <td>${r.table_no || ''}</td>
-          <td>${r.payment_status || ''}</td>
-          <td>${r.payment_mode || ''}</td>
-          <td>${r.payment_note || ''}</td>
-          <td>${r.notes || ''}</td>
-        `;
-        detailTbl.appendChild(tr);
-      });
-
-      salesRpt.appendChild(detailTbl);
+    // ---------- Report ----------
+    function lockReportToTodayOnMobile(){
+      if(!isMobile()) return;
+      rPeriod.value = 'today';
+      rPeriod.disabled = true;
+      if(rStart) rStart.disabled = true;
+      if(rEnd) rEnd.disabled = true;
+      if(rCategory) rCategory.disabled = true;
+      if(rBranch) rBranch.disabled = true;
+      if(rItem) rItem.disabled = true;
+      if(rStatus) rStatus.disabled = true;
     }
 
-    // --- Init ---
-    (async function init() {
-      await loadReadyProducts();
-      await loadBranches();
-      await refreshOrderId();
-      handleCategoryChange();
-      handlePaymentStatusChange();
-      await runSalesReport();
+    function fillTable(tbl, obj){
+      // keep header row
+      const header = tbl.querySelector('tr').outerHTML;
+      tbl.innerHTML = header;
+      Object.entries(obj||{}).forEach(([k,v])=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${k||'—'}</td><td>${toMoney(v)}</td>`;
+        tbl.appendChild(tr);
+      });
+    }
+
+    function fillPayModeTable(rows){
+      if(!tblPayMode) return;
+      // header
+      const header = tblPayMode.querySelector('tr').outerHTML;
+      tblPayMode.innerHTML = header;
+      const agg = {};
+      const cnt = {};
+      (rows||[]).forEach(r=>{
+        const m = r.payment_mode || (r.payment_status==='Paid' ? '(unknown)' : '(not paid)');
+        const amt = Number(r.total_price||0);
+        agg[m] = (agg[m]||0) + amt;
+        cnt[m] = (cnt[m]||0) + 1;
+      });
+      Object.keys(agg).forEach(k=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${k}</td><td>${toMoney(agg[k])}</td><td>${cnt[k]||0}</td>`;
+        tblPayMode.appendChild(tr);
+      });
+    }
+
+    async function runReport(){
+      const p = new URLSearchParams();
+      p.set('period', rPeriod.value);
+      if(rPeriod.value==='daterange'){ if(rStart.value) p.set('start',rStart.value); if(rEnd.value) p.set('end',rEnd.value); }
+      if(!isMobile()){ // desktop filters only
+        if(rCategory?.value) p.set('category', rCategory.value);
+        if(rBranch?.value?.trim()) p.set('branch', rBranch.value.trim());
+        if(rItem?.value?.trim()) p.set('item', rItem.value.trim());
+        if(rStatus?.value) p.set('payment_status', rStatus.value);
+      }else{
+        // Mobile: force today
+        p.set('period','today');
+      }
+
+      const d = await fetchJSON('/api/sales/report?'+p.toString());
+      reportSummary.textContent = `Total: ${toMoney(d.total_sales)} (from ${d.period.start} to ${d.period.end})`;
+
+      fillTable(tblCat, d.by_category||{});
+      fillTable(tblItem, d.by_item||{});
+      fillTable(tblBranch, d.by_branch||{});
+
+      // Mobile-only summary by payment mode (ensure captured even when details hidden)
+      if(isMobile()){ fillPayModeTable(d.rows||[]); }
+
+      // Desktop detailed table
+      if(!isMobile()){
+        tblDetail.innerHTML = `
+          <tr>
+            <th>Date</th><th>Category</th><th>Branch</th><th>Order</th>
+            <th>Item</th><th>Unit</th><th>Qty</th><th>Unit Price</th>
+            <th>Discount</th><th>Total</th><th>Customer</th><th>Phone</th>
+            <th>Table</th><th>Status</th><th>Mode</th><th>Pay Note</th><th>Notes</th>
+          </tr>`;
+        (d.rows||[]).forEach(r=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.date}</td><td>${r.category||''}</td><td>${r.branch||''}</td><td>${r.order_id||''}</td>
+            <td>${r.item||''}</td><td>${r.unit||''}</td><td>${r.qty||''}</td><td>${r.unit_price||''}</td>
+            <td>${r.discount||''}</td><td>${r.total_price||''}</td><td>${r.customer_name||''}</td><td>${r.customer_phone||''}</td>
+            <td>${r.table_no||''}</td><td>${r.payment_status||''}</td><td>${r.payment_mode||''}</td><td>${r.payment_note||''}</td><td>${r.notes||''}</td>`;
+          tblDetail.appendChild(tr);
+        });
+      }
+    }
+    runReportBtn.addEventListener('click', runReport);
+
+    // ---------- Init ----------
+    (async function init(){
+      // Default date = today
+      try{ saleDate.valueAsDate = new Date(); }catch{}
+      await Promise.all([loadNextOrder(), loadReadyProducts(), loadBranches()]);
+      toggleSFH(); togglePay(); updateTotals();
+      // Preselect SFH branch in "Live" if SFH chosen
+      liveBranch.value = branchSelect.value || '';
+      lockReportToTodayOnMobile();
+      await runReport();
+      // If there is a branch, show live immediately
+      if(liveBranch.value) loadLiveTables();
     })();
   </script>
 </body>
