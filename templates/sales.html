@@ -58,7 +58,7 @@
       font-size:13px; padding:8px 12px; border:1px solid #ddd; border-radius:999px;
       background:#fff; cursor:pointer; user-select:none;
     }
-    .chip.active{ border-color:var(--accent); color:#fff; background:#var(--accent); }
+    .chip.active{ border-color:var(--accent); color:#fff; background:var(--accent); }
 
     .qty-row{ display:flex; gap:8px; flex-wrap:wrap; }
     .qty-row .btn{ padding:10px 12px; border-radius:8px; border:1px solid #ddd; background:#fff; }
@@ -103,6 +103,81 @@
       background:#f7f7f7 !important; color:#333;
       border-color:#e0e0e0 !important;
       pointer-events:none;
+    }
+
+    /* mobile cash box */
+    .cashbox{
+      border-radius:10px;
+      border:1px solid #eee;
+      background:#fff;
+      padding:10px 12px;
+      font-size:13px;
+    }
+    .cashbox-opening{
+      margin-bottom:8px;
+    }
+    .cashbox-opening label{
+      display:block;
+      margin-bottom:4px;
+      font-size:12px;
+      color:#444;
+    }
+    .cashbox-opening input{
+      width:100%;
+      height:38px;
+      font-size:14px;
+      border-radius:6px;
+      border:1px solid #ddd;
+      padding:4px 8px;
+    }
+    .cashbox-row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:4px;
+    }
+    .cashbox-row span{
+      color:#555;
+    }
+    .cashbox-row strong{
+      color:#111;
+    }
+    .cashbox-row.total-row strong{
+      font-size:15px;
+    }
+    .cashbox hr{
+      border:none;
+      border-top:1px dashed #e0e0e0;
+      margin:6px 0;
+    }
+    .cashbox-settle{
+      margin-top:8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .cashbox-settle button{
+      flex:1 1 auto;
+      min-width:140px;
+      font-size:12px;
+    }
+
+    /* column chooser (desktop) */
+    .col-chooser{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .col-chooser label{
+      font-size:11px;
+      border:1px solid #ddd;
+      border-radius:999px;
+      padding:4px 8px;
+      background:#fff;
+      cursor:pointer;
+      user-select:none;
+    }
+    .col-chooser input{
+      margin-right:4px;
     }
 
     /* breakpoints */
@@ -335,10 +410,11 @@
 
       <!-- Mobile notice -->
       <div class="show-on-mobile hint" style="margin-bottom:8px;">
-        Mobile view shows <b>Today</b> only. Detailed record table is hidden for a faster POS workflow.
+        Mobile view shows <b>Today</b> only for the currently selected Category / Branch.
       </div>
 
       <div class="pos-grid">
+        <!-- Filters -->
         <div class="field w3">
           <label>Period</label>
           <select id="rPeriod">
@@ -389,44 +465,47 @@
           <button id="runReport" type="button">Run</button>
         </div>
 
-        <div class="field w12">
-          <div class="kpi" id="reportSummary">Total: ₹0.00</div>
-        </div>
-
-        <div class="field w12">
-          <div class="row" style="gap:14px; flex-wrap:wrap;">
-            <div>
-              <h3 style="margin:0 0 6px;">By Category</h3>
-              <div class="table-scroll"><table id="tblCat"><tr><th>Category</th><th>Sales</th></tr></table></div>
+        <!-- Mobile cash / summary box -->
+        <div class="field w12 show-on-mobile">
+          <div id="mobileCashBox" class="cashbox">
+            <div class="cashbox-opening">
+              <label for="openingCash">Opening Cash</label>
+              <input id="openingCash" type="number" step="0.01" inputmode="decimal" placeholder="0.00">
             </div>
-            <div>
-              <h3 style="margin:0 0 6px;">By Item</h3>
-              <div class="table-scroll"><table id="tblItem"><tr><th>Item</th><th>Sales</th></tr></table></div>
-            </div>
-            <div>
-              <h3 style="margin:0 0 6px;">By Branch</h3>
-              <div class="table-scroll"><table id="tblBranch"><tr><th>Branch</th><th>Sales</th></tr></table></div>
-            </div>
-            <!-- Mobile-only: By Payment Mode -->
-            <div class="show-on-mobile">
-              <h3 style="margin:0 0 6px;">By Payment Mode (Today)</h3>
-              <div class="table-scroll"><table id="tblPayMode"><tr><th>Mode</th><th>Sales</th><th>Count</th></tr></table></div>
+            <div class="cashbox-row"><span>Category</span><strong id="cbCategory">–</strong></div>
+            <div class="cashbox-row"><span>Branch</span><strong id="cbBranch">–</strong></div>
+            <div class="cashbox-row total-row"><span>Total Sales</span><strong id="cbTotalSales">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Due</span><strong id="cbDue">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Paid</span><strong id="cbPaid">₹0.00</strong></div>
+            <hr>
+            <div class="cashbox-row"><span>Cash</span><strong id="cbCash">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Current a/c UPI</span><strong id="cbCurrentUPI">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Card</span><strong id="cbCard">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Personal Cash</span><strong id="cbPersonalCash">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Personal UPI</span><strong id="cbPersonalUPI">₹0.00</strong></div>
+            <div class="cashbox-settle">
+              <button type="button" id="settlePersonalCashBtn" class="btn-plain">Settle Personal Cash → Cash</button>
+              <button type="button" id="settlePersonalUPIBtn" class="btn-plain">Settle Personal UPI → Current UPI</button>
             </div>
           </div>
         </div>
 
-        <!-- Detailed Records (hidden on mobile) -->
+        <!-- Summary KPI -->
+        <div class="field w12">
+          <div class="kpi" id="reportSummary">Total: ₹0.00</div>
+        </div>
+
+        <!-- Desktop column chooser -->
+        <div class="field w12 hide-on-mobile">
+          <label>Columns to show</label>
+          <div id="detailColChooser" class="col-chooser"></div>
+        </div>
+
+        <!-- Detailed Records (desktop only) -->
         <div class="field w12 hide-on-mobile" id="detailBlock">
           <h3 style="margin:10px 0 6px;">Detailed Records</h3>
           <div class="table-scroll">
-            <table id="tblDetail">
-              <tr>
-                <th>Date</th><th>Category</th><th>Branch</th><th>Order</th>
-                <th>Item</th><th>Unit</th><th>Qty</th><th>Unit Price</th>
-                <th>Discount</th><th>Total</th><th>Customer</th><th>Phone</th>
-                <th>Table</th><th>Status</th><th>Mode</th><th>Pay Note</th><th>Notes</th>
-              </tr>
-            </table>
+            <table id="tblDetail"></table>
           </div>
         </div>
       </div>
@@ -497,17 +576,58 @@
     const rStatus  = document.getElementById('rStatus');
     const runReportBtn = document.getElementById('runReport');
     const reportSummary= document.getElementById('reportSummary');
-    const tblCat   = document.getElementById('tblCat');
-    const tblItem  = document.getElementById('tblItem');
-    const tblBranch= document.getElementById('tblBranch');
     const tblDetail= document.getElementById('tblDetail');
-    const tblPayMode = document.getElementById('tblPayMode');
+    const detailColChooser = document.getElementById('detailColChooser');
+
+    // Mobile cash box
+    const mobileCashBox      = document.getElementById('mobileCashBox');
+    const openingCashInput   = document.getElementById('openingCash');
+    const cbCategory         = document.getElementById('cbCategory');
+    const cbBranch           = document.getElementById('cbBranch');
+    const cbTotalSales       = document.getElementById('cbTotalSales');
+    const cbDue              = document.getElementById('cbDue');
+    const cbPaid             = document.getElementById('cbPaid');
+    const cbCash             = document.getElementById('cbCash');
+    const cbCurrentUPI       = document.getElementById('cbCurrentUPI');
+    const cbCard             = document.getElementById('cbCard');
+    const cbPersonalCash     = document.getElementById('cbPersonalCash');
+    const cbPersonalUPI      = document.getElementById('cbPersonalUPI');
+    const settlePersonalCashBtn = document.getElementById('settlePersonalCashBtn');
+    const settlePersonalUPIBtn  = document.getElementById('settlePersonalUPIBtn');
 
     // ---------- State ----------
-    let readyRows = [];  // full raw rows from backend
-    let readyIndex = {}; // name_lower -> info
-    let readyCodeIndex = {}; // 3-char code (upper) -> info
+    let readyRows = [];          // full raw rows from backend
+    let readyIndex = {};         // name_lower -> info
+    let readyCodeIndex = {};     // 3-char code (upper) -> info
     let payStatus  = 'Live';
+
+    const detailColumns = [
+      { key: 'date',           label: 'Date' },
+      { key: 'category',       label: 'Category' },
+      { key: 'branch',         label: 'Branch' },
+      { key: 'order_id',       label: 'Order' },
+      { key: 'item',           label: 'Item' },
+      { key: 'unit',           label: 'Unit' },
+      { key: 'qty',            label: 'Qty' },
+      { key: 'unit_price',     label: 'Unit Price' },
+      { key: 'discount',       label: 'Discount' },
+      { key: 'total_price',    label: 'Total' },
+      { key: 'customer_name',  label: 'Customer' },
+      { key: 'customer_phone', label: 'Phone' },
+      { key: 'table_no',       label: 'Table' },
+      { key: 'payment_status', label: 'Status' },
+      { key: 'payment_mode',   label: 'Mode' },
+      { key: 'payment_note',   label: 'Pay Note' },
+      { key: 'notes',          label: 'Notes' },
+    ];
+
+    const PAYMENT_STATUSES = ['Live','Due','Paid'];
+    const PAYMENT_MODES    = ['', 'CurrentUPI','Cash','Card','PersonalUPI','PersonalCash'];
+
+    let visibleDetailCols = new Set(detailColumns.map(c => c.key));
+    let currentReportRows = [];
+    let lastReportData    = null;
+    let openingCashKey    = null;
 
     // ---------- Utils ----------
     const toMoney = (n)=> '₹' + (Number(n||0).toFixed(2));
@@ -522,6 +642,14 @@
     function isThreeCharCode(val){
       // exactly 3 chars: 1 digit + 2 letters (case-insensitive)
       return /^[0-9][A-Za-z]{2}$/.test(val);
+    }
+
+    async function fetchJSON(url, opts){
+      const res = await fetch(url, Object.assign({
+        headers: {'Content-Type':'application/json'}
+      }, opts || {}));
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
     }
 
     // ---------- Loaders ----------
@@ -548,7 +676,6 @@
       saleItemCategoryFilter.appendChild(optAll);
 
       if(catSet.size === 0){
-        // nothing to filter -> hide the field
         if(itemCatFilterField) itemCatFilterField.style.display = 'none';
         return;
       }
@@ -583,8 +710,8 @@
         const bits = [];
         if(code) bits.push(code);
         bits.push(name);
-        if(unit) bits.push(`${unit} @ ₹${price.toFixed(2)}`);
-        if(ic) bits.push(`(${ic})`);
+        if(unit) bits.push(unit + ' @ ₹' + price.toFixed(2));
+        if(ic) bits.push('(' + ic + ')');
 
         opt.label = bits.join(' • ');
         readyList.appendChild(opt);
@@ -719,6 +846,10 @@
         liveBranch.value = branchSelect.value;
         loadLiveTables();
       }
+      // On mobile, rerun report so cash box follows new category / branch
+      if(isMobile()){
+        runReport();
+      }
     });
 
     // Item Category filter change
@@ -768,6 +899,9 @@
       await loadBranches();
       branchSelect.value = name; liveBranch.value = name;
       loadLiveTables();
+      if(isMobile()){
+        runReport();
+      }
     });
 
     // Live tables
@@ -777,7 +911,7 @@
         liveWrap.innerHTML = '<div class="hint">Select branch to view tables.</div>';
         return;
       }
-      const d = await fetchJSON(`/api/branch_tables?branch=${encodeURIComponent(br)}&status=Live`);
+      const d = await fetchJSON('/api/branch_tables?branch=' + encodeURIComponent(br) + '&status=Live');
       const rows = d.rows||[];
       if(!rows.length){
         liveWrap.innerHTML = '<div class="hint">No live orders right now.</div>';
@@ -788,7 +922,7 @@
       rows.forEach(r=>{
         const card = document.createElement('div');
         card.className = 'tcard';
-        card.innerHTML = `<h3>Table ${r.table_no}</h3><div class="count">${r.open_orders}</div>`;
+        card.innerHTML = '<h3>Table ' + r.table_no + '</h3><div class="count">' + r.open_orders + '</div>';
         grid.appendChild(card);
       });
       liveWrap.innerHTML=''; liveWrap.appendChild(grid);
@@ -841,10 +975,13 @@
         saleItemCategoryFilter.value = '';
         rebuildReadyOptions();
       }
+      payStatus = 'Live';
+      setChipsActive(payChips,'Live','data-status');
+      togglePay();
       updateTotals();
     });
 
-    // ---------- Report ----------
+    // ---------- Report + desktop detail table ----------
     function lockReportToTodayOnMobile(){
       if(!isMobile()) return;
       rPeriod.value = 'today';
@@ -857,82 +994,275 @@
       if(rStatus) rStatus.disabled = true;
     }
 
-    function fillTable(tbl, obj){
-      const header = tbl.querySelector('tr').outerHTML;
-      tbl.innerHTML = header;
-      Object.entries(obj||{}).forEach(([k,v])=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${k||'—'}</td><td>${toMoney(v)}</td>`;
-        tbl.appendChild(tr);
+    function buildColumnChooser(){
+      if(!detailColChooser) return;
+      detailColChooser.innerHTML = '';
+      detailColumns.forEach(col=>{
+        const lbl = document.createElement('label');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = col.key;
+        cb.checked = visibleDetailCols.has(col.key);
+        cb.addEventListener('change', ()=>{
+          if(cb.checked) visibleDetailCols.add(col.key);
+          else visibleDetailCols.delete(col.key);
+          renderDetailTable(currentReportRows);
+        });
+        lbl.appendChild(cb);
+        lbl.appendChild(document.createTextNode(' ' + col.label));
+        detailColChooser.appendChild(lbl);
       });
     }
 
-    function fillPayModeTable(rows){
-      if(!tblPayMode) return;
-      const header = tblPayMode.querySelector('tr').outerHTML;
-      tblPayMode.innerHTML = header;
-      const agg = {};
-      const cnt = {};
-      (rows||[]).forEach(r=>{
-        const m = r.payment_mode || (r.payment_status==='Paid' ? '(unknown)' : '(not paid)');
-        const amt = Number(r.total_price||0);
-        agg[m] = (agg[m]||0) + amt;
-        cnt[m] = (cnt[m]||0) + 1;
+    function renderDetailTable(rows){
+      currentReportRows = rows || [];
+      if(!tblDetail) return;
+      tblDetail.innerHTML = '';
+
+      // header
+      const headerTr = document.createElement('tr');
+      detailColumns.forEach(col=>{
+        if(!visibleDetailCols.has(col.key)) return;
+        const th = document.createElement('th');
+        th.textContent = col.label;
+        headerTr.appendChild(th);
       });
-      Object.keys(agg).forEach(k=>{
+      tblDetail.appendChild(headerTr);
+
+      // rows
+      currentReportRows.forEach(r=>{
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${k}</td><td>${toMoney(agg[k])}</td><td>${cnt[k]||0}</td>`;
-        tblPayMode.appendChild(tr);
+        tr.dataset.saleId = r.id;
+        detailColumns.forEach(col=>{
+          if(!visibleDetailCols.has(col.key)) return;
+          const td = document.createElement('td');
+
+          if(col.key === 'payment_status'){
+            const sel = document.createElement('select');
+            sel.className = 'status-select';
+            PAYMENT_STATUSES.forEach(st=>{
+              const o = document.createElement('option');
+              o.value = st;
+              o.textContent = st;
+              if((r.payment_status || 'Live') === st) o.selected = true;
+              sel.appendChild(o);
+            });
+            td.appendChild(sel);
+          } else if(col.key === 'payment_mode'){
+            const sel = document.createElement('select');
+            sel.className = 'mode-select';
+            PAYMENT_MODES.forEach(m=>{
+              const o = document.createElement('option');
+              o.value = m;
+              o.textContent = m === '' ? '(none)' : m;
+              if((r.payment_mode || '') === m) o.selected = true;
+              sel.appendChild(o);
+            });
+            if((r.payment_status || '') !== 'Paid'){
+              sel.disabled = true;
+            }
+            td.appendChild(sel);
+          } else {
+            const val = r[col.key] || '';
+            td.textContent = val;
+          }
+
+          tr.appendChild(td);
+        });
+        tblDetail.appendChild(tr);
       });
+    }
+
+    function updateMobileCashBox(data){
+      if(!isMobile() || !mobileCashBox) return;
+      const rows = data.rows || [];
+
+      const cat = saleCategory.value || '(All)';
+      const br  = (saleCategory.value === 'SFH' && branchSelect.value) ? branchSelect.value : '—';
+
+      cbCategory.textContent = cat;
+      cbBranch.textContent   = br;
+
+      let totalSales = 0;
+      let dueAmt     = 0;
+      let paidAmt    = 0;
+      let cashAmt    = 0;
+      let currUPIAmt = 0;
+      let cardAmt    = 0;
+      let pCashAmt   = 0;
+      let pUPIAmt    = 0;
+
+      const pCashNames = new Set();
+      const pUPINames  = new Set();
+
+      rows.forEach(r=>{
+        const amt = Number(r.total_price || 0);
+        totalSales += amt;
+
+        if(r.payment_status === 'Due'){
+          dueAmt += amt;
+        } else if(r.payment_status === 'Paid'){
+          paidAmt += amt;
+          const mode = r.payment_mode || '';
+          if(mode === 'Cash') cashAmt += amt;
+          else if(mode === 'CurrentUPI') currUPIAmt += amt;
+          else if(mode === 'Card') cardAmt += amt;
+          else if(mode === 'PersonalCash'){
+            pCashAmt += amt;
+            if(r.payment_note) pCashNames.add(r.payment_note);
+          } else if(mode === 'PersonalUPI'){
+            pUPIAmt += amt;
+            if(r.payment_note) pUPINames.add(r.payment_note);
+          }
+        }
+      });
+
+      cbTotalSales.textContent = toMoney(totalSales);
+      cbDue.textContent        = toMoney(dueAmt);
+      cbPaid.textContent       = toMoney(paidAmt);
+      cbCash.textContent       = toMoney(cashAmt);
+      cbCurrentUPI.textContent = toMoney(currUPIAmt);
+      cbCard.textContent       = toMoney(cardAmt);
+
+      const pCashLabel = toMoney(pCashAmt) + (pCashNames.size ? ' (' + Array.from(pCashNames).join(', ') + ')' : '');
+      const pUPILabel  = toMoney(pUPIAmt)  + (pUPINames.size  ? ' (' + Array.from(pUPINames).join(', ') + ')' : '');
+      cbPersonalCash.textContent = pCashLabel;
+      cbPersonalUPI.textContent  = pUPILabel;
+
+      // opening cash local storage key
+      openingCashKey = 'tbm_opening_cash_' + data.period.start + '_' + cat + '_' + br;
+      if(openingCashInput && openingCashInput.value === ''){
+        const stored = localStorage.getItem(openingCashKey);
+        if(stored !== null){
+          openingCashInput.value = stored;
+        }
+      }
     }
 
     async function runReport(){
       const p = new URLSearchParams();
-      p.set('period', rPeriod.value);
-      if(rPeriod.value==='daterange'){
-        if(rStart.value) p.set('start',rStart.value);
-        if(rEnd.value) p.set('end',rEnd.value);
-      }
-      if(!isMobile()){
+
+      if(isMobile()){
+        p.set('period','today');
+        const cat = saleCategory.value || '';
+        if(cat) p.set('category', cat);
+        if(cat === 'SFH' && branchSelect.value){
+          p.set('branch', branchSelect.value.trim());
+        }
+      }else{
+        p.set('period', rPeriod.value);
+        if(rPeriod.value==='daterange'){
+          if(rStart.value) p.set('start',rStart.value);
+          if(rEnd.value)   p.set('end',  rEnd.value);
+        }
         if(rCategory?.value) p.set('category', rCategory.value);
         if(rBranch?.value?.trim()) p.set('branch', rBranch.value.trim());
-        if(rItem?.value?.trim()) p.set('item', rItem.value.trim());
-        if(rStatus?.value) p.set('payment_status', rStatus.value);
-      }else{
-        p.set('period','today');
+        if(rItem?.value?.trim())   p.set('item',   rItem.value.trim());
+        if(rStatus?.value)         p.set('payment_status', rStatus.value);
       }
 
       const d = await fetchJSON('/api/sales/report?'+p.toString());
-      reportSummary.textContent = `Total: ${toMoney(d.total_sales)} (from ${d.period.start} to ${d.period.end})`;
+      lastReportData = d;
 
-      fillTable(tblCat, d.by_category||{});
-      fillTable(tblItem, d.by_item||{});
-      fillTable(tblBranch, d.by_branch||{});
+      reportSummary.textContent = 'Total: ' + toMoney(d.total_sales) +
+        ' (from ' + d.period.start + ' to ' + d.period.end + ')';
 
       if(isMobile()){
-        fillPayModeTable(d.rows||[]);
-      }
-
-      if(!isMobile()){
-        tblDetail.innerHTML = `
-          <tr>
-            <th>Date</th><th>Category</th><th>Branch</th><th>Order</th>
-            <th>Item</th><th>Unit</th><th>Qty</th><th>Unit Price</th>
-            <th>Discount</th><th>Total</th><th>Customer</th><th>Phone</th>
-            <th>Table</th><th>Status</th><th>Mode</th><th>Pay Note</th><th>Notes</th>
-          </tr>`;
-        (d.rows||[]).forEach(r=>{
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${r.date}</td><td>${r.category||''}</td><td>${r.branch||''}</td><td>${r.order_id||''}</td>
-            <td>${r.item||''}</td><td>${r.unit||''}</td><td>${r.qty||''}</td><td>${r.unit_price||''}</td>
-            <td>${r.discount||''}</td><td>${r.total_price||''}</td><td>${r.customer_name||''}</td><td>${r.customer_phone||''}</td>
-            <td>${r.table_no||''}</td><td>${r.payment_status||''}</td><td>${r.payment_mode||''}</td><td>${r.payment_note||''}</td><td>${r.notes||''}</td>`;
-          tblDetail.appendChild(tr);
-        });
+        updateMobileCashBox(d);
+      }else{
+        renderDetailTable(d.rows || []);
       }
     }
     runReportBtn.addEventListener('click', runReport);
+
+    // desktop inline status/mode editing
+    tblDetail?.addEventListener('change', async (e)=>{
+      const sel = e.target;
+      const tr  = sel.closest('tr');
+      if(!tr || !tr.dataset.saleId) return;
+      const id = tr.dataset.saleId;
+      const row = currentReportRows.find(r=> r.id === id);
+      if(!row) return;
+
+      let newStatus = row.payment_status || 'Live';
+      let newMode   = row.payment_mode || '';
+
+      if(sel.classList.contains('status-select')){
+        newStatus = sel.value;
+        const modeSel = tr.querySelector('select.mode-select');
+        if(modeSel){
+          if(newStatus !== 'Paid'){
+            modeSel.disabled = true;
+            newMode = '';
+            modeSel.value = '';
+          }else{
+            modeSel.disabled = false;
+          }
+        }
+      }else if(sel.classList.contains('mode-select')){
+        newMode = sel.value;
+      }
+
+      row.payment_status = newStatus;
+      row.payment_mode   = newMode;
+
+      try{
+        await fetchJSON('/api/sales/update_payment', {
+          method:'POST',
+          body: JSON.stringify({
+            id,
+            payment_status: newStatus,
+            payment_mode: newMode
+          })
+        });
+        await runReport();
+      }catch(err){
+        console.error(err);
+        await runReport();
+      }
+    });
+
+    // mobile opening cash persistence
+    openingCashInput?.addEventListener('input', ()=>{
+      if(!openingCashKey) return;
+      localStorage.setItem(openingCashKey, openingCashInput.value || '');
+    });
+
+    // mobile settle helpers
+    async function settlePersonal(fromMode, toMode){
+      if(!lastReportData) return;
+      const rows = (lastReportData.rows || []).filter(r=>{
+        return r.payment_status === 'Paid' && r.payment_mode === fromMode;
+      });
+      if(!rows.length){
+        alert('Nothing to settle for ' + fromMode + '.');
+        return;
+      }
+      if(!confirm('Convert ' + rows.length + ' ' + fromMode + ' payments to ' + toMode + '?')) return;
+
+      for(const r of rows){
+        try{
+          await fetchJSON('/api/sales/update_payment', {
+            method:'POST',
+            body: JSON.stringify({
+              id: r.id,
+              payment_status: 'Paid',
+              payment_mode: toMode
+            })
+          });
+        }catch(err){
+          console.error(err);
+        }
+      }
+      await runReport();
+    }
+
+    settlePersonalCashBtn?.addEventListener('click', ()=>{
+      settlePersonal('PersonalCash','Cash');
+    });
+    settlePersonalUPIBtn?.addEventListener('click', ()=>{
+      settlePersonal('PersonalUPI','CurrentUPI');
+    });
 
     // ---------- Init ----------
     (async function init(){
@@ -941,6 +1271,7 @@
       toggleSFH(); togglePay(); updateTotals();
       liveBranch.value = branchSelect.value || '';
       lockReportToTodayOnMobile();
+      buildColumnChooser();
       await runReport();
       if(liveBranch.value) loadLiveTables();
     })();
