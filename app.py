@@ -340,12 +340,53 @@ def _ensure_subcategory(s: str):
 
 # ---- Ready Products ----
 
+def _generate_ready_code(name: str, item_category: str, rows: List[Dict]) -> str:
+    """
+    Generate a 3-character code: <digit><letter><letter>, e.g. 1CM / 5CB.
+    - 2nd char = first letter of item_category (fallback to name)
+    - 3rd char = first letter of item name
+    - 1st char = 1-9 chosen to avoid duplicates for that pair of letters
+    """
+    base_cat = (item_category or "").strip()
+    base_name = (name or "").strip()
+
+    if not base_cat:
+        base_cat = base_name
+
+    l2 = (base_cat[:1] or "X").upper()
+    l3 = (base_name[:1] or "X").upper()
+    suffix = l2 + l3
+
+    existing = {(r.get("code") or "").upper() for r in rows}
+
+    # Try 1–9 for that suffix (most normal case)
+    for d in range(1, 10):
+        code = f"{d}{suffix}"
+        if code not in existing:
+            return code
+
+    # Fallback: brute force some other letter combos if things are crazy
+    idx = 0
+    while True:
+        for d in range(1, 10):
+            extra = chr(ord("A") + (idx % 26))
+            code = f"{d}{l2}{extra}"
+            if code not in existing:
+                return code
+        idx += 1
+
+
 @app.get("/api/ready_products")
 def list_ready_products():
     rows = read_csv("ready_products")
     for r in rows:
+        # numeric fields as float for UI
         for k in ("unit_cost", "price", "quantity", "threshold"):
             r[k] = float(r.get(k) or 0)
+
+        # keep new fields always present so frontend can rely on them
+        r.setdefault("item_category", "")
+        r.setdefault("code", "")
     return {"rows": rows}
 
 
@@ -354,10 +395,35 @@ def add_ready_product_api(item: ReadyProductIn):
     if item.category not in CATEGORIES:
         raise HTTPException(400, f"category must be one of {CATEGORIES}")
     _ensure_unit(item.unit)
+
+    rows = read_csv("ready_products")
+
+    # These two come from the updated model; if not present yet, getattr() keeps it safe.
+    item_category = (getattr(item, "item_category", "") or "").strip()
+    incoming_code = (getattr(item, "code", "") or "").strip().upper()
+
+    # Validate / generate code (3 chars: 1 digit + 2 letters)
+    if incoming_code:
+        if len(incoming_code) != 3 or not (
+            incoming_code[0].isdigit() and incoming_code[1:].isalpha()
+        ):
+            raise HTTPException(
+                400, "code must be exactly 3 chars: 1 digit + 2 letters (e.g. 1CM, 5CB)"
+            )
+        # uniqueness check
+        for r in rows:
+            if (r.get("code") or "").upper() == incoming_code:
+                raise HTTPException(400, f"code '{incoming_code}' already exists")
+        code = incoming_code
+    else:
+        code = _generate_ready_code(item.name, item_category, rows)
+
     row = {
         "id": gen_id(),
         "name": item.name.strip(),
         "category": item.category,
+        "item_category": item_category,
+        "code": code,
         "unit": item.unit,
         "unit_cost": f"{item.unit_cost:.2f}",
         "price": f"{item.price:.2f}",
@@ -365,26 +431,54 @@ def add_ready_product_api(item: ReadyProductIn):
         "threshold": f"{item.threshold:.3f}",
     }
     append_row("ready_products", row)
-    return {"ok": True, "id": row["id"]}
+    return {"ok": True, "id": row["id"], "code": code}
 
 
 @app.put("/api/ready_products/{item_id}")
 def update_ready_product_api(item_id: str, patch: ReadyProductUpdate):
     rows = read_csv("ready_products")
-    found = False
     data = patch.model_dump(exclude_none=True)
+
+    # validations
+    if "category" in data and data["category"] not in CATEGORIES:
+        raise HTTPException(400, f"category must be one of {CATEGORIES}")
     if "unit" in data:
         _ensure_unit(data["unit"])
+
+    # Normalise / validate code if being changed
+    if "code" in data:
+        raw = (data["code"] or "").strip().upper()
+        if raw:
+            if len(raw) != 3 or not (raw[0].isdigit() and raw[1:].isalpha()):
+                raise HTTPException(
+                    400, "code must be exactly 3 chars: 1 digit + 2 letters (e.g. 1CM, 5CB)"
+                )
+            for r in rows:
+                if r["id"] != item_id and (r.get("code") or "").upper() == raw:
+                    raise HTTPException(400, f"code '{raw}' already exists")
+            data["code"] = raw
+        else:
+            # allow clearing code
+            data["code"] = ""
+
+    found = False
     for r in rows:
         if r["id"] == item_id:
             found = True
+            # make sure new fields exist even on very old rows
+            r.setdefault("item_category", "")
+            r.setdefault("code", "")
             for k, v in data.items():
                 r[k] = str(v)
             break
+
     if not found:
         raise HTTPException(404, "Not found")
+
     write_csv("ready_products", rows)
     return {"ok": True}
+
+
 
 
 @app.delete("/api/ready_products/{item_id}")
