@@ -180,46 +180,6 @@
       margin-right:4px;
     }
 
-    /* ======== Bill palette ======== */
-    .bill-items{
-      border-radius:8px;
-      border:1px solid #eee;
-      background:#fff;
-      padding:8px;
-      max-height:220px;
-      overflow-y:auto;
-    }
-    .bill-items table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:13px;
-    }
-    .bill-items th,
-    .bill-items td{
-      padding:4px 6px;
-      border-bottom:1px solid #f0f0f0;
-    }
-    .bill-items th{
-      text-align:left;
-      font-weight:600;
-      color:#444;
-    }
-    .bill-items td.actions{
-      text-align:right;
-      white-space:nowrap;
-    }
-    .bill-items button.small{
-      height:auto;
-      font-size:11px;
-      padding:3px 6px;
-      border-radius:6px;
-    }
-    .bill-empty{
-      font-size:12px;
-      color:var(--muted);
-      padding:4px 2px;
-    }
-
     /* breakpoints */
     @media (min-width:768px){
       .field.w2{ grid-column:span 2; }
@@ -355,20 +315,6 @@
         </div>
 
         <div class="field w4">
-          <label>&nbsp;</label>
-          <button type="button" id="addItemBtn">Add Item to Bill</button>
-          <div class="hint">Adds the current item to the bill palette.</div>
-        </div>
-
-        <div class="field w8">
-          <label>Current Bill (palette)</label>
-          <div id="billItemsBlock" class="bill-items">
-            <div id="billEmptyMsg" class="bill-empty">No items yet. Add your first item above.</div>
-            <table id="billItemsTable"></table>
-          </div>
-        </div>
-
-        <div class="field w4">
           <label>Table Number</label>
           <input id="saleTable" placeholder="">
         </div>
@@ -417,7 +363,7 @@
         <!-- Live bill preview -->
         <div class="field w12">
           <div class="totals">
-            <div>Subtotal (all items)</div><div class="v" id="tSubtotal">₹0.00</div>
+            <div>Subtotal</div><div class="v" id="tSubtotal">₹0.00</div>
             <div>Discount</div><div class="v" id="tDiscount">₹0.00</div>
             <div class="grand">Total</div><div class="v grand" id="tTotal">₹0.00</div>
           </div>
@@ -429,19 +375,14 @@
       </form>
 
       <div class="float-bar" id="floatBar">
-        <div class="summary">
-          Order <b id="floatOrder">#–</b> • Total <b id="floatTotal">₹0.00</b>
-        </div>
+        <div class="summary">Order <b id="floatOrder">#–</b> • Total <b id="floatTotal">₹0.00</b></div>
         <div style="display:flex; gap:8px;">
           <button class="btn-plain" type="button" id="clearFormBtn">Clear</button>
           <button type="button" id="submitBarBtn">Save &amp; Bill</button>
         </div>
       </div>
 
-      <p class="hint">
-        You can add <b>multiple items</b> to the bill palette. Stock reduces from <b>Ready Products</b> when the bill is saved.
-        The bill opens in a new tab (you can print/share PDF).
-      </p>
+      <p class="hint">Stock reduces from <b>Ready Products</b> instantly. The bill opens in a new tab (you can print/share PDF).</p>
     </section>
 
     <!-- =================== LIVE TABLES (SFH) =================== -->
@@ -620,12 +561,6 @@
     const clearFormBtn = document.getElementById('clearFormBtn');
     const sForm        = document.getElementById('sForm');
 
-    // Bill palette
-    const addItemBtn   = document.getElementById('addItemBtn');
-    const billItemsBlock = document.getElementById('billItemsBlock');
-    const billItemsTable = document.getElementById('billItemsTable');
-    const billEmptyMsg   = document.getElementById('billEmptyMsg');
-
     // Live tables
     const liveBranch   = document.getElementById('liveBranch');
     const refreshLive  = document.getElementById('refreshLive');
@@ -665,10 +600,6 @@
     let readyIndex = {};         // name_lower -> info
     let readyCodeIndex = {};     // 3-char code (upper) -> info
     let payStatus  = 'Live';
-
-    // bill palette
-    let billItems = [];
-    let editingIndex = null;
 
     const detailColumns = [
       { key: 'date',           label: 'Date' },
@@ -721,83 +652,24 @@
       return await res.json();
     }
 
-    function renderBillItems(){
-      if(!billItemsTable) return;
-      billItemsTable.innerHTML = '';
-
-      if(!billItems.length){
-        if(billEmptyMsg) billEmptyMsg.style.display = 'block';
-        billItemsTable.style.display = 'none';
-        return;
-      }
-
-      if(billEmptyMsg) billEmptyMsg.style.display = 'none';
-      billItemsTable.style.display = 'table';
-
-      const thead = document.createElement('thead');
-      const hr = document.createElement('tr');
-      ['Item','Qty','Unit','Price','Line Total',''].forEach(text=>{
-        const th = document.createElement('th');
-        th.textContent = text;
-        hr.appendChild(th);
+    // ensure new Ready Product categories appear in all category selects
+    function syncCategoryOptions(catSet){
+      const cats = Array.from(catSet || []).filter(Boolean);
+      const selects = [saleCategory, rCategory];
+      selects.forEach(sel=>{
+        if(!sel) return;
+        const existing = new Set(
+          Array.from(sel.options).map(o => o.value || o.textContent)
+        );
+        cats.forEach(c=>{
+          if(!existing.has(c)){
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            sel.appendChild(opt);
+          }
+        });
       });
-      thead.appendChild(hr);
-      billItemsTable.appendChild(thead);
-
-      const tbody = document.createElement('tbody');
-      billItems.forEach((row, idx)=>{
-        const tr = document.createElement('tr');
-        tr.dataset.idx = String(idx);
-
-        const cItem  = document.createElement('td'); cItem.textContent  = row.item;
-        const cQty   = document.createElement('td'); cQty.textContent   = row.qty;
-        const cUnit  = document.createElement('td'); cUnit.textContent  = row.unit;
-        const cPrice = document.createElement('td'); cPrice.textContent = row.unit_price.toFixed(2);
-        const cTotal = document.createElement('td'); cTotal.textContent = row.line_total.toFixed(2);
-
-        const cAct   = document.createElement('td');
-        cAct.className = 'actions';
-        const btnEdit = document.createElement('button');
-        btnEdit.type = 'button';
-        btnEdit.className = 'small btn-plain';
-        btnEdit.textContent = 'Edit';
-        btnEdit.dataset.action = 'edit';
-
-        const btnDel = document.createElement('button');
-        btnDel.type = 'button';
-        btnDel.className = 'small';
-        btnDel.style.marginLeft = '4px';
-        btnDel.dataset.action = 'remove';
-        btnDel.textContent = '✕';
-
-        cAct.appendChild(btnEdit);
-        cAct.appendChild(btnDel);
-
-        tr.append(cItem,cQty,cUnit,cPrice,cTotal,cAct);
-        tbody.appendChild(tr);
-      });
-      billItemsTable.appendChild(tbody);
-    }
-
-    function updateTotals(){
-      let sub = 0;
-      billItems.forEach(row=>{
-        const line = Number(row.qty || 0) * Number(row.unit_price || 0);
-        if(!Number.isNaN(line)) sub += line;
-      });
-      const disc = Number(saleDiscount.value || 0);
-      const tot  = Math.max(0, sub - disc);
-
-      tSub.textContent   = toMoney(sub);
-      tDisc.textContent  = toMoney(disc);
-      tTotal.textContent = toMoney(tot);
-      floatTotal.textContent = toMoney(tot);
-    }
-
-    function clearCurrentItemInputs(){
-      saleItem.value = '';
-      saleQty.value = '';
-      // leave unit and price as-is for speed
     }
 
     // ---------- Loaders ----------
@@ -848,7 +720,7 @@
         const ic = (r.item_category || '').trim();
         if(filterCat && ic !== filterCat) return;
 
-        const code = (r.item_code || '').trim();
+        const codeRaw = (r.item_code || r.code || '').trim();
         const unit = (r.unit || '').trim();
         const price = Number(r.price || 0);
 
@@ -856,7 +728,7 @@
         opt.value = name;
 
         const bits = [];
-        if(code) bits.push(code);
+        if(codeRaw) bits.push(codeRaw);
         bits.push(name);
         if(unit) bits.push(unit + ' @ ₹' + price.toFixed(2));
         if(ic) bits.push('(' + ic + ')');
@@ -871,6 +743,7 @@
       readyRows = d.rows || [];
       readyIndex = {};
       readyCodeIndex = {};
+      const catSet = new Set();
 
       readyRows.forEach(r=>{
         const name = (r.name || '').trim();
@@ -882,15 +755,21 @@
           price: parseFloat(r.price || 0),
           category: r.category,
           item_category: (r.item_category || '').trim(),
-          item_code: (r.item_code || '').trim()
+          // support both "item_code" and "code" from backend
+          item_code: (r.item_code || r.code || '').trim()
         };
         readyIndex[keyName] = info;
+
+        if(info.category) catSet.add(info.category);
 
         const code = info.item_code;
         if(code && isThreeCharCode(code)){
           readyCodeIndex[code.toUpperCase()] = info;
         }
       });
+
+      // NEW: auto-include any new Ready Product categories into the selects
+      syncCategoryOptions(catSet);
 
       rebuildItemCategoryFilter();
       rebuildReadyOptions();
@@ -929,6 +808,21 @@
       if(info.item_category && saleItemCategoryFilter && !saleItemCategoryFilter.value){
         saleItemCategoryFilter.value = info.item_category;
       }
+
+      updateTotals();
+    }
+
+    function updateTotals(){
+      const qty = Number(saleQty.value || 0);
+      const up  = Number(saleUnitPrice.value || 0);
+      const disc= Number(saleDiscount.value || 0);
+      const sub = qty * up;
+      const tot = Math.max(0, sub - disc);
+
+      tSub.textContent   = toMoney(sub);
+      tDisc.textContent  = toMoney(disc);
+      tTotal.textContent = toMoney(tot);
+      floatTotal.textContent = toMoney(tot);
     }
 
     function toggleSFH(){
@@ -947,11 +841,12 @@
     qtyRow?.addEventListener('click', (e)=>{
       const btn = e.target.closest('.btn');
       if(!btn) return;
-      if(btn.id==='qtyPlus'){ saleQty.value = Number(saleQty.value||0) + 1; return; }
-      if(btn.id==='qtyMinus'){ saleQty.value = Math.max(0, Number(saleQty.value||0) - 1); return; }
-      if(btn.id==='qtyClear'){ saleQty.value=''; return; }
+      if(btn.id==='qtyPlus'){ saleQty.value = Number(saleQty.value||0) + 1; updateTotals(); return; }
+      if(btn.id==='qtyMinus'){ saleQty.value = Math.max(0, Number(saleQty.value||0) - 1); updateTotals(); return; }
+      if(btn.id==='qtyClear'){ saleQty.value=''; updateTotals(); return; }
       const inc = Number(btn.dataset.q||0);
       saleQty.value = Number(saleQty.value||0) + inc;
+      updateTotals();
     });
 
     // discount chips
@@ -961,10 +856,6 @@
       saleDiscount.value = b.dataset.disc;
       updateTotals();
     }));
-    saleDiscount.addEventListener('input', ()=>{
-      chipDiscBtns.forEach(x=>x.classList.remove('active'));
-      updateTotals();
-    });
 
     // pay chips
     payChips.addEventListener('click', (e)=>{
@@ -991,8 +882,10 @@
     // Item Category filter change
     saleItemCategoryFilter?.addEventListener('change', ()=>{
       rebuildReadyOptions();
+      // clearing item box keeps new filter effective
       saleItem.value = '';
       saleUnitPrice.value = '';
+      updateTotals();
     });
 
     // smart item selection: name or 3-char code
@@ -1001,6 +894,7 @@
       if(isThreeCharCode(val)){
         const info = readyCodeIndex[val.toUpperCase()];
         if(info){
+          // direct select by code
           saleItem.value = info.name;
           if(saleItemCategoryFilter && info.item_category){
             saleItemCategoryFilter.value = info.item_category;
@@ -1009,81 +903,20 @@
           saleUnit.value = info.unit || saleUnit.value;
           saleUnitPrice.value = Number(info.price || 0).toFixed(2);
           if(!saleCategory.value) saleCategory.value = info.category || 'Home Delivery';
+          updateTotals();
+          return;
         }
       }
+      // if not a complete code, just recalc totals when name later chosen
     });
 
     // also apply defaults when user picks from datalist
     saleItem.addEventListener('change', applyItemDefaults);
 
-    // Add item to bill palette
-    addItemBtn?.addEventListener('click', ()=>{
-      applyItemDefaults();
-
-      const itemName  = (saleItem.value || '').trim();
-      const qty       = Number(saleQty.value || 0);
-      const unitPrice = Number(saleUnitPrice.value || 0);
-      const unit      = saleUnit.value;
-
-      if(!itemName){
-        alert('Please choose an item from Ready Products.');
-        return;
-      }
-      if(qty <= 0){
-        alert('Quantity must be > 0');
-        return;
-      }
-      if(unitPrice <= 0){
-        alert('Unit price missing; please check Ready Products price.');
-        return;
-      }
-
-      const line = {
-        item: itemName,
-        unit,
-        qty,
-        unit_price: unitPrice,
-        line_total: qty * unitPrice
-      };
-
-      if(editingIndex !== null){
-        billItems[editingIndex] = line;
-        editingIndex = null;
-        addItemBtn.textContent = 'Add Item to Bill';
-      } else {
-        billItems.push(line);
-      }
-
-      clearCurrentItemInputs();
-      renderBillItems();
+    saleQty.addEventListener('input', updateTotals);
+    saleDiscount.addEventListener('input', ()=>{
+      chipDiscBtns.forEach(x=>x.classList.remove('active'));
       updateTotals();
-    });
-
-    // bill palette actions: edit / remove
-    billItemsTable?.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button');
-      if(!btn) return;
-      const tr = btn.closest('tr');
-      if(!tr) return;
-      const idx = Number(tr.dataset.idx);
-      if(Number.isNaN(idx) || idx < 0 || idx >= billItems.length) return;
-
-      const action = btn.dataset.action;
-      if(action === 'edit'){
-        const row = billItems[idx];
-        saleItem.value = row.item;
-        saleUnit.value = row.unit;
-        saleUnitPrice.value = row.unit_price;
-        saleQty.value = row.qty;
-        editingIndex = idx;
-        addItemBtn.textContent = 'Update Item';
-      } else if(action === 'remove'){
-        billItems.splice(idx,1);
-        editingIndex = null;
-        addItemBtn.textContent = 'Add Item to Bill';
-        renderBillItems();
-        updateTotals();
-      }
     });
 
     // add branch
@@ -1124,90 +957,51 @@
     refreshLive.addEventListener('click', loadLiveTables);
     liveBranch.addEventListener('change', loadLiveTables);
 
-    // Submit full bill
+    // Submit
     async function submitSale(){
-      if(!billItems.length){
-        alert('Add at least one item to the bill.');
-        return;
-      }
-
+      applyItemDefaults();
+      updateTotals();
       const category = saleCategory.value || 'Home Delivery';
-      const discountAmount = Number(saleDiscount.value || 0);
-
-      let sub = 0;
-      billItems.forEach(row=>{
-        const line = Number(row.qty || 0) * Number(row.unit_price || 0);
-        if(!Number.isNaN(line)) sub += line;
-      });
-      const total = Math.max(0, sub - discountAmount);
-
-      const header = {
+      const payload = {
         date: saleDate.value || null,
         category,
         branch: category==='SFH' ? (branchSelect.value||'') : '',
+        item: (saleItem.value||'').trim(),
+        unit: saleUnit.value,
+        qty: Number(saleQty.value||0),
+        unit_price: null,  // backend uses Ready Products price
+        discount: Number(saleDiscount.value||0),
         customer_name: (saleCustName.value||'').trim(),
         customer_phone: (saleCustPhone.value||'').trim(),
         table_no: (saleTable.value||'').trim(),
         payment_status: payStatus,
         payment_mode: payStatus==='Paid' ? (payMode.value||'') : '',
         payment_note: (payNote.value||'').trim(),
-        notes: (saleNotes.value||'').trim(),
-        discount: discountAmount,
-        subtotal: sub,
-        total: total
+        notes: (saleNotes.value||'').trim()
       };
-
-      const first = billItems[0];
-      const payload = Object.assign({}, header, {
-        item: first.item,
-        unit: first.unit,
-        qty: Number(first.qty || 0),
-        unit_price: Number(first.unit_price || 0),
-        items: billItems.map(row=>({
-          item: row.item,
-          unit: row.unit,
-          qty: Number(row.qty || 0),
-          unit_price: Number(row.unit_price || 0)
-        }))
-      });
+      if(!payload.item){ alert('Please choose an item.'); return; }
+      if(payload.qty<=0){ alert('Quantity must be > 0'); return; }
 
       const res = await fetchJSON('/api/sales', {method:'POST', body: JSON.stringify(payload)});
       if(res.bill_url){ window.open(res.bill_url, '_blank'); }
-
       await Promise.all([loadNextOrder(), runReport()]);
       const keepCat = saleCategory.value;
       const keepBr  = branchSelect.value;
-
       sForm.reset();
       saleCategory.value = keepCat;
       branchSelect.value = keepBr;
-
-      billItems = [];
-      editingIndex = null;
-      addItemBtn.textContent = 'Add Item to Bill';
-      renderBillItems();
-
-      payStatus='Live';
-      setChipsActive(payChips,'Live','data-status');
-      toggleSFH();
-      togglePay();
+      toggleSFH(); setChipsActive(payChips,'Live','data-status'); payStatus='Live'; togglePay();
       updateTotals();
       loadLiveTables();
     }
-
     sForm.addEventListener('submit', (e)=>{ e.preventDefault(); submitSale(); });
     submitBarBtn.addEventListener('click', submitSale);
-
     clearFormBtn.addEventListener('click', ()=>{
       sForm.reset();
       if(saleItemCategoryFilter){
         saleItemCategoryFilter.value = '';
         rebuildReadyOptions();
       }
-      billItems = [];
-      editingIndex = null;
-      addItemBtn.textContent = 'Add Item to Bill';
-      renderBillItems();
       payStatus = 'Live';
       setChipsActive(payChips,'Live','data-status');
       togglePay();
@@ -1501,9 +1295,7 @@
     (async function init(){
       try{ saleDate.valueAsDate = new Date(); }catch{}
       await Promise.all([loadNextOrder(), loadReadyProducts(), loadBranches()]);
-      toggleSFH(); togglePay();
-      renderBillItems();
-      updateTotals();
+      toggleSFH(); togglePay(); updateTotals();
       liveBranch.value = branchSelect.value || '';
       lockReportToTodayOnMobile();
       buildColumnChooser();
