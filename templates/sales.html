@@ -1456,80 +1456,84 @@
     }
 
     function openPrintWindow(){
-      if(!billItems.length){
-        alert('Add at least one item to the bill before printing.');
-        return;
-      }
-      const w = window.open('', '_blank');
-      if(!w){
-        alert('Popup blocked. Allow popups to print.');
-        return;
-      }
-      const now = new Date();
-      const dt = now.toLocaleString();
-      const cat = saleCategory.value || '';
-      const table = (saleTable.value || '').trim();
-      const branchVal = (saleCategory.value === 'SFH') ? (branchSelect.value || '') : '';
-      const custName = (saleCustName.value || '').trim();
-      const custPhone = (saleCustPhone.value || '').trim();
+  if(!billItems.length){
+    alert('Add at least one item to the bill before printing.');
+    return;
+  }
+  const w = window.open('', '_blank');
+  if(!w){
+    alert('Popup blocked. Allow popups to print.');
+    return;
+  }
+  const now = new Date();
+  const dt = now.toLocaleString();
+  const cat = saleCategory.value || '';
+  const table = (saleTable.value || '').trim();
+  const branchVal = (saleCategory.value === 'SFH') ? (branchSelect.value || '') : '';
+  const custName = (saleCustName.value || '').trim();
+  const custPhone = (saleCustPhone.value || '').trim();
 
-      let rowsHtml = '';
-      billItems.forEach((line, idx)=>{
-        const lineSub = line.qty * line.unit_price;
-        const lineTot = Math.max(0, lineSub - line.discount);
-        rowsHtml += `
-          <tr>
-            <td>${idx+1}</td>
-            <td>${line.name}</td>
-            <td>${line.qty}</td>
-            <td>${line.unit_price.toFixed(2)}</td>
-            <td>${line.discount ? line.discount.toFixed(2) : '0.00'}</td>
-            <td>${lineTot.toFixed(2)}</td>
-          </tr>
-        `;
-      });
+  let rowsHtml = '';
+  billItems.forEach((line, idx)=>{
+    const lineSub = line.qty * line.unit_price;
+    const lineTot = Math.max(0, lineSub - line.discount);
+    rowsHtml += `
+      <tr>
+        <td>${idx+1}</td>
+        <td>${line.name}</td>
+        <td>${line.qty}</td>
+        <td>${line.unit_price.toFixed(2)}</td>
+        <td>${line.discount ? line.discount.toFixed(2) : '0.00'}</td>
+        <td>${lineTot.toFixed(2)}</td>
+      </tr>
+    `;
+  });
 
-      const html = `
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Bill</title>
-        <style>
-          body{ font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; margin:0; padding:4px; width:280px; }
-          h1{ font-size:16px; text-align:center; margin:0 0 4px; }
-          .meta{ font-size:11px; margin-bottom:4px; }
-          table{ width:100%; border-collapse:collapse; font-size:11px; }
-          th,td{ border-bottom:1px dashed #999; padding:2px 0; text-align:left; }
-          tfoot td{ border-top:1px solid #000; font-weight:bold; }
-          .center{ text-align:center; }
-        </style>
-      </head>
-      <body>
-        <h1>TBM Cafe</h1>
-        <div class="meta">
-          Order: #${currentOrderId || '–'}<br>
-          Date: ${dt}<br>
-          Cat: ${cat}${branchVal ? ' • ' + branchVal : ''}${table ? ' • Table ' + table : ''}<br>
-          ${custName || custPhone ? ('Customer: ' + custName + (custPhone ? ' ('+custPhone+')' : '')) : ''}
-        </div>
-        <table>
-          <thead>
-            <tr><th>#</th><th>Item</th><th>Q</th><th>Rate</th><th>Disc</th><th>Amt</th></tr>
-          </thead>
-          <tbody>${rowsHtml}</tbody>
-          <tfoot>
-            <tr><td colspan="5">Subtotal</td><td>${billSubtotal.toFixed(2)}</td></tr>
-            <tr><td colspan="5">Discount</td><td>${billDiscountTotal.toFixed(2)}</td></tr>
-            <tr><td colspan="5">Total</td><td>${billGrandTotal.toFixed(2)}</td></tr>
-          </tfoot>
-        </table>
-        <div class="center" style="margin-top:4px;">Thank you!</div>
-        <script>window.print();</script>
-      </body>
-      </html>`;
-      w.document.write(html);
-      w.document.close();
-    }
+  const html = `
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bill</title>
+    <style>
+      body{ font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; margin:0; padding:4px; width:280px; }
+      h1{ font-size:16px; text-align:center; margin:0 0 4px; }
+      .meta{ font-size:11px; margin-bottom:4px; }
+      table{ width:100%; border-collapse:collapse; font-size:11px; }
+      th,td{ border-bottom:1px dashed #999; padding:2px 0; text-align:left; }
+      tfoot td{ border-top:1px solid #000; font-weight:bold; }
+      .center{ text-align:center; }
+    </style>
+  </head>
+  <body>
+    <h1>TBM Cafe</h1>
+    <div class="meta">
+      Order: #${currentOrderId || '–'}<br>
+      Date: ${dt}<br>
+      Cat: ${cat}${branchVal ? ' • ' + branchVal : ''}${table ? ' • Table ' + table : ''}<br>
+      ${custName || custPhone ? ('Customer: ' + custName + (custPhone ? ' ('+custPhone+')' : '')) : ''}
+    </div>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Item</th><th>Q</th><th>Rate</th><th>Disc</th><th>Amt</th></tr>
+      </thead>
+      <tbody>${rowsHtml}</tbody>
+      <tfoot>
+        <tr><td colspan="5">Subtotal</td><td>${billSubtotal.toFixed(2)}</td></tr>
+        <tr><td colspan="5">Discount</td><td>${billDiscountTotal.toFixed(2)}</td></tr>
+        <tr><td colspan="5">Total</td><td>${billGrandTotal.toFixed(2)}</td></tr>
+      </tfoot>
+    </table>
+    <div class="center" style="margin-top:4px;">Thank you!</div>
+  </body>
+  </html>`;
+
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
 
     async function lockAndPrint(){
       if(!billItems.length){
