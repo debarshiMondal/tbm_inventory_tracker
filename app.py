@@ -27,9 +27,19 @@ PAYMENT_STATUSES = ["Live", "Due", "Paid"]
 PAYMENT_MODES = ["CurrentUPI", "Cash", "Card", "PersonalUPI", "PersonalCash"]
 
 HEADERS = {
-    "ready_products": ["id","name","category","unit","unit_cost","price","quantity","threshold"],
-    "raw_inventory":  ["id","name","category","subcategory","unit","unit_cost","stock","threshold"],
-    "purchases":      ["id","date","category","subcategory","item","unit","qty","unit_cost","total_cost","notes"],
+    # Added item_category + code so codes persist in CSV
+    "ready_products": [
+        "id", "name", "category", "item_category", "code",
+        "unit", "unit_cost", "price", "quantity", "threshold"
+    ],
+    "raw_inventory":  [
+        "id", "name", "category", "subcategory", "unit",
+        "unit_cost", "stock", "threshold"
+    ],
+    "purchases":      [
+        "id", "date", "category", "subcategory", "item",
+        "unit", "qty", "unit_cost", "total_cost", "notes"
+    ],
     # Extended sales schema for POS
     "sales": [
         "id","date","category","branch","order_id","item","unit","qty","unit_price",
@@ -174,7 +184,7 @@ def convert_qty(qty: float, from_unit: str, to_unit: str) -> float:
 # ---- Order sequence ----
 
 def _scan_max_order_id() -> int:
-    """Best-effort: read all days (today folder) and return max order_id seen."""
+    """Best-effort: read today's sales and return max order_id seen."""
     try:
         rows = read_csv("sales")
         m = 0
@@ -259,6 +269,9 @@ class ReadyProductIn(BaseModel):
     price: float = 0.0
     quantity: float = 0.0
     threshold: float = 0.0
+    # optional new fields
+    item_category: Optional[str] = ""
+    code: Optional[str] = ""
 
 
 class ReadyProductUpdate(BaseModel):
@@ -269,6 +282,8 @@ class ReadyProductUpdate(BaseModel):
     price: Optional[float] = None
     quantity: Optional[float] = None
     threshold: Optional[float] = None
+    item_category: Optional[str] = None
+    code: Optional[str] = None
 
 
 class RawItemIn(BaseModel):
@@ -326,6 +341,17 @@ class SaleIn(BaseModel):
     payment_mode: Optional[str] = ""  # only when Paid
     payment_note: Optional[str] = ""  # personal upi/cash owner name
     notes: Optional[str] = ""
+
+
+class BranchIn(BaseModel):
+    name: str
+    is_active: bool = True
+
+
+class SalePaymentPatch(BaseModel):
+    id: str
+    payment_status: Optional[str] = None
+    payment_mode: Optional[str] = None
 
 
 def _ensure_unit(u: str):
@@ -387,6 +413,8 @@ def list_ready_products():
         # keep new fields always present so frontend can rely on them
         r.setdefault("item_category", "")
         r.setdefault("code", "")
+        # expose code also as item_code for the UI
+        r["item_code"] = r.get("code", "") or ""
     return {"rows": rows}
 
 
@@ -398,9 +426,9 @@ def add_ready_product_api(item: ReadyProductIn):
 
     rows = read_csv("ready_products")
 
-    # These two come from the updated model; if not present yet, getattr() keeps it safe.
-    item_category = (getattr(item, "item_category", "") or "").strip()
-    incoming_code = (getattr(item, "code", "") or "").strip().upper()
+    # These two come from the updated model (or default)
+    item_category = (item.item_category or "").strip()
+    incoming_code = (item.code or "").strip().upper()
 
     # Validate / generate code (3 chars: 1 digit + 2 letters)
     if incoming_code:
@@ -477,8 +505,6 @@ def update_ready_product_api(item_id: str, patch: ReadyProductUpdate):
 
     write_csv("ready_products", rows)
     return {"ok": True}
-
-
 
 
 @app.delete("/api/ready_products/{item_id}")
@@ -580,11 +606,6 @@ def delete_raw_item_api(item_id: str):
 def list_branches():
     rows = read_csv("branches")
     return {"rows": rows}
-
-
-class BranchIn(BaseModel):
-    name: str
-    is_active: bool = True
 
 
 @app.post("/api/branches")
@@ -894,6 +915,43 @@ def get_bill(sale_id: str):
         lines.append(f"Remarks: {sale['notes']}")
     content = "\n".join(lines)
     return PlainTextResponse(content, media_type="text/plain")
+
+
+@app.post("/api/sales/update_payment")
+def update_sale_payment(p: SalePaymentPatch):
+    """
+    Update payment_status and/or payment_mode for a sale.
+    Used by:
+      - Desktop Detailed Records inline dropdowns
+      - Mobile settle buttons
+    """
+    rows = read_csv("sales")
+    sale = None
+    for r in rows:
+        if r.get("id") == p.id:
+            sale = r
+            break
+
+    if not sale:
+        raise HTTPException(404, "Sale not found")
+
+    if p.payment_status is not None:
+        if p.payment_status not in PAYMENT_STATUSES:
+            raise HTTPException(400, f"payment_status must be one of {PAYMENT_STATUSES}")
+        sale["payment_status"] = p.payment_status
+
+    if p.payment_mode is not None:
+        mode = p.payment_mode or ""
+        if mode and mode not in PAYMENT_MODES:
+            raise HTTPException(400, f"payment_mode must be one of {PAYMENT_MODES + ['(empty)']}")
+        # if not Paid, force blank mode
+        if sale.get("payment_status") != "Paid":
+            sale["payment_mode"] = ""
+        else:
+            sale["payment_mode"] = mode
+
+    write_csv("sales", rows)
+    return {"ok": True}
 
 
 # ---- Sales report ----
