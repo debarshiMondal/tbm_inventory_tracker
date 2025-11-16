@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="stylesheet" href="/static/main.css">
   <style>
-    /* ======== Mobile-first page styles (overrides & additions) ======== */
     :root{
       --accent:#c62828;
       --ink:#111;
@@ -18,13 +17,11 @@
       --warn:#ef6c00;
     }
 
-    /* tighten header on phones */
     .site-header{ padding:10px 12px; gap:12px; }
     .site-title{ font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .site-nav{ overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; }
     .site-nav a{ padding-bottom:2px; }
 
-    /* sticky section nav under header */
     .section-nav{
       position:sticky; top:56px; z-index:15; background:var(--bg);
       padding:8px 0; margin:8px 0 12px; border-bottom:1px dashed #ddd;
@@ -36,11 +33,9 @@
     }
     .section-nav a:hover{ border-color:var(--accent); color:var(--accent); }
 
-    /* card extras */
-    .card h2{ display:flex; align-items:center; gap:8px; }
+    .card h2{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .hint{ color:var(--muted); font-size:11px; }
 
-    /* grid: start stacked, grow as viewport widens */
     .pos-grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:10px 12px; }
     .field{ grid-column:span 12; }
     .field.w2{ grid-column:span 6; }
@@ -52,7 +47,159 @@
     .field label{ display:block; margin:0 0 4px 2px; font-size:12px; color:#444; }
     .field input,.field select,.field textarea{ width:100%; height:44px; font-size:15px; }
 
-    /* quick rows */
+    .kpi{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid #eee; font-size:12px; }
+    .kpi b{ color:var(--accent); }
+
+    /* suggestion panel */
+    .suggest-wrap{
+      position:relative;
+    }
+    .suggest-panel{
+      position:absolute;
+      left:0; right:0; top:100%;
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:8px;
+      margin-top:3px;
+      box-shadow:0 4px 10px rgba(0,0,0,.12);
+      max-height:260px;
+      overflow-y:auto;
+      z-index:25;
+      font-size:13px;
+    }
+    .suggest-panel.hidden{ display:none; }
+    .suggest-group-title{
+      padding:6px 10px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      color:#999;
+      border-bottom:1px solid #f0f0f0;
+      background:#fafafa;
+      position:sticky;
+      top:0;
+    }
+    .suggest-item{
+      padding:8px 10px;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .suggest-item-main{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .suggest-item-name{ font-weight:500; }
+    .suggest-item-meta{
+      font-size:11px;
+      color:#777;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .suggest-item.active,
+    .suggest-item:hover{
+      background:#ffecec;
+    }
+
+    /* bill items palette */
+    .bill-items{
+      border-radius:10px;
+      border:1px solid #eee;
+      background:#fafafa;
+      padding:8px 8px 4px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      max-height:260px;
+      overflow-y:auto;
+    }
+    .bill-items-empty{
+      font-size:12px;
+      color:#777;
+      padding:2px 2px 4px;
+    }
+    .bill-line{
+      background:#fff;
+      border-radius:8px;
+      border:1px solid #e0e0e0;
+      padding:6px 8px;
+      display:grid;
+      grid-template-columns: minmax(0,1.6fr) minmax(0,1.1fr) auto;
+      gap:6px;
+      align-items:center;
+    }
+    .bill-line-main{
+      min-width:0;
+    }
+    .bill-line-title{
+      font-size:13px;
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .bill-line-sub{
+      font-size:11px;
+      color:#777;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .bill-line-qty{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      justify-content:flex-start;
+    }
+    .bill-line-qty button{
+      width:30px;
+      height:32px;
+      border-radius:6px;
+      font-size:16px;
+      padding:0;
+    }
+    .bill-line-qty input{
+      width:60px;
+      height:32px;
+      text-align:center;
+      font-size:14px;
+    }
+    .bill-line-total{
+      text-align:right;
+      font-size:13px;
+      font-weight:600;
+    }
+    .bill-line-total-main{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      justify-content:flex-end;
+    }
+    .bill-line-remove{
+      border:none;
+      background:none;
+      color:#999;
+      font-size:16px;
+      padding:0 0 0 4px;
+      cursor:pointer;
+    }
+    .bill-line-remove:hover{
+      color:#c62828;
+    }
+
+    .totals{
+      display:grid; grid-template-columns:1fr auto; gap:6px; background:#fafafa; border:1px dashed #ddd; border-radius:8px; padding:10px 12px;
+    }
+    .totals .v{ text-align:right; font-weight:600; }
+    .totals .grand{ color:#000; font-size:18px; }
+
+    .qty-row{ display:flex; gap:8px; flex-wrap:wrap; }
+    .qty-row .btn{ padding:10px 12px; border-radius:8px; border:1px solid #ddd; background:#fff; }
+    .qty-row .btn:active{ transform:scale(.98); }
+
     .chipbar{ display:flex; flex-wrap:wrap; gap:6px; }
     .chip{
       font-size:13px; padding:8px 12px; border:1px solid #ddd; border-radius:999px;
@@ -60,23 +207,8 @@
     }
     .chip.active{ border-color:var(--accent); color:#fff; background:var(--accent); }
 
-    .qty-row{ display:flex; gap:8px; flex-wrap:wrap; }
-    .qty-row .btn{ padding:10px 12px; border-radius:8px; border:1px solid #ddd; background:#fff; }
-    .qty-row .btn:active{ transform:scale(.98); }
-
-    .kpi{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid #eee; font-size:12px; }
-    .kpi b{ color:var(--accent); }
-
-    /* live preview box (for bill totals) */
-    .totals{
-      display:grid; grid-template-columns:1fr auto; gap:6px; background:#fafafa; border:1px dashed #ddd; border-radius:8px; padding:10px 12px;
-    }
-    .totals .v{ text-align:right; font-weight:600; }
-    .totals .grand{ color:#000; font-size:18px; }
-
-    /* floating submit bar (mobile) */
     .float-bar{
-      position:sticky; bottom:0; z-index:20; background:rgba(255,255,255,.95);
+      position:sticky; bottom:0; z-index:20; background:rgba(255,255,255,.96);
       border-top:1px solid #eee; backdrop-filter: blur(5px);
       padding:8px 10px; display:flex; gap:10px; align-items:center; justify-content:space-between;
     }
@@ -84,89 +216,75 @@
     .float-bar .summary b{ color:#000; }
     .float-bar button{ height:44px; padding:0 16px; border-radius:8px; }
 
-    /* table scrolling on phones */
-    .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .table-scroll table{ min-width:820px; }
+    .btn-plain{ background:#fff; color:var(--accent); border:1px solid var(--accent); }
+    .btn-plain:hover{ background:var(--accent); color:#fff; }
 
-    /* live tables: card layout on phones */
-    .table-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-    .tcard{ border:1px solid #eee; border-radius:10px; padding:10px 12px; background:#fff; }
-    .tcard h3{ margin:0 0 6px; font-size:14px; }
-    .tcard .count{ font-size:18px; font-weight:700; color:var(--accent); }
-
-    /* mobile/desktop visibility helpers */
     .hide-on-mobile{ display:none; }
     .show-on-mobile{ display:block; }
 
-    /* read-only input look (unit price) */
     .ro{
       background:#f7f7f7 !important; color:#333;
       border-color:#e0e0e0 !important;
       pointer-events:none;
     }
 
-    /* mobile cash box */
-    .cashbox{
-      border-radius:10px;
-      border:1px solid #eee;
-      background:#fff;
-      padding:10px 12px;
-      font-size:13px;
-    }
-    .cashbox-opening{
-      margin-bottom:8px;
-    }
-    .cashbox-opening label{
-      display:block;
-      margin-bottom:4px;
+    /* More details collapsible */
+    .more-toggle{
       font-size:12px;
       color:#444;
-    }
-    .cashbox-opening input{
-      width:100%;
-      height:38px;
-      font-size:14px;
-      border-radius:6px;
-      border:1px solid #ddd;
-      padding:4px 8px;
-    }
-    .cashbox-row{
-      display:flex;
-      justify-content:space-between;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
       margin-bottom:4px;
     }
-    .cashbox-row span{
-      color:#555;
+    .more-toggle span.arrow{
+      font-size:11px;
+      transition:transform .15s ease;
     }
-    .cashbox-row strong{
-      color:#111;
+    .more-toggle.open span.arrow{
+      transform:rotate(90deg);
     }
-    .cashbox-row.total-row strong{
-      font-size:15px;
+    .more-body{
+      display:none;
+      margin-top:4px;
     }
-    .cashbox hr{
-      border:none;
-      border-top:1px dashed #e0e0e0;
-      margin:6px 0;
-    }
-    .cashbox-settle{
-      margin-top:8px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-    }
-    .cashbox-settle button{
-      flex:1 1 auto;
-      min-width:140px;
-      font-size:12px;
+    .more-body.open{
+      display:block;
     }
 
-    /* column chooser (desktop) */
-    .col-chooser{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
+    /* status chips (for later use in lists) */
+    .status-chip{
+      display:inline-flex;
+      align-items:center;
+      padding:2px 6px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:500;
     }
+    .status-live{
+      background:#fff3e0;
+      color:#ef6c00;
+    }
+    .status-due{
+      background:#ffebee;
+      color:#c62828;
+    }
+    .status-paid{
+      background:#e8f5e9;
+      color:#2e7d32;
+    }
+
+    .table-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .tcard{ border:1px solid #eee; border-radius:10px; padding:10px 12px; background:#fff; cursor:pointer; }
+    .tcard h3{ margin:0 0 6px; font-size:14px; }
+    .tcard .count{ font-size:18px; font-weight:700; color:var(--accent); }
+    .tcard:hover{ box-shadow:0 2px 6px rgba(0,0,0,.12); }
+
+    .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .table-scroll table{ min-width:820px; }
+
+    .col-chooser{ display:flex; flex-wrap:wrap; gap:6px; }
     .col-chooser label{
       font-size:11px;
       border:1px solid #ddd;
@@ -176,113 +294,7 @@
       cursor:pointer;
       user-select:none;
     }
-    .col-chooser input{
-      margin-right:4px;
-    }
-
-    /* suggestions under item box */
-    .suggest-box{
-      position:relative;
-    }
-    #itemSuggestBox{
-      position:absolute;
-      left:0;
-      right:0;
-      top:100%;
-      margin-top:2px;
-      background:#fff;
-      border:1px solid #ddd;
-      border-radius:8px;
-      box-shadow:0 4px 10px rgba(0,0,0,0.10);
-      max-height:240px;
-      overflow-y:auto;
-      z-index:25;
-      display:none;
-    }
-    .suggest-item{
-      padding:6px 10px;
-      font-size:13px;
-      cursor:pointer;
-    }
-    .suggest-item:hover,
-    .suggest-item.active{
-      background:#f5f5f5;
-    }
-    .suggest-item .s-line1{ font-weight:600; }
-    .suggest-item .s-line2{ color:#666; font-size:11px; }
-
-    /* bill palette */
-    .bill-panel{
-      border-radius:10px;
-      border:1px solid #e0e0e0;
-      background:#fafafa;
-      padding:8px 10px;
-      margin-top:10px;
-    }
-    .bill-header-line{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:4px;
-    }
-    .bill-header-line h3{
-      margin:0;
-      font-size:15px;
-    }
-    .bill-items{
-      border-radius:8px;
-      border:1px dashed #ddd;
-      padding:4px 6px;
-      max-height:260px;
-      overflow-y:auto;
-      background:#fff;
-    }
-    .bill-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:4px 0;
-      border-bottom:1px dashed #eee;
-    }
-    .bill-row:last-child{
-      border-bottom:none;
-    }
-    .bill-main{
-      flex:1 1 auto;
-      min-width:0;
-      padding-right:8px;
-    }
-    .bill-name{
-      font-size:13px;
-      font-weight:600;
-    }
-    .bill-meta{
-      font-size:11px;
-      color:#555;
-    }
-    .bill-cat{
-      font-size:10px;
-      color:#888;
-    }
-    .bill-actions{
-      display:flex;
-      align-items:center;
-      gap:4px;
-      white-space:nowrap;
-    }
-    .bill-btn{
-      min-width:28px;
-      height:28px;
-      padding:0;
-      border-radius:999px;
-      font-size:16px;
-      line-height:1;
-    }
-    .bill-qty{
-      font-size:13px;
-      min-width:18px;
-      text-align:center;
-    }
+    .col-chooser input{ margin-right:4px; }
 
     /* breakpoints */
     @media (min-width:768px){
@@ -291,20 +303,36 @@
       .field.w4{ grid-column:span 4; }
       .field.w6{ grid-column:span 6; }
       .field.w8{ grid-column:span 8; }
+      .field.w12{ grid-column:span 12; }
       .table-cards{ grid-template-columns:repeat(4,1fr); }
       .hide-on-mobile{ display:block; }
       .show-on-mobile{ display:none; }
     }
 
-    /* nicer buttons */
     button{ height:44px; border-radius:8px; }
-    .btn-plain{ background:#fff; color:var(--accent); border:1px solid var(--accent); }
-    .btn-plain:hover{ background:var(--accent); color:#fff; }
+
+    /* tiny toast */
+    .toast{
+      position:fixed;
+      left:50%; bottom:80px;
+      transform:translateX(-50%);
+      background:#000;
+      color:#fff;
+      padding:8px 14px;
+      border-radius:999px;
+      font-size:12px;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease, transform .2s ease;
+      z-index:50;
+    }
+    .toast.show{
+      opacity:0.95;
+      transform:translateX(-50%) translateY(-6px);
+    }
   </style>
 </head>
 <body>
-
-  <!-- Top header / global nav (from main.css) -->
   <header class="site-header">
     <div class="logo">TBM</div>
     <div class="site-title">TBM Inventory and Sells Tracker</div>
@@ -321,21 +349,26 @@
     <h1>Sales / POS</h1>
 
     <div class="section-nav">
-      <a href="#add">Create Bill</a>
+      <a href="#add">Add Sale</a>
       <a href="#live">Live Tables</a>
       <a href="#report">Sales Report</a>
     </div>
 
-    <!-- =================== ADD / POS BILL =================== -->
+    <!-- =================== ADD SALE =================== -->
     <section id="add" class="card">
-      <h2>Create Bill <span class="kpi">Next Order: <b id="nextOrderKpi">#–</b></span></h2>
+      <h2>
+        Add Sale
+        <span class="kpi">Current Bill: <b id="billOrderLabel">#–</b></span>
+      </h2>
 
-      <!-- category + branch -->
+      <!-- High-level: Category + Branch + Date -->
       <div class="pos-grid" style="margin-bottom:8px;">
         <div class="field w4">
           <label>Category</label>
-          <!-- Options will be injected dynamically from Ready Products categories -->
-          <select id="saleCategory"></select>
+          <select id="saleCategory">
+            <!-- will be filled dynamically from Ready Products + defaults -->
+          </select>
+          <div class="hint">New categories from Ready Products auto-appear here.</div>
         </div>
 
         <div class="field w4" id="sfhBranchWrap" style="display:none;">
@@ -353,35 +386,33 @@
         </div>
       </div>
 
-      <!-- Favourites / Most sold strip -->
-      <div class="chipbar" id="favStrip" style="margin-bottom:10px;">
-        <span class="hint">Favourites / Most sold today will appear here for one-tap add.</span>
-      </div>
-
-      <!-- Item entry (one line) -->
+      <!-- POS core form (keyboard + mobile friendly) -->
       <form id="sForm" class="pos-grid" autocomplete="off">
-        <!-- Item Category filter -->
+        <!-- Essential fields row: Item Category filter + Smart Item search -->
         <div class="field w4" id="itemCatFilterField">
           <label>Item Category (filter)</label>
           <select id="saleItemCategoryFilter">
             <option value="">(All)</option>
           </select>
-          <div class="hint">Optional: pick Momo / Pizza / etc. Then type item name or code.</div>
+          <div class="hint">Optional: pick Momo / Pizza / etc. Smart search respects this.</div>
         </div>
 
-        <!-- Smart search box -->
         <div class="field w8">
-          <label>Item (from Ready Products)</label>
-          <div class="suggest-box">
-            <input id="saleItem" placeholder="Type item name, category keyword (e.g. momo) or 3-char code (1CM)…" autocomplete="off">
-            <div id="itemSuggestBox"></div>
+          <label>Item (name / category / 3-char code)</label>
+          <div class="suggest-wrap">
+            <input id="saleItem" placeholder="Type 'momo c' or code 1CM or item name…" required>
+            <div id="itemSuggestPanel" class="suggest-panel hidden"></div>
           </div>
-          <div class="hint" id="autoMapHint">
-            Type item name or <b>3-char code</b> (1 digit + 2 letters, e.g. <code>1CM</code>). Unit &amp; price auto-fill from Ready Products.
+          <datalist id="readyList"></datalist>
+          <div class="hint">
+            Type item name, <b>3-char code</b> (1 digit + 2 letters, e.g. <code>1CM</code>) or
+            "<code>momo c</code>" (category + first letter) to narrow fast.  
+            Enter = add item, Ctrl+Enter = save bill.
           </div>
         </div>
 
-        <div class="field w2">
+        <!-- Qty / Unit / quick qty row -->
+        <div class="field w3">
           <label>Unit</label>
           <select id="saleUnit">
             <option>KG</option><option>GM</option><option>Pieces</option>
@@ -389,31 +420,13 @@
           </select>
         </div>
 
-        <div class="field w2">
+        <div class="field w3">
           <label>Qty</label>
           <input id="saleQty" type="number" inputmode="decimal" step="0.001" placeholder="0">
         </div>
 
-        <div class="field w12">
-          <div class="qty-row">
-            <button class="btn" type="button" data-q="0.25">+0.25</button>
-            <button class="btn" type="button" data-q="0.5">+0.5</button>
-            <button class="btn" type="button" data-q="1">+1</button>
-            <button class="btn" type="button" id="qtyMinus">–</button>
-            <button class="btn" type="button" id="qtyPlus">+</button>
-            <button class="btn" type="button" id="qtyClear">Clear</button>
-            <span class="hint">Enter from keyboard or use quick qty buttons.</span>
-          </div>
-        </div>
-
-        <div class="field w4">
-          <label>Unit Price (auto)</label>
-          <input id="saleUnitPrice" class="ro" type="number" inputmode="decimal" step="0.01" placeholder="auto" readonly>
-          <div class="hint">Locked to Ready Products price (unless you override later in backend).</div>
-        </div>
-
-        <div class="field w4">
-          <label>Discount (₹) for this line</label>
+        <div class="field w6">
+          <label>Discount (₹, this line)</label>
           <input id="saleDiscount" type="number" inputmode="decimal" step="0.01" value="0">
           <div class="chipbar" style="margin-top:6px;">
             <div class="chip" data-disc="0">0</div>
@@ -424,99 +437,127 @@
           </div>
         </div>
 
+        <div class="field w12">
+          <div class="qty-row">
+            <button class="btn" type="button" data-q="0.25">+0.25</button>
+            <button class="btn" type="button" data-q="0.5">+0.5</button>
+            <button class="btn" type="button" data-q="1">+1</button>
+            <button class="btn" type="button" id="qtyMinus">–</button>
+            <button class="btn" type="button" id="qtyPlus">+</button>
+            <button class="btn" type="button" id="qtyClear">Clear</button>
+            <span class="hint">Flow: Search → Qty → Discount → <b>Add Item</b> (Enter).</span>
+          </div>
+        </div>
+
+        <!-- Unit price display -->
         <div class="field w4">
-          <label>Table Number</label>
+          <label>Unit Price (auto from Ready Products)</label>
+          <input id="saleUnitPrice" class="ro" type="number" inputmode="decimal" step="0.01" placeholder="auto" readonly>
+        </div>
+
+        <!-- Table / Branch & essential routing -->
+        <div class="field w4">
+          <label>Table Number (SFH only)</label>
           <input id="saleTable" placeholder="">
+          <div class="hint">Hidden for Home Delivery / Frozen by default.</div>
         </div>
 
-        <div class="field w6">
-          <label>Customer Name</label>
-          <input id="saleCustName" placeholder="">
+        <div class="field w4">
+          <label>&nbsp;</label>
+          <button type="button" id="addItemBtn">+ Add Item to Bill</button>
         </div>
 
-        <div class="field w6">
-          <label>Customer Phone</label>
-          <input id="saleCustPhone" placeholder="" inputmode="tel">
+        <!-- Bill items palette -->
+        <div class="field w12">
+          <label>Bill Items</label>
+          <div id="billItems" class="bill-items">
+            <div class="bill-items-empty">No items yet. Add from above.</div>
+          </div>
+        </div>
+
+        <!-- Totals for the whole bill -->
+        <div class="field w12">
+          <div class="totals">
+            <div>Subtotal</div><div class="v" id="tSubtotal">₹0.00</div>
+            <div>Total Discount</div><div class="v" id="tDiscount">₹0.00</div>
+            <div class="grand">Grand Total</div><div class="v grand" id="tTotal">₹0.00</div>
+          </div>
+        </div>
+
+        <!-- Payment + More details (collapsed by default) -->
+        <div class="field w12">
+          <div class="more-toggle" id="moreToggle">
+            <span class="arrow">▶</span>
+            <span>More details / Payment ▾</span>
+          </div>
+          <div class="more-body" id="moreBody">
+            <div class="pos-grid">
+              <div class="field w12">
+                <label>Payment Status</label>
+                <div class="chipbar" id="payChips">
+                  <div class="chip active" data-status="Live">Live</div>
+                  <div class="chip" data-status="Due">Due</div>
+                  <div class="chip" data-status="Paid">Paid</div>
+                </div>
+              </div>
+
+              <div class="field w6" id="payModeRow" style="display:none;">
+                <label>Payment Mode (if Paid)</label>
+                <select id="payMode">
+                  <option value="">Select</option>
+                  <option value="CurrentUPI">Current a/c UPI</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Card">Card</option>
+                  <option value="PersonalUPI">Personal UPI</option>
+                  <option value="PersonalCash">Personal Cash</option>
+                </select>
+              </div>
+
+              <div class="field w6" id="payNoteRow" style="display:none;">
+                <label>Payment Note</label>
+                <input id="payNote" placeholder="Owner / keeper (for Personal)">
+              </div>
+
+              <div class="field w6">
+                <label>Customer Name</label>
+                <input id="saleCustName" placeholder="">
+              </div>
+
+              <div class="field w6">
+                <label>Customer Phone</label>
+                <input id="saleCustPhone" placeholder="" inputmode="tel">
+              </div>
+
+              <div class="field w12">
+                <label>Notes (bill)</label>
+                <input id="saleNotes" placeholder="Any remarks…">
+              </div>
+            </div>
+            <div class="hint">
+              For Home Delivery, payment defaults to UPI and table stays hidden.  
+              For SFH, table is required, and payment defaults to Live.
+            </div>
+          </div>
         </div>
 
         <div class="field w12">
-          <label>Notes</label>
-          <input id="saleNotes" placeholder="Any remarks…">
-        </div>
-
-        <div class="field w12">
-          <button id="addItemBtn" type="submit">Add Item to Bill</button>
+          <button type="button" id="saveBillBtn">Save Bill &amp; Print</button>
         </div>
       </form>
 
-      <!-- Current Bill palette -->
-      <div class="bill-panel">
-        <div class="bill-header-line">
-          <h3>Current Bill</h3>
-          <span id="billStatusLabel" class="hint">No items yet.</span>
-        </div>
-        <div id="billItemsList" class="bill-items"></div>
-        <div id="lowStockHint" class="hint" style="display:none; margin-top:4px;"></div>
-      </div>
-
-      <!-- Bill totals -->
-      <div style="margin-top:10px;">
-        <div class="totals">
-          <div>Subtotal</div><div class="v" id="tSubtotal">₹0.00</div>
-          <div>Discount</div><div class="v" id="tDiscount">₹0.00</div>
-          <div class="grand">Total</div><div class="v grand" id="tTotal">₹0.00</div>
-        </div>
-      </div>
-
-      <!-- Floating bar -->
       <div class="float-bar" id="floatBar">
         <div class="summary">
-          Order <b id="floatOrder">#–</b> • Items <b id="floatItems">0</b> • Total <b id="floatTotal">₹0.00</b>
+          Bill <b id="floatOrder">#–</b> • Items <b id="floatItems">0</b> • Total <b id="floatTotal">₹0.00</b>
         </div>
         <div style="display:flex; gap:8px;">
-          <button class="btn-plain" type="button" id="clearBillBtn">Clear Bill</button>
-          <button type="button" id="lockPrintBtn">Lock &amp; Print</button>
-        </div>
-      </div>
-
-      <!-- Payment step (visible after Lock & Print) -->
-      <div id="paymentBlock" style="display:none; margin-top:12px;">
-        <h3 style="margin:4px 0 8px;">Payment</h3>
-        <div class="pos-grid">
-          <div class="field w12">
-            <label>Payment Status</label>
-            <div class="chipbar" id="payChips">
-              <div class="chip active" data-status="Live">Live</div>
-              <div class="chip" data-status="Due">Due</div>
-              <div class="chip" data-status="Paid">Paid</div>
-            </div>
-          </div>
-
-          <div class="field w6" id="payModeRow" style="display:none;">
-            <label>Payment Mode (if Paid)</label>
-            <select id="payMode">
-              <option value="">Select</option>
-              <option value="CurrentUPI">Current a/c UPI</option>
-              <option value="Cash">Cash</option>
-              <option value="Card">Card</option>
-              <option value="PersonalUPI">Personal UPI</option>
-              <option value="PersonalCash">Personal Cash</option>
-            </select>
-          </div>
-
-          <div class="field w6" id="payNoteRow" style="display:none;">
-            <label>Payment Note</label>
-            <input id="payNote" placeholder="Owner / keeper (for Personal)">
-          </div>
-
-          <div class="field w12">
-            <button id="saveBillBtn" type="button">Save Bill</button>
-          </div>
+          <button class="btn-plain" type="button" id="clearFormBtn">New Bill</button>
+          <button type="button" id="saveBillBtnFloat">Save &amp; Print</button>
         </div>
       </div>
 
       <p class="hint">
-        This flow is two-step: build the bill → <b>Lock &amp; Print</b> (thermal view) → set payment → <b>Save Bill</b> (writes to CSV & updates stock).
+        Multi-item bill: add several items above, adjust quantities in the palette, then save &amp; print.  
+        Stock reduces from <b>Ready Products</b> per item as the bill is saved.
       </p>
     </section>
 
@@ -543,13 +584,11 @@
     <section id="report" class="card">
       <h2>Sales Records &amp; Report</h2>
 
-      <!-- Mobile notice -->
       <div class="show-on-mobile hint" style="margin-bottom:8px;">
         Mobile view shows <b>Today</b> only for the currently selected Category / Branch.
       </div>
 
       <div class="pos-grid">
-        <!-- Filters -->
         <div class="field w3">
           <label>Period</label>
           <select id="rPeriod">
@@ -572,9 +611,9 @@
         </div>
         <div class="field w3 hide-on-mobile">
           <label>Category</label>
-          <!-- options injected dynamically from Ready Products categories -->
           <select id="rCategory">
             <option value="">(All)</option>
+            <!-- filled dynamically from ready products -->
           </select>
         </div>
         <div class="field w4 hide-on-mobile">
@@ -598,7 +637,7 @@
           <button id="runReport" type="button">Run</button>
         </div>
 
-        <!-- Mobile cash / summary box -->
+        <!-- Mobile cash / summary box (kept from previous version) -->
         <div class="field w12 show-on-mobile">
           <div id="mobileCashBox" class="cashbox">
             <div class="cashbox-opening">
@@ -623,18 +662,15 @@
           </div>
         </div>
 
-        <!-- Summary KPI -->
         <div class="field w12">
           <div class="kpi" id="reportSummary">Total: ₹0.00</div>
         </div>
 
-        <!-- Desktop column chooser -->
         <div class="field w12 hide-on-mobile">
           <label>Columns to show</label>
           <div id="detailColChooser" class="col-chooser"></div>
         </div>
 
-        <!-- Detailed Records (desktop only) -->
         <div class="field w12 hide-on-mobile" id="detailBlock">
           <h3 style="margin:10px 0 6px;">Detailed Records</h3>
           <div class="table-scroll">
@@ -647,81 +683,79 @@
     <div class="footer">TBM Inventory and Sells Tracker — CSV based, simple, fast.</div>
   </div>
 
+  <div id="toast" class="toast"></div>
+
   <script src="/static/ui.js"></script>
   <script>
     document.querySelector('.nav-sales')?.classList.add('active');
 
     // ---------- Elements ----------
-    const nextOrderKpi = document.getElementById('nextOrderKpi');
-    const floatOrder   = document.getElementById('floatOrder');
-    const floatTotal   = document.getElementById('floatTotal');
-    const floatItems   = document.getElementById('floatItems');
+    const billOrderLabel = document.getElementById('billOrderLabel');
+    const floatOrder     = document.getElementById('floatOrder');
+    const floatItems     = document.getElementById('floatItems');
+    const floatTotal     = document.getElementById('floatTotal');
 
-    const saleCategory = document.getElementById('saleCategory');
-    const sfhBranchWrap= document.getElementById('sfhBranchWrap');
-    const branchSelect = document.getElementById('branchSelect');
-    const addBranchBtn = document.getElementById('addBranchBtn');
-    const saleDate     = document.getElementById('saleDate');
-
-    const favStrip     = document.getElementById('favStrip');
+    const saleCategory   = document.getElementById('saleCategory');
+    const sfhBranchWrap  = document.getElementById('sfhBranchWrap');
+    const branchSelect   = document.getElementById('branchSelect');
+    const addBranchBtn   = document.getElementById('addBranchBtn');
+    const saleDate       = document.getElementById('saleDate');
 
     const saleItemCategoryFilter = document.getElementById('saleItemCategoryFilter');
     const itemCatFilterField     = document.getElementById('itemCatFilterField');
 
-    const saleItem     = document.getElementById('saleItem');
-    const itemSuggestBox = document.getElementById('itemSuggestBox');
-    const saleUnit     = document.getElementById('saleUnit');
-    const saleQty      = document.getElementById('saleQty');
-    const saleUnitPrice= document.getElementById('saleUnitPrice');
-    const saleDiscount = document.getElementById('saleDiscount');
-    const saleTable    = document.getElementById('saleTable');
-    const saleCustName = document.getElementById('saleCustName');
-    const saleCustPhone= document.getElementById('saleCustPhone');
-    const saleNotes    = document.getElementById('saleNotes');
+    const saleItem       = document.getElementById('saleItem');
+    const itemSuggestPanel = document.getElementById('itemSuggestPanel');
+    const readyList      = document.getElementById('readyList');
+    const saleUnit       = document.getElementById('saleUnit');
+    const saleQty        = document.getElementById('saleQty');
+    const saleUnitPrice  = document.getElementById('saleUnitPrice');
+    const saleDiscount   = document.getElementById('saleDiscount');
+    const saleTable      = document.getElementById('saleTable');
+    const saleCustName   = document.getElementById('saleCustName');
+    const saleCustPhone  = document.getElementById('saleCustPhone');
+    const saleNotes      = document.getElementById('saleNotes');
 
-    const payChips     = document.getElementById('payChips');
-    const payModeRow   = document.getElementById('payModeRow');
-    const payNoteRow   = document.getElementById('payNoteRow');
-    const payMode      = document.getElementById('payMode');
-    const payNote      = document.getElementById('payNote');
-    const paymentBlock = document.getElementById('paymentBlock');
-    const saveBillBtn  = document.getElementById('saveBillBtn');
+    const payChips       = document.getElementById('payChips');
+    const payModeRow     = document.getElementById('payModeRow');
+    const payNoteRow     = document.getElementById('payNoteRow');
+    const payMode        = document.getElementById('payMode');
+    const payNote        = document.getElementById('payNote');
 
-    const chipDiscBtns = document.querySelectorAll('.chip[data-disc]');
-    const qtyRow       = document.querySelector('.qty-row');
+    const chipDiscBtns   = document.querySelectorAll('.chip[data-disc]');
+    const qtyRow         = document.querySelector('.qty-row');
+    const addItemBtn     = document.getElementById('addItemBtn');
+    const saveBillBtn    = document.getElementById('saveBillBtn');
+    const saveBillBtnFloat = document.getElementById('saveBillBtnFloat');
+    const clearFormBtn   = document.getElementById('clearFormBtn');
+    const sForm          = document.getElementById('sForm');
 
-    const tSub   = document.getElementById('tSubtotal');
-    const tDisc  = document.getElementById('tDiscount');
-    const tTotal = document.getElementById('tTotal');
+    const billItemsEl    = document.getElementById('billItems');
+    const tSub           = document.getElementById('tSubtotal');
+    const tDisc          = document.getElementById('tDiscount');
+    const tTotal         = document.getElementById('tTotal');
 
-    const floatBar     = document.getElementById('floatBar');
-    const clearBillBtn = document.getElementById('clearBillBtn');
-    const lockPrintBtn = document.getElementById('lockPrintBtn');
-    const sForm        = document.getElementById('sForm');
+    const floatBar       = document.getElementById('floatBar');
 
-    const billItemsList   = document.getElementById('billItemsList');
-    const billStatusLabel = document.getElementById('billStatusLabel');
-    const lowStockHint    = document.getElementById('lowStockHint');
+    const moreToggle     = document.getElementById('moreToggle');
+    const moreBody       = document.getElementById('moreBody');
 
-    // Live tables
-    const liveBranch   = document.getElementById('liveBranch');
-    const refreshLive  = document.getElementById('refreshLive');
-    const liveWrap     = document.getElementById('liveWrap');
+    const liveBranch     = document.getElementById('liveBranch');
+    const refreshLive    = document.getElementById('refreshLive');
+    const liveWrap       = document.getElementById('liveWrap');
 
-    // Report
-    const rPeriod  = document.getElementById('rPeriod');
-    const rStart   = document.getElementById('rStart');
-    const rEnd     = document.getElementById('rEnd');
-    const rCategory= document.getElementById('rCategory');
-    const rBranch  = document.getElementById('rBranch');
-    const rItem    = document.getElementById('rItem');
-    const rStatus  = document.getElementById('rStatus');
-    const runReportBtn = document.getElementById('runReport');
-    const reportSummary= document.getElementById('reportSummary');
-    const tblDetail= document.getElementById('tblDetail');
+    const rPeriod        = document.getElementById('rPeriod');
+    const rStart         = document.getElementById('rStart');
+    const rEnd           = document.getElementById('rEnd');
+    const rCategory      = document.getElementById('rCategory');
+    const rBranch        = document.getElementById('rBranch');
+    const rItem          = document.getElementById('rItem');
+    const rStatus        = document.getElementById('rStatus');
+    const runReportBtn   = document.getElementById('runReport');
+    const reportSummary  = document.getElementById('reportSummary');
+    const tblDetail      = document.getElementById('tblDetail');
     const detailColChooser = document.getElementById('detailColChooser');
 
-    // Mobile cash box
     const mobileCashBox      = document.getElementById('mobileCashBox');
     const openingCashInput   = document.getElementById('openingCash');
     const cbCategory         = document.getElementById('cbCategory');
@@ -737,12 +771,27 @@
     const settlePersonalCashBtn = document.getElementById('settlePersonalCashBtn');
     const settlePersonalUPIBtn  = document.getElementById('settlePersonalUPIBtn');
 
+    const toastEl = document.getElementById('toast');
+
     // ---------- State ----------
-    let readyRows = [];          // full raw rows from backend
-    let readyIndex = {};         // name_lower -> info
-    let readyCodeIndex = {};     // 3-char code (upper) -> info
-    let readyById = {};          // id -> info
+    const DEFAULT_CATEGORIES = ['Home Delivery','Frozen Products','SFH'];
+
+    let readyRows = [];
+    let readyIndexByName = {};   // name_lower -> info
+    let readyIndexByCode = {};   // code_upper -> info
+    let allCategories = new Set();
+
     let payStatus  = 'Live';
+
+    let billItems = []; // [{id,name,code,item_category,unit,qty,unit_price,discount}]
+    let nextOrderId = 1;
+    let lastReportData = null;
+    let currentReportRows = [];
+    let visibleDetailCols = new Set();
+    let openingCashKey = null;
+
+    const PAYMENT_STATUSES = ['Live','Due','Paid'];
+    const PAYMENT_MODES    = ['', 'CurrentUPI','Cash','Card','PersonalUPI','PersonalCash'];
 
     const detailColumns = [
       { key: 'date',           label: 'Date' },
@@ -763,32 +812,33 @@
       { key: 'payment_note',   label: 'Pay Note' },
       { key: 'notes',          label: 'Notes' },
     ];
+    visibleDetailCols = new Set(detailColumns.map(c => c.key));
 
-    const PAYMENT_STATUSES = ['Live','Due','Paid'];
-    const PAYMENT_MODES    = ['', 'CurrentUPI','Cash','Card','PersonalUPI','PersonalCash'];
-
-    let visibleDetailCols = new Set(detailColumns.map(c => c.key));
-    let currentReportRows = [];
-    let lastReportData    = null;
-    let openingCashKey    = null;
-
-    // Bill state
-    let billItems = [];   // {lineId, readyId, name, code, category, item_category, unit, qty, unit_price, discount}
-    let billStage = 'empty'; // empty | editing | printed | saved
-    let currentOrderId = null;
-
-    // Bill totals
-    let billSubtotal = 0;
-    let billDiscountTotal = 0;
-    let billGrandTotal = 0;
-
-    // Suggestions state
-    let suggestionItems = []; // list of ready info
-    let suggestionIndex = -1;
+    let suggestionList = [];
+    let suggestionActiveIndex = -1;
 
     // ---------- Utils ----------
     const toMoney = (n)=> '₹' + (Number(n||0).toFixed(2));
     const isMobile = ()=> window.matchMedia('(max-width: 767px)').matches;
+
+    function isThreeCharCode(val){
+      return /^[0-9][A-Za-z]{2}$/.test(val);
+    }
+
+    function showToast(msg){
+      if(!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(()=> toastEl.classList.remove('show'), 1800);
+    }
+
+    async function fetchJSON(url, opts){
+      const res = await fetch(url, Object.assign({
+        headers: {'Content-Type':'application/json'}
+      }, opts || {}));
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
+    }
 
     function setChipsActive(container, value, keyAttr){
       container.querySelectorAll('.chip').forEach(ch=>{
@@ -796,111 +846,71 @@
       });
     }
 
-    function isThreeCharCode(val){
-      // exactly 3 chars: 1 digit + 2 letters (case-insensitive)
-      return /^[0-9][A-Za-z]{2}$/.test(val);
+    function updateOrderLabels(){
+      billOrderLabel.textContent = '#' + nextOrderId;
+      floatOrder.textContent     = '#' + nextOrderId;
     }
 
-    async function fetchJSON(url, opts){
-      const res = await fetch(url, Object.assign({
-        headers: {'Content-Type':'application/json'}
-      }, opts || {}));
-      if(!res.ok){
-        const txt = await res.text().catch(()=> '');
-        throw new Error('HTTP ' + res.status + ' ' + txt);
-      }
-      return await res.json();
+    function reserveOrderId(){
+      const id = nextOrderId;
+      nextOrderId += 1;
+      localStorage.setItem('tbm_last_order_id', String(id));
+      updateOrderLabels();
+      return String(id);
     }
 
-    function showPaymentBlock(show){
-      if(!paymentBlock) return;
-      paymentBlock.style.display = show ? 'block' : 'none';
-    }
+    // ---------- Ready Products & categories ----------
+    function rebuildCategorySelects(){
+      const cats = new Set(DEFAULT_CATEGORIES);
+      allCategories.forEach(c => cats.add(c));
+      const sorted = Array.from(cats).filter(Boolean).sort();
 
-    function updateBillStatusLabel(){
-      if(!billStatusLabel) return;
-      if(!billItems.length){
-        billStatusLabel.textContent = 'No items yet.';
-      }else if(billStage === 'printed'){
-        billStatusLabel.textContent = 'Bill locked & printed. Set payment and Save.';
-      }else if(billStage === 'saved'){
-        billStatusLabel.textContent = 'Bill saved.';
-      }else{
-        billStatusLabel.textContent = billItems.length + ' items in bill.';
-      }
-    }
-
-    // ---------- Loaders ----------
-    async function loadNextOrder(){
-      try{
-        const d = await fetchJSON('/api/sales/next_order');
-        const n = d.next_order_id;
-        if(typeof n === 'number'){
-          nextOrderKpi.textContent = '#' + n;
-          if(!currentOrderId){
-            floatOrder.textContent   = '#' + n;
-          }
+      const catSelects = [saleCategory, rCategory];
+      catSelects.forEach(sel=>{
+        if(!sel) return;
+        const prev = sel.value;
+        sel.innerHTML = '';
+        if(sel === rCategory){
+          const optAll = document.createElement('option');
+          optAll.value = '';
+          optAll.textContent = '(All)';
+          sel.appendChild(optAll);
         }
-      }catch(e){
-        console.error('next_order error', e);
-      }
-    }
-
-    function rebuildCategoryDropdowns(catSet){
-      const defaults = ['Home Delivery','Frozen Products','SFH'];
-      const all = [...defaults];
-      (catSet || new Set()).forEach(c=>{
-        if(c && !all.includes(c)) all.push(c);
-      });
-
-      // saleCategory
-      const prevSale = saleCategory.value;
-      saleCategory.innerHTML = '';
-      all.forEach(c=>{
-        const o = document.createElement('option');
-        o.value = c;
-        o.textContent = c;
-        saleCategory.appendChild(o);
-      });
-      if(prevSale && all.includes(prevSale)){
-        saleCategory.value = prevSale;
-      }
-
-      // report category
-      if(rCategory){
-        const prev = rCategory.value;
-        rCategory.innerHTML = '';
-        const optAll = document.createElement('option');
-        optAll.value = '';
-        optAll.textContent = '(All)';
-        rCategory.appendChild(optAll);
-        all.forEach(c=>{
+        sorted.forEach(c=>{
           const o = document.createElement('option');
           o.value = c;
           o.textContent = c;
-          rCategory.appendChild(o);
+          sel.appendChild(o);
         });
-        if(prev && all.includes(prev)){
-          rCategory.value = prev;
+        if(prev && sorted.includes(prev)){
+          sel.value = prev;
+        }else if(sel === saleCategory){
+          sel.value = 'SFH'; // default to SFH for your cafe
         }
-      }
+      });
     }
 
-    function rebuildItemCategoryFilter(itemCatSet){
+    function rebuildItemCategoryFilter(){
       if(!saleItemCategoryFilter) return;
+      const catSet = new Set();
+      readyRows.forEach(r=>{
+        const ic = (r.item_category || '').trim();
+        if(ic) catSet.add(ic);
+      });
+
       saleItemCategoryFilter.innerHTML = '';
       const optAll = document.createElement('option');
       optAll.value = '';
       optAll.textContent = '(All)';
       saleItemCategoryFilter.appendChild(optAll);
 
-      if(!itemCatSet || itemCatSet.size === 0){
+      if(catSet.size === 0){
         if(itemCatFilterField) itemCatFilterField.style.display = 'none';
         return;
       }
       if(itemCatFilterField) itemCatFilterField.style.display = '';
 
-      Array.from(itemCatSet).sort().forEach(cat=>{
+      Array.from(catSet).sort().forEach(cat=>{
         const o = document.createElement('option');
         o.value = cat;
         o.textContent = cat;
@@ -908,53 +918,74 @@
       });
     }
 
+    function rebuildReadyDatalist(){
+      readyList.innerHTML = '';
+      const filterCat = saleItemCategoryFilter ? (saleItemCategoryFilter.value || '') : '';
+
+      readyRows.forEach(r=>{
+        const name = (r.name || '').trim();
+        if(!name) return;
+        const ic   = (r.item_category || '').trim();
+        const code = (r.code || '').trim();
+        const unit = (r.unit || '').trim();
+        const price = Number(r.price || 0);
+
+        if(filterCat && ic !== filterCat) return;
+
+        const opt = document.createElement('option');
+        opt.value = name;
+        const bits = [];
+        if(code) bits.push(code);
+        bits.push(name);
+        if(unit) bits.push(unit + ' @ ' + toMoney(price).slice(1));
+        if(ic)   bits.push('(' + ic + ')');
+        opt.label = bits.join(' • ');
+        readyList.appendChild(opt);
+      });
+    }
+
     async function loadReadyProducts(){
       const d = await fetchJSON('/api/ready_products');
       readyRows = d.rows || [];
-      readyIndex = {};
-      readyCodeIndex = {};
-      readyById = {};
-      const catSet = new Set();
-      const itemCatSet = new Set();
+      readyIndexByName = {};
+      readyIndexByCode = {};
+      allCategories = new Set();
 
       readyRows.forEach(r=>{
         const name = (r.name || '').trim();
         if(!name) return;
         const keyName = name.toLowerCase();
         const info = {
-          id: r.id,
           name,
           unit: r.unit,
-          price: Number(r.price || 0),
+          price: parseFloat(r.price || 0),
           category: r.category,
           item_category: (r.item_category || '').trim(),
-          code: (r.code || '').trim(),
-          quantity: Number(r.quantity || 0),
-          threshold: Number(r.threshold || 0)
+          code: (r.code || '').trim().toUpperCase()
         };
-        readyIndex[keyName] = info;
-        readyById[info.id] = info;
-
+        readyIndexByName[keyName] = info;
         if(info.code && isThreeCharCode(info.code)){
-          readyCodeIndex[info.code.toUpperCase()] = info;
+          readyIndexByCode[info.code] = info;
         }
-        if(info.category) catSet.add(info.category);
-        if(info.item_category) itemCatSet.add(info.item_category);
+        if(info.category) allCategories.add(info.category);
       });
 
-      rebuildCategoryDropdowns(catSet);
-      rebuildItemCategoryFilter(itemCatSet);
-      buildSuggestions(saleItem.value || '');
+      rebuildCategorySelects();
+      rebuildItemCategoryFilter();
+      rebuildReadyDatalist();
+      applyCategoryDefaults();
     }
 
+    // ---------- Branches & Live tables ----------
     async function loadBranches(){
       const d = await fetchJSON('/api/branches');
-      const rows = d.rows||[];
+      const rows = d.rows || [];
       [branchSelect, liveBranch].forEach(sel=>{
-        sel.innerHTML='';
+        if(!sel) return;
+        sel.innerHTML = '';
         const ph = document.createElement('option');
-        ph.value='';
-        ph.textContent='(Select)';
+        ph.value = '';
+        ph.textContent = '(Select)';
         sel.appendChild(ph);
       });
       rows.forEach(r=>{
@@ -966,430 +997,438 @@
       });
     }
 
-    // ---------- Item search & suggestions ----------
-    function buildSuggestions(q){
-      if(!itemSuggestBox) return;
-      q = (q || '').trim();
-      itemSuggestBox.innerHTML = '';
-      suggestionItems = [];
-      suggestionIndex = -1;
-
-      // if blank, hide
-      if(!q){
-        itemSuggestBox.style.display = 'none';
+    async function loadLiveTables(){
+      const br = liveBranch.value || branchSelect.value || '';
+      if(!br){
+        liveWrap.innerHTML = '<div class="hint">Select branch to view tables.</div>';
         return;
       }
+      const p = new URLSearchParams();
+      p.set('period','today');
+      p.set('category','SFH');
+      p.set('branch', br);
+      p.set('payment_status','Live');
 
-      const lc = q.toLowerCase();
+      const d = await fetchJSON('/api/sales/report?' + p.toString());
+      const rows = d.rows || [];
+      const counts = {};
+      rows.forEach(r=>{
+        const tn = (r.table_no || '—');
+        counts[tn] = (counts[tn] || 0) + 1;
+      });
 
-      // If matches an item_category exactly, treat as text-based category filter
-      const itemCats = new Set();
-      readyRows.forEach(r=>{
-        const ic = (r.item_category || '').trim();
-        if(ic) itemCats.add(ic);
-      });
-      let matchedCat = null;
-      Array.from(itemCats).forEach(ic=>{
-        if(ic.toLowerCase() === lc){
-          matchedCat = ic;
-        }
-      });
-      if(matchedCat){
-        if(saleItemCategoryFilter){
-          saleItemCategoryFilter.value = matchedCat;
-        }
-        saleItem.value = '';
-        itemSuggestBox.style.display = 'none';
-        suggestionItems = [];
-        suggestionIndex = -1;
+      const entries = Object.entries(counts);
+      if(!entries.length){
+        liveWrap.innerHTML = '<div class="hint">No live orders right now.</div>';
         return;
       }
-
-      const filterCat = saleItemCategoryFilter ? (saleItemCategoryFilter.value || '') : '';
-      const matches = [];
-
-      readyRows.forEach(r=>{
-        const name = (r.name || '').trim();
-        if(!name) return;
-        const code = (r.code || '').trim();
-        const itemCat = (r.item_category || '').trim();
-        const cat = r.category || '';
-
-        if(filterCat && itemCat !== filterCat) return;
-
-        const nameLc = name.toLowerCase();
-        const codeLc = code.toLowerCase();
-        const itemCatLc = itemCat.toLowerCase();
-
-        if(nameLc.startsWith(lc) || codeLc.startsWith(lc) || (!filterCat && itemCatLc.startsWith(lc))){
-          matches.push({
-            id: r.id,
-            name,
-            unit: r.unit,
-            price: Number(r.price || 0),
-            category: cat,
-            item_category: itemCat,
-            code
-          });
-        }
+      const grid = document.createElement('div');
+      grid.className = 'table-cards';
+      entries.forEach(([table_no,count])=>{
+        const card = document.createElement('div');
+        card.className = 'tcard';
+        card.innerHTML = '<h3>Table ' + table_no + '</h3>' +
+                         '<div class="count">' + count + '</div>' +
+                         '<div class="hint">Tap to see details (later enhancement)</div>';
+        grid.appendChild(card);
       });
-
-      if(!matches.length){
-        itemSuggestBox.style.display = 'none';
-        return;
-      }
-
-      suggestionItems = matches.slice(0, 12);
-      const frag = document.createDocumentFragment();
-      suggestionItems.forEach((info, idx)=>{
-        const div = document.createElement('div');
-        div.className = 'suggest-item';
-        div.dataset.index = String(idx);
-
-        const line1 = (info.code ? info.code + ' • ' : '') + info.name;
-        const parts2 = [];
-        if(info.item_category) parts2.push(info.item_category);
-        if(info.category) parts2.push(info.category);
-        if(info.unit) parts2.push(info.unit + ' @ ₹' + info.price.toFixed(2));
-
-        div.innerHTML = `
-          <div class="s-line1">${line1}</div>
-          <div class="s-line2">${parts2.join(' • ')}</div>
-        `;
-        frag.appendChild(div);
-      });
-
-      itemSuggestBox.innerHTML = '';
-      itemSuggestBox.appendChild(frag);
-      itemSuggestBox.style.display = 'block';
+      liveWrap.innerHTML = '';
+      liveWrap.appendChild(grid);
     }
 
-    function highlightSuggestion(){
-      if(!itemSuggestBox) return;
-      const els = itemSuggestBox.querySelectorAll('.suggest-item');
-      els.forEach(el=>{
-        const idx = Number(el.dataset.index);
-        el.classList.toggle('active', idx === suggestionIndex);
-      });
-    }
-
-    function chooseSuggestion(idx){
-      const info = suggestionItems[idx];
+    // ---------- Smart item selection ----------
+    function applyItemDefaultsFromInfo(info){
       if(!info) return;
-
-      saleItem.value = info.name;
-      saleItem.dataset.readyId = info.id;
-      saleItem.dataset.code = info.code || '';
-      saleItem.dataset.itemCategory = info.item_category || '';
-
-      if(info.unit) saleUnit.value = info.unit;
+      saleUnit.value = info.unit || saleUnit.value;
       saleUnitPrice.value = Number(info.price || 0).toFixed(2);
-      if(info.category) saleCategory.value = info.category;
-      if(saleItemCategoryFilter && info.item_category){
-        saleItemCategoryFilter.value = info.item_category;
+
+      if(!saleCategory.value){
+        saleCategory.value = info.category || 'Home Delivery';
       }
-      itemSuggestBox.style.display = 'none';
-      suggestionItems = [];
-      suggestionIndex = -1;
+      if(info.item_category && saleItemCategoryFilter && !saleItemCategoryFilter.value){
+        saleItemCategoryFilter.value = info.item_category;
+        rebuildReadyDatalist();
+      }
+    }
+
+    function findItemInfoBySmartQuery(raw){
+      const val = raw.trim();
+      if(!val) return null;
+
+      // direct code match
+      if(isThreeCharCode(val)){
+        const info = readyIndexByCode[val.toUpperCase()];
+        if(info) return info;
+      }
+
+      // "momo c" style: first token category-ish, second token name/code prefix
+      const parts = val.toLowerCase().split(/\s+/).filter(Boolean);
+      let catToken = '';
+      let nameToken = '';
+      if(parts.length >= 2){
+        catToken = parts[0];
+        nameToken = parts.slice(1).join(' ');
+      }else{
+        nameToken = parts[0];
+      }
+
+      const filterCatExplicit = saleItemCategoryFilter?.value || '';
+
+      let best = null;
+      const filterFn = (info)=>{
+        if(filterCatExplicit && info.item_category !== filterCatExplicit) return false;
+        if(catToken){
+          if(!info.item_category || info.item_category.toLowerCase().indexOf(catToken) === -1) return false;
+        }
+        if(!nameToken) return true;
+        const lowerName = (info.name || '').toLowerCase();
+        const code = (info.code || '').toLowerCase();
+        return lowerName.startsWith(nameToken) || code.startsWith(nameToken);
+      };
+
+      for(const key in readyIndexByName){
+        const info = readyIndexByName[key];
+        if(filterFn(info)){
+          best = info;
+          break;
+        }
+      }
+      return best;
+    }
+
+    function rebuildSuggestionPanel(){
+      const qRaw = saleItem.value || '';
+      const q = qRaw.trim();
+      suggestionList = [];
+      suggestionActiveIndex = -1;
+
+      if(!q){
+        itemSuggestPanel.classList.add('hidden');
+        itemSuggestPanel.innerHTML = '';
+        return;
+      }
+
+      const parts = q.toLowerCase().split(/\s+/).filter(Boolean);
+      let catToken = '';
+      let nameToken = '';
+      if(parts.length >= 2){
+        catToken = parts[0];
+        nameToken = parts.slice(1).join(' ');
+      }else{
+        nameToken = parts[0];
+      }
+      const filterCatExplicit = saleItemCategoryFilter?.value || '';
+
+      const groups = new Map(); // item_category -> [info]
+
+      Object.values(readyIndexByName).forEach(info=>{
+        if(filterCatExplicit && info.item_category !== filterCatExplicit) return;
+        if(catToken){
+          if(!info.item_category || info.item_category.toLowerCase().indexOf(catToken) === -1){
+            // allow "momo" to match either category or name if only 1 token
+            if(parts.length === 1){
+              const lowerName = info.name.toLowerCase();
+              const code = (info.code || '').toLowerCase();
+              if(!lowerName.startsWith(catToken) && !code.startsWith(catToken)) return;
+            }else{
+              return;
+            }
+          }
+        }
+
+        if(nameToken){
+          const lowerName = info.name.toLowerCase();
+          const code = (info.code || '').toLowerCase();
+          if(!lowerName.startsWith(nameToken) && !code.startsWith(nameToken)) return;
+        }
+
+        const gKey = info.item_category || '(No Category)';
+        if(!groups.has(gKey)) groups.set(gKey, []);
+        groups.get(gKey).push(info);
+      });
+
+      if(!groups.size){
+        itemSuggestPanel.classList.add('hidden');
+        itemSuggestPanel.innerHTML = '';
+        return;
+      }
+
+      itemSuggestPanel.innerHTML = '';
+      const frag = document.createDocumentFragment();
+
+      groups.forEach((infos, groupKey)=>{
+        const title = document.createElement('div');
+        title.className = 'suggest-group-title';
+        title.textContent = groupKey;
+        frag.appendChild(title);
+
+        infos.sort((a,b)=> a.name.localeCompare(b.name));
+        infos.forEach(info=>{
+          const idx = suggestionList.length;
+          suggestionList.push(info);
+          const div = document.createElement('div');
+          div.className = 'suggest-item';
+          div.dataset.index = String(idx);
+
+          const main = document.createElement('div');
+          main.className = 'suggest-item-main';
+
+          const left = document.createElement('div');
+          left.className = 'suggest-item-name';
+          left.textContent = info.name;
+          const right = document.createElement('div');
+          right.textContent = info.code || '';
+
+          main.appendChild(left);
+          main.appendChild(right);
+
+          const meta = document.createElement('div');
+          meta.className = 'suggest-item-meta';
+          if(info.item_category) meta.appendChild(textSpan(info.item_category));
+          if(info.unit) meta.appendChild(textSpan(info.unit));
+          meta.appendChild(textSpan(toMoney(info.price)));
+
+          div.appendChild(main);
+          div.appendChild(meta);
+          frag.appendChild(div);
+        });
+      });
+
+      itemSuggestPanel.appendChild(frag);
+      itemSuggestPanel.classList.remove('hidden');
+    }
+
+    function textSpan(txt){
+      const s = document.createElement('span');
+      s.textContent = txt;
+      return s;
+    }
+
+    function applySuggestionByIndex(idx){
+      if(idx < 0 || idx >= suggestionList.length) return;
+      const info = suggestionList[idx];
+      saleItem.value = info.name;
+      applyItemDefaultsFromInfo(info);
+      itemSuggestPanel.classList.add('hidden');
+      suggestionList = [];
+      suggestionActiveIndex = -1;
       saleQty.focus();
     }
 
-    saleItem.addEventListener('input', ()=>{
-      const val = (saleItem.value || '').trim();
-      if(!val){
-        itemSuggestBox.style.display = 'none';
-        suggestionItems = [];
-        suggestionIndex = -1;
-        return;
-      }
-
-      // 3-char code instant select
-      if(isThreeCharCode(val)){
-        const info = readyCodeIndex[val.toUpperCase()];
-        if(info){
-          saleItem.value = info.name;
-          saleItem.dataset.readyId = info.id;
-          saleItem.dataset.code = info.code || '';
-          saleItem.dataset.itemCategory = info.item_category || '';
-          saleUnit.value = info.unit || saleUnit.value;
-          saleUnitPrice.value = Number(info.price || 0).toFixed(2);
-          if(info.category) saleCategory.value = info.category;
-          if(saleItemCategoryFilter && info.item_category){
-            saleItemCategoryFilter.value = info.item_category;
-          }
-          itemSuggestBox.style.display = 'none';
-          suggestionItems = [];
-          suggestionIndex = -1;
-          saleQty.focus();
-          return;
-        }
-      }
-
-      buildSuggestions(val);
-    });
-
-    saleItem.addEventListener('keydown', (e)=>{
-      if(!itemSuggestBox || itemSuggestBox.style.display === 'none') return;
-      if(e.key === 'ArrowDown'){
-        e.preventDefault();
-        if(!suggestionItems.length) return;
-        suggestionIndex = (suggestionIndex + 1) % suggestionItems.length;
-        highlightSuggestion();
-      }else if(e.key === 'ArrowUp'){
-        e.preventDefault();
-        if(!suggestionItems.length) return;
-        suggestionIndex = (suggestionIndex - 1 + suggestionItems.length) % suggestionItems.length;
-        highlightSuggestion();
-      }else if(e.key === 'Enter'){
-        if(suggestionItems.length && suggestionIndex >= 0){
-          e.preventDefault();
-          chooseSuggestion(suggestionIndex);
-        }
-      }else if(e.key === 'Escape'){
-        itemSuggestBox.style.display = 'none';
-        suggestionItems = [];
-        suggestionIndex = -1;
-      }
-    });
-
-    itemSuggestBox?.addEventListener('click', (e)=>{
-      const row = e.target.closest('.suggest-item');
-      if(!row) return;
-      const idx = Number(row.dataset.index);
-      chooseSuggestion(idx);
-    });
-
-    saleItemCategoryFilter?.addEventListener('change', ()=>{
-      // keep current text but adjust suggestions based on filter
-      buildSuggestions(saleItem.value || '');
-    });
-
-    // ---------- Bill helpers ----------
-    function recalcBillTotals(){
-      billSubtotal = 0;
-      billDiscountTotal = 0;
-      billGrandTotal = 0;
-
-      billItems.forEach(line=>{
-        const sub = line.qty * line.unit_price;
-        billSubtotal += sub;
-        billDiscountTotal += Number(line.discount || 0);
+    function highlightSuggestion(idx){
+      suggestionActiveIndex = idx;
+      const items = itemSuggestPanel.querySelectorAll('.suggest-item');
+      items.forEach(el=>{
+        const i = Number(el.dataset.index || -1);
+        el.classList.toggle('active', i === idx);
       });
-      billGrandTotal = Math.max(0, billSubtotal - billDiscountTotal);
+    }
 
-      tSub.textContent = toMoney(billSubtotal);
-      tDisc.textContent = toMoney(billDiscountTotal);
-      tTotal.textContent = toMoney(billGrandTotal);
-      floatTotal.textContent = toMoney(billGrandTotal);
+    // ---------- Bill items ----------
+    function recalcBillTotals(){
+      let sub = 0;
+      let disc = 0;
+      billItems.forEach(line=>{
+        const lineSub = Number(line.qty || 0) * Number(line.unit_price || 0);
+        const lineDisc = Number(line.discount || 0);
+        sub  += lineSub;
+        disc += lineDisc;
+      });
+      const tot = Math.max(0, sub - disc);
+      tSub.textContent   = toMoney(sub);
+      tDisc.textContent  = toMoney(disc);
+      tTotal.textContent = toMoney(tot);
+      floatTotal.textContent = toMoney(tot);
       floatItems.textContent = String(billItems.length);
     }
 
-    function checkLowStockAll(){
-      if(!lowStockHint) return;
-      lowStockHint.style.display = 'none';
-      lowStockHint.textContent = '';
-
-      if(!billItems.length) return;
-
-      const usageById = {};
-      billItems.forEach(line=>{
-        if(!line.readyId) return;
-        usageById[line.readyId] = (usageById[line.readyId] || 0) + line.qty;
-      });
-
-      const warnings = [];
-      Object.keys(usageById).forEach(id=>{
-        const info = readyById[id];
-        if(!info) return;
-        const totalUse = usageById[id];
-        const stock = Number(info.quantity || 0);
-        const th = Number(info.threshold || 0);
-        const remaining = stock - totalUse;
-        if(th > 0 && remaining <= th){
-          warnings.push(info.name + ': low stock (approx ' +
-            remaining.toFixed(3) + ' ' + (info.unit || '') +
-            ' left vs threshold ' + th.toFixed(3) + ')');
-        }
-      });
-
-      if(warnings.length){
-        lowStockHint.style.display = 'block';
-        lowStockHint.textContent = warnings.join(' | ');
-      }
-    }
-
-    function renderBill(){
-      billItemsList.innerHTML = '';
+    function renderBillItems(){
+      billItemsEl.innerHTML = '';
       if(!billItems.length){
+        const empty = document.createElement('div');
+        empty.className = 'bill-items-empty';
+        empty.textContent = 'No items yet. Add from above.';
+        billItemsEl.appendChild(empty);
         recalcBillTotals();
-        updateBillStatusLabel();
-        checkLowStockAll();
         return;
       }
 
       billItems.forEach(line=>{
         const row = document.createElement('div');
-        row.className = 'bill-row';
-        row.dataset.lineId = line.lineId;
+        row.className = 'bill-line';
+        row.dataset.id = line.id;
 
-        const titleParts = [];
-        if(line.code) titleParts.push(line.code);
-        titleParts.push(line.name);
-        const title = titleParts.join(' • ');
-
-        const lineSub = line.qty * line.unit_price;
-        const lineTot = Math.max(0, lineSub - line.discount);
-
-        const metaParts = [];
-        metaParts.push(line.qty + ' x ₹' + line.unit_price.toFixed(2));
+        const main = document.createElement('div');
+        main.className = 'bill-line-main';
+        const title = document.createElement('div');
+        title.className = 'bill-line-title';
+        title.textContent = line.name;
+        const sub = document.createElement('div');
+        sub.className = 'bill-line-sub';
+        const bits = [];
+        if(line.code) bits.push(line.code);
+        if(line.item_category) bits.push(line.item_category);
+        if(line.unit) bits.push(line.unit);
+        bits.push(toMoney(line.unit_price) + '/u');
         if(line.discount){
-          metaParts.push('Disc ₹' + line.discount.toFixed(2));
+          bits.push('Disc: ' + toMoney(line.discount));
         }
-        metaParts.push('= ₹' + lineTot.toFixed(2));
+        sub.textContent = bits.join(' • ');
+        main.appendChild(title);
+        main.appendChild(sub);
 
-        const catLabel = [line.category, line.item_category].filter(Boolean).join(' • ');
+        const qtyCol = document.createElement('div');
+        qtyCol.className = 'bill-line-qty';
+        const btnMinus = document.createElement('button');
+        btnMinus.type = 'button';
+        btnMinus.textContent = '–';
+        btnMinus.className = 'bl-qty-minus';
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.step = '0.001';
+        qtyInput.value = String(line.qty);
+        qtyInput.className = 'bl-qty-input';
+        const btnPlus = document.createElement('button');
+        btnPlus.type = 'button';
+        btnPlus.textContent = '+';
+        btnPlus.className = 'bl-qty-plus';
+        qtyCol.appendChild(btnMinus);
+        qtyCol.appendChild(qtyInput);
+        qtyCol.appendChild(btnPlus);
 
-        row.innerHTML = `
-          <div class="bill-main">
-            <div class="bill-name">${title}</div>
-            <div class="bill-meta">${metaParts.join(' • ')}</div>
-            <div class="bill-cat">${catLabel}</div>
-          </div>
-          <div class="bill-actions">
-            <button type="button" class="bill-btn" data-act="minus">−</button>
-            <span class="bill-qty">${line.qty}</span>
-            <button type="button" class="bill-btn" data-act="plus">+</button>
-            <button type="button" class="bill-btn" data-act="delete">✕</button>
-          </div>
-        `;
-        billItemsList.appendChild(row);
+        const totalCol = document.createElement('div');
+        totalCol.className = 'bill-line-total';
+        const totalMain = document.createElement('div');
+        totalMain.className = 'bill-line-total-main';
+        const totalSpan = document.createElement('span');
+        const lineSub = Number(line.qty || 0) * Number(line.unit_price || 0);
+        const lineDisc = Number(line.discount || 0);
+        const lineTot = Math.max(0, lineSub - lineDisc);
+        totalSpan.textContent = toMoney(lineTot);
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'bill-line-remove';
+        delBtn.innerHTML = '&times;';
+        totalMain.appendChild(totalSpan);
+        totalMain.appendChild(delBtn);
+        totalCol.appendChild(totalMain);
+
+        row.appendChild(main);
+        row.appendChild(qtyCol);
+        row.appendChild(totalCol);
+        billItemsEl.appendChild(row);
       });
-
       recalcBillTotals();
-      updateBillStatusLabel();
-      checkLowStockAll();
     }
 
-    function getCurrentReadyInfo(){
-      const nameVal = (saleItem.value || '').trim();
-      if(!nameVal) return null;
-
-      const idFromDataset = saleItem.dataset.readyId;
-      if(idFromDataset && readyById[idFromDataset]){
-        return readyById[idFromDataset];
-      }
-
-      const lower = nameVal.toLowerCase();
-      const info = readyIndex[lower];
-      return info || null;
-    }
-
-    async function addCurrentItemToBill(){
-      const info = getCurrentReadyInfo();
-      if(!info){
-        alert('Please choose a valid item from Ready Products (via search or favourites).');
+    function addItemToBill(){
+      const raw = saleItem.value || '';
+      const name = raw.trim();
+      if(!name){
+        alert('Please choose an item.');
         return;
       }
       const qty = Number(saleQty.value || 0);
       if(qty <= 0){
         alert('Quantity must be > 0');
+        saleQty.focus();
         return;
       }
-      const disc = Number(saleDiscount.value || 0);
-      const unitPrice = Number(saleUnitPrice.value || info.price || 0);
 
-      saleUnit.value = info.unit || saleUnit.value;
-      saleUnitPrice.value = unitPrice.toFixed(2);
-      if(info.category) saleCategory.value = info.category;
+      // best-effort info
+      let info = null;
+      const lowerName = name.toLowerCase();
+      if(readyIndexByName[lowerName]){
+        info = readyIndexByName[lowerName];
+      }else{
+        info = findItemInfoBySmartQuery(raw) || null;
+      }
 
-      const lineId = 'L' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-      billItems.push({
-        lineId,
-        readyId: info.id,
-        name: info.name,
-        code: info.code || '',
-        category: info.category,
-        item_category: info.item_category,
-        unit: info.unit,
-        qty,
-        unit_price: unitPrice,
-        discount: disc
-      });
+      if(!info){
+        alert('Item not found in Ready Products (name/category/code).');
+        return;
+      }
 
-      billStage = 'editing';
-      currentOrderId = null;
+      applyItemDefaultsFromInfo(info);
 
-      // clear line (keep table / customer to be bill-level)
+      const discount = Number(saleDiscount.value || 0);
+      const id = 'BL' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+      // if same item/unit/price/discount exists, merge quantities
+      const existing = billItems.find(l =>
+        l.name === info.name &&
+        l.unit === info.unit &&
+        Number(l.unit_price) === Number(info.price) &&
+        Number(l.discount) === discount
+      );
+
+      if(existing){
+        existing.qty = Number(existing.qty || 0) + qty;
+      }else{
+        billItems.push({
+          id,
+          name: info.name,
+          code: info.code,
+          item_category: info.item_category,
+          unit: info.unit,
+          qty,
+          unit_price: Number(info.price || 0),
+          discount
+        });
+      }
+
+      renderBillItems();
       saleItem.value = '';
-      saleItem.dataset.readyId = '';
-      saleItem.dataset.code = '';
-      saleItem.dataset.itemCategory = '';
       saleQty.value = '';
       saleDiscount.value = '0';
       chipDiscBtns.forEach(x=>x.classList.remove('active'));
-      itemSuggestBox.style.display = 'none';
-      suggestionItems = [];
-      suggestionIndex = -1;
-
-      renderBill();
+      saleUnitPrice.value = '';
+      itemSuggestPanel.classList.add('hidden');
+      suggestionList = [];
+      suggestionActiveIndex = -1;
+      saleItem.focus();
+      showToast('Item added to bill');
     }
 
-    // quick qty handlers
-    qtyRow?.addEventListener('click', (e)=>{
-      const btn = e.target.closest('.btn');
-      if(!btn) return;
-      if(btn.id==='qtyPlus'){
-        saleQty.value = Number(saleQty.value||0) + 1;
-        return;
-      }
-      if(btn.id==='qtyMinus'){
-        saleQty.value = Math.max(0, Number(saleQty.value||0) - 1);
-        return;
-      }
-      if(btn.id==='qtyClear'){
-        saleQty.value='';
-        return;
-      }
-      const inc = Number(btn.dataset.q||0);
-      saleQty.value = Number(saleQty.value||0) + inc;
-    });
-
-    // discount chips
-    chipDiscBtns.forEach(b=> b.addEventListener('click', ()=>{
-      chipDiscBtns.forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      saleDiscount.value = b.dataset.disc;
-    }));
-
-    // bill palette actions
-    billItemsList?.addEventListener('click', (e)=>{
-      const btn = e.target.closest('.bill-btn');
-      if(!btn) return;
-      const row = btn.closest('.bill-row');
+    billItemsEl.addEventListener('click', (e)=>{
+      const row = e.target.closest('.bill-line');
       if(!row) return;
-      const lineId = row.dataset.lineId;
-      const line = billItems.find(l => l.lineId === lineId);
+      const id = row.dataset.id;
+      const line = billItems.find(l => l.id === id);
       if(!line) return;
 
-      const act = btn.dataset.act;
-      if(act === 'plus'){
-        line.qty += 1;
-      }else if(act === 'minus'){
-        line.qty = Math.max(1, line.qty - 1);
-      }else if(act === 'delete'){
-        const idx = billItems.findIndex(l => l.lineId === lineId);
-        if(idx >= 0) billItems.splice(idx,1);
+      if(e.target.classList.contains('bl-qty-minus')){
+        line.qty = Math.max(0, Number(line.qty || 0) - 1);
+        if(line.qty === 0){
+          billItems = billItems.filter(l => l.id !== id);
+        }
+        renderBillItems();
+      }else if(e.target.classList.contains('bl-qty-plus')){
+        line.qty = Number(line.qty || 0) + 1;
+        renderBillItems();
+      }else if(e.target.classList.contains('bill-line-remove')){
+        billItems = billItems.filter(l => l.id !== id);
+        renderBillItems();
       }
-      billStage = 'editing';
-      renderBill();
     });
 
-    // ---------- SFH & payment ----------
-    function toggleSFH(){
-      const isSFH = (saleCategory.value === 'SFH');
-      sfhBranchWrap.style.display = isSFH ? '' : 'none';
-    }
+    billItemsEl.addEventListener('change', (e)=>{
+      const row = e.target.closest('.bill-line');
+      if(!row) return;
+      if(!e.target.classList.contains('bl-qty-input')) return;
+      const id = row.dataset.id;
+      const line = billItems.find(l => l.id === id);
+      if(!line) return;
+      const q = Number(e.target.value || 0);
+      if(q <= 0){
+        billItems = billItems.filter(l => l.id !== id);
+      }else{
+        line.qty = q;
+      }
+      renderBillItems();
+    });
 
+    // ---------- Payment & defaults ----------
     function togglePay(){
       const paid = (payStatus === 'Paid');
       payModeRow.style.display = paid ? '' : 'none';
@@ -1397,304 +1436,250 @@
       payNoteRow.style.display = needsNote ? '' : 'none';
     }
 
+    function applyCategoryDefaults(){
+      const cat = saleCategory.value || 'SFH';
+      if(cat === 'Home Delivery'){
+        sfhBranchWrap.style.display = 'none';
+        saleTable.parentElement.style.display = 'none';
+        if(payMode && !payMode.value){
+          payMode.value = 'CurrentUPI';
+        }
+      }else if(cat === 'Frozen Products'){
+        sfhBranchWrap.style.display = 'none';
+        saleTable.parentElement.style.display = 'none';
+      }else if(cat === 'SFH'){
+        sfhBranchWrap.style.display = '';
+        saleTable.parentElement.style.display = '';
+      }
+    }
+
+    function toggleMoreBody(){
+      const open = moreBody.classList.toggle('open');
+      moreToggle.classList.toggle('open', open);
+    }
+
+    // ---------- Qty / discount / chips ----------
+    qtyRow?.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.btn');
+      if(!btn) return;
+      if(btn.id === 'qtyPlus'){
+        saleQty.value = Number(saleQty.value || 0) + 1;
+      }else if(btn.id === 'qtyMinus'){
+        saleQty.value = Math.max(0, Number(saleQty.value || 0) - 1);
+      }else if(btn.id === 'qtyClear'){
+        saleQty.value = '';
+      }else{
+        const inc = Number(btn.dataset.q || 0);
+        saleQty.value = Number(saleQty.value || 0) + inc;
+      }
+    });
+
+    chipDiscBtns.forEach(b=> b.addEventListener('click', ()=>{
+      chipDiscBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      saleDiscount.value = b.dataset.disc;
+    }));
+
+    // ---------- Events: category / branch / payment ----------
+    saleCategory.addEventListener('change', ()=>{
+      applyCategoryDefaults();
+      if(isMobile()){
+        runReport();
+      }
+    });
+
+    saleItemCategoryFilter?.addEventListener('change', ()=>{
+      rebuildReadyDatalist();
+      saleItem.value = '';
+      itemSuggestPanel.classList.add('hidden');
+    });
+
     payChips.addEventListener('click', (e)=>{
       const c = e.target.closest('.chip'); if(!c) return;
       payStatus = c.dataset.status;
       setChipsActive(payChips, payStatus, 'data-status');
       togglePay();
     });
-    payMode.addEventListener('change', ()=>{
-      togglePay();
-      try{ localStorage.setItem('tbm_last_pay_mode', payMode.value || ''); }catch{}
-    });
+    payMode.addEventListener('change', togglePay);
 
-    saleCategory.addEventListener('change', ()=>{
-      toggleSFH();
-      try{ localStorage.setItem('tbm_last_sale_category', saleCategory.value || ''); }catch{}
-      if(saleCategory.value==='SFH' && branchSelect.value){
-        liveBranch.value = branchSelect.value;
-        loadLiveTables();
-      }
-      if(isMobile()){
-        runReport();
-      }
-    });
-
-    branchSelect.addEventListener('change', ()=>{
-      try{ localStorage.setItem('tbm_last_sale_branch', branchSelect.value || ''); }catch{}
-    });
-
-    saleTable.addEventListener('change', ()=>{
-      try{ localStorage.setItem('tbm_last_sale_table', saleTable.value || ''); }catch{}
-    });
-
-    // add branch
     addBranchBtn.addEventListener('click', async ()=>{
       const name = prompt('New branch name?'); if(!name) return;
       await fetchJSON('/api/branches', {method:'POST', body: JSON.stringify({name, is_active:true})});
       await loadBranches();
-      branchSelect.value = name; liveBranch.value = name;
+      branchSelect.value = name;
+      liveBranch.value = name;
       loadLiveTables();
       if(isMobile()){
         runReport();
       }
     });
 
-    // ---------- Lock & print ----------
-    async function ensureOrderId(){
-      if(currentOrderId) return currentOrderId;
-      try{
-        const d = await fetchJSON('/api/sales/next_order');
-        currentOrderId = d.next_order_id;
-        nextOrderKpi.textContent = '#' + currentOrderId;
-        floatOrder.textContent   = '#' + currentOrderId;
-      }catch(e){
-        console.error('order id error', e);
-        currentOrderId = null;
+    liveBranch.addEventListener('change', loadLiveTables);
+    refreshLive.addEventListener('click', loadLiveTables);
+
+    // ---------- Item input: suggestions & keyboard ----------
+    saleItem.addEventListener('input', ()=>{
+      const val = saleItem.value || '';
+      if(isThreeCharCode(val.trim())){
+        const info = readyIndexByCode[val.trim().toUpperCase()];
+        if(info){
+          saleItem.value = info.name;
+          applyItemDefaultsFromInfo(info);
+          itemSuggestPanel.classList.add('hidden');
+          suggestionList = [];
+          suggestionActiveIndex = -1;
+          saleQty.focus();
+          return;
+        }
       }
-      return currentOrderId;
-    }
+      rebuildSuggestionPanel();
+    });
 
-    function openPrintWindow(){
-  if(!billItems.length){
-    alert('Add at least one item to the bill before printing.');
-    return;
-  }
-  const w = window.open('', '_blank');
-  if(!w){
-    alert('Popup blocked. Allow popups to print.');
-    return;
-  }
-  const now = new Date();
-  const dt = now.toLocaleString();
-  const cat = saleCategory.value || '';
-  const table = (saleTable.value || '').trim();
-  const branchVal = (saleCategory.value === 'SFH') ? (branchSelect.value || '') : '';
-  const custName = (saleCustName.value || '').trim();
-  const custPhone = (saleCustPhone.value || '').trim();
-
-  let rowsHtml = '';
-  billItems.forEach((line, idx)=>{
-    const lineSub = line.qty * line.unit_price;
-    const lineTot = Math.max(0, lineSub - line.discount);
-    rowsHtml += `
-      <tr>
-        <td>${idx+1}</td>
-        <td>${line.name}</td>
-        <td>${line.qty}</td>
-        <td>${line.unit_price.toFixed(2)}</td>
-        <td>${line.discount ? line.discount.toFixed(2) : '0.00'}</td>
-        <td>${lineTot.toFixed(2)}</td>
-      </tr>
-    `;
-  });
-
-  const html = `
-  <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Bill</title>
-    <style>
-      body{ font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; margin:0; padding:4px; width:280px; }
-      h1{ font-size:16px; text-align:center; margin:0 0 4px; }
-      .meta{ font-size:11px; margin-bottom:4px; }
-      table{ width:100%; border-collapse:collapse; font-size:11px; }
-      th,td{ border-bottom:1px dashed #999; padding:2px 0; text-align:left; }
-      tfoot td{ border-top:1px solid #000; font-weight:bold; }
-      .center{ text-align:center; }
-    </style>
-  </head>
-  <body>
-    <h1>TBM Cafe</h1>
-    <div class="meta">
-      Order: #${currentOrderId || '–'}<br>
-      Date: ${dt}<br>
-      Cat: ${cat}${branchVal ? ' • ' + branchVal : ''}${table ? ' • Table ' + table : ''}<br>
-      ${custName || custPhone ? ('Customer: ' + custName + (custPhone ? ' ('+custPhone+')' : '')) : ''}
-    </div>
-    <table>
-      <thead>
-        <tr><th>#</th><th>Item</th><th>Q</th><th>Rate</th><th>Disc</th><th>Amt</th></tr>
-      </thead>
-      <tbody>${rowsHtml}</tbody>
-      <tfoot>
-        <tr><td colspan="5">Subtotal</td><td>${billSubtotal.toFixed(2)}</td></tr>
-        <tr><td colspan="5">Discount</td><td>${billDiscountTotal.toFixed(2)}</td></tr>
-        <tr><td colspan="5">Total</td><td>${billGrandTotal.toFixed(2)}</td></tr>
-      </tfoot>
-    </table>
-    <div class="center" style="margin-top:4px;">Thank you!</div>
-  </body>
-  </html>`;
-
-  w.document.open();
-  w.document.write(html);
-  w.document.close();
-  w.focus();
-  w.print();
-}
-
-
-    async function lockAndPrint(){
-      if(!billItems.length){
-        alert('Add at least one item to the bill.');
-        return;
+    saleItem.addEventListener('keydown', (e)=>{
+      if(suggestionList.length && !itemSuggestPanel.classList.contains('hidden')){
+        if(e.key === 'ArrowDown'){
+          e.preventDefault();
+          const next = (suggestionActiveIndex + 1) % suggestionList.length;
+          highlightSuggestion(next);
+          return;
+        }else if(e.key === 'ArrowUp'){
+          e.preventDefault();
+          const next = (suggestionActiveIndex - 1 + suggestionList.length) % suggestionList.length;
+          highlightSuggestion(next);
+          return;
+        }else if(e.key === 'Enter'){
+          if(suggestionActiveIndex >= 0){
+            e.preventDefault();
+            applySuggestionByIndex(suggestionActiveIndex);
+            return;
+          }
+        }
       }
-      await ensureOrderId();
-      billStage = 'printed';
-      updateBillStatusLabel();
-      showPaymentBlock(true);
-      openPrintWindow();
-    }
+      if(e.key === 'Enter' && !e.ctrlKey){
+        e.preventDefault();
+        addItemToBill();
+      }
+    });
 
-    // ---------- Save bill (commit to backend) ----------
+    itemSuggestPanel.addEventListener('click', (e)=>{
+      const itemEl = e.target.closest('.suggest-item');
+      if(!itemEl) return;
+      const idx = Number(itemEl.dataset.index || -1);
+      if(idx >= 0){
+        applySuggestionByIndex(idx);
+      }
+    });
+
+    saleQty.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && !e.ctrlKey){
+        e.preventDefault();
+        saleDiscount.focus();
+      }
+    });
+
+    saleDiscount.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && !e.ctrlKey){
+        e.preventDefault();
+        addItemToBill();
+      }
+    });
+
+    addItemBtn.addEventListener('click', addItemToBill);
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.ctrlKey && e.key === 'Enter'){
+        e.preventDefault();
+        saveBill();
+      }
+    });
+
+    // ---------- Save / Clear bill ----------
     async function saveBill(){
       if(!billItems.length){
-        alert('No items to save.');
+        alert('No items in bill.');
         return;
       }
-      await ensureOrderId();
-      const category = saleCategory.value || 'Home Delivery';
-      const branchVal = (category === 'SFH') ? (branchSelect.value || '') : '';
-      const dateVal = saleDate.value || null;
+      const category = saleCategory.value || 'SFH';
+      const branch = category === 'SFH' ? (branchSelect.value || '') : '';
+      const date = saleDate.value || null;
+      if(category === 'SFH' && !saleTable.value.trim()){
+        alert('Table is required for SFH.');
+        saleTable.focus();
+        return;
+      }
 
+      const orderId = reserveOrderId();
       const payloadBase = {
-        date: dateVal,
+        date,
         category,
-        branch: branchVal,
-        customer_name: (saleCustName.value||'').trim(),
-        customer_phone: (saleCustPhone.value||'').trim(),
-        table_no: (saleTable.value||'').trim(),
+        branch,
+        table_no: (saleTable.value || '').trim(),
+        customer_name: (saleCustName.value || '').trim(),
+        customer_phone: (saleCustPhone.value || '').trim(),
         payment_status: payStatus,
-        payment_mode: payStatus === 'Paid' ? (payMode.value||'') : '',
-        payment_note: (payNote.value||'').trim(),
-        notes: (saleNotes.value||'').trim()
+        payment_mode: payStatus === 'Paid' ? (payMode.value || '') : '',
+        payment_note: (payNote.value || '').trim(),
+        notes: (saleNotes.value || '').trim(),
+        order_id: orderId
       };
 
       try{
+        let firstBillUrl = null;
         for(const line of billItems){
           const payload = Object.assign({}, payloadBase, {
             item: line.name,
             unit: line.unit,
-            qty: line.qty,
-            unit_price: null,  // backend uses Ready Products price
-            discount: line.discount,
-            order_id: currentOrderId
+            qty: Number(line.qty || 0),
+            unit_price: line.unit_price,
+            discount: Number(line.discount || 0)
           });
-          await fetchJSON('/api/sales', {
-            method:'POST',
-            body: JSON.stringify(payload)
-          });
+          const res = await fetchJSON('/api/sales', {method:'POST', body: JSON.stringify(payload)});
+          if(!firstBillUrl && res.bill_url){
+            firstBillUrl = res.bill_url;
+          }
         }
-        alert('Bill #' + (currentOrderId || '–') + ' saved.');
-        billStage = 'saved';
-        // refresh data
-        await Promise.all([loadNextOrder(), loadReadyProducts(), runReport(), loadLiveTables()]);
-        // clear bill but keep basic context (category/branch/table)
-        billItems.length = 0;
-        currentOrderId = null;
-        renderBill();
-        showPaymentBlock(false);
+        if(firstBillUrl){
+          window.open(firstBillUrl, '_blank');
+        }
+        showToast('Bill #' + orderId + ' saved');
+        // reset bill
+        billItems = [];
+        renderBillItems();
+        sForm.reset();
+        applyCategoryDefaults();
       }catch(err){
         console.error(err);
-        alert('Error saving bill. Please check connection / logs.');
+        alert('Error while saving bill. Check console/logs.');
       }
     }
 
-    // ---------- Clear bill ----------
-    clearBillBtn.addEventListener('click', ()=>{
-      billItems.length = 0;
-      billStage = 'empty';
-      currentOrderId = null;
-      renderBill();
-      showPaymentBlock(false);
+    saveBillBtn.addEventListener('click', saveBill);
+    saveBillBtnFloat.addEventListener('click', saveBill);
+
+    clearFormBtn.addEventListener('click', ()=>{
+      billItems = [];
+      renderBillItems();
+      sForm.reset();
+      applyCategoryDefaults();
+      saleItem.value = '';
+      itemSuggestPanel.classList.add('hidden');
+      suggestionList = [];
+      suggestionActiveIndex = -1;
     });
 
-    // ---------- Favourites strip ----------
-    function buildFavStrip(byItem){
-      if(!favStrip) return;
-      favStrip.innerHTML = '';
-      const label = document.createElement('span');
-      label.className = 'hint';
-      label.textContent = 'Favourites / Most sold today:';
-      favStrip.appendChild(label);
+    sForm.addEventListener('submit', (e)=> e.preventDefault());
 
-      if(!byItem) return;
-      const pairs = Object.entries(byItem);
-      if(!pairs.length) return;
-
-      pairs.sort((a,b)=> b[1]-a[1]);
-      const top = pairs.slice(0, 8);
-      top.forEach(([name, amt])=>{
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.dataset.itemName = name;
-        chip.textContent = name;
-        favStrip.appendChild(chip);
-      });
-    }
-
-    favStrip?.addEventListener('click', (e)=>{
-      const chip = e.target.closest('.chip'); if(!chip) return;
-      const name = chip.dataset.itemName;
-      if(!name) return;
-      const info = readyIndex[name.toLowerCase()];
-      if(!info){
-        saleItem.value = name;
-        saleItem.focus();
-        return;
-      }
-      saleItem.value = info.name;
-      saleItem.dataset.readyId = info.id;
-      saleItem.dataset.code = info.code || '';
-      saleItem.dataset.itemCategory = info.item_category || '';
-      saleUnit.value = info.unit || saleUnit.value;
-      saleUnitPrice.value = info.price.toFixed(2);
-      if(info.category) saleCategory.value = info.category;
-      if(saleItemCategoryFilter && info.item_category){
-        saleItemCategoryFilter.value = info.item_category;
-      }
-      saleQty.value = Number(saleQty.value||0) + 1;
-      saleQty.focus();
-    });
-
-    // ---------- Live tables ----------
-    async function loadLiveTables(){
-      const br = liveBranch.value || branchSelect.value || '';
-      if(!br){
-        liveWrap.innerHTML = '<div class="hint">Select branch to view tables.</div>';
-        return;
-      }
-      const d = await fetchJSON('/api/branch_tables?branch=' + encodeURIComponent(br) + '&status=Live');
-      const rows = d.rows||[];
-      if(!rows.length){
-        liveWrap.innerHTML = '<div class="hint">No live orders right now.</div>';
-        return;
-      }
-      const grid = document.createElement('div');
-      grid.className = 'table-cards';
-      rows.forEach(r=>{
-        const card = document.createElement('div');
-        card.className = 'tcard';
-        card.innerHTML = '<h3>Table ' + r.table_no + '</h3><div class="count">' + r.open_orders + '</div>';
-        grid.appendChild(card);
-      });
-      liveWrap.innerHTML=''; liveWrap.appendChild(grid);
-    }
-    refreshLive.addEventListener('click', loadLiveTables);
-    liveBranch.addEventListener('change', loadLiveTables);
-
-    // ---------- Report + desktop detail table ----------
+    // ---------- Report / detail table ----------
     function lockReportToTodayOnMobile(){
       if(!isMobile()) return;
       rPeriod.value = 'today';
       rPeriod.disabled = true;
       if(rStart) rStart.disabled = true;
-      if(rEnd) rEnd.disabled = true;
+      if(rEnd)   rEnd.disabled = true;
       if(rCategory) rCategory.disabled = true;
-      if(rBranch) rBranch.disabled = true;
-      if(rItem) rItem.disabled = true;
-      if(rStatus) rStatus.disabled = true;
+      if(rBranch)   rBranch.disabled = true;
+      if(rItem)     rItem.disabled = true;
+      if(rStatus)   rStatus.disabled = true;
     }
 
     function buildColumnChooser(){
@@ -1722,7 +1707,6 @@
       if(!tblDetail) return;
       tblDetail.innerHTML = '';
 
-      // header
       const headerTr = document.createElement('tr');
       detailColumns.forEach(col=>{
         if(!visibleDetailCols.has(col.key)) return;
@@ -1732,7 +1716,6 @@
       });
       tblDetail.appendChild(headerTr);
 
-      // rows
       currentReportRows.forEach(r=>{
         const tr = document.createElement('tr');
         tr.dataset.saleId = r.id;
@@ -1741,33 +1724,20 @@
           const td = document.createElement('td');
 
           if(col.key === 'payment_status'){
-            const sel = document.createElement('select');
-            sel.className = 'status-select';
-            PAYMENT_STATUSES.forEach(st=>{
-              const o = document.createElement('option');
-              o.value = st;
-              o.textContent = st;
-              if((r.payment_status || 'Live') === st) o.selected = true;
-              sel.appendChild(o);
-            });
-            td.appendChild(sel);
-          } else if(col.key === 'payment_mode'){
-            const sel = document.createElement('select');
-            sel.className = 'mode-select';
-            PAYMENT_MODES.forEach(m=>{
-              const o = document.createElement('option');
-              o.value = m;
-              o.textContent = m === '' ? '(none)' : m;
-              if((r.payment_mode || '') === m) o.selected = true;
-              sel.appendChild(o);
-            });
-            if((r.payment_status || '') !== 'Paid'){
-              sel.disabled = true;
-            }
-            td.appendChild(sel);
-          } else {
-            const val = r[col.key] || '';
-            td.textContent = val;
+            const span = document.createElement('span');
+            span.textContent = r.payment_status || 'Live';
+            span.className = 'status-chip ' + (
+              r.payment_status === 'Paid' ? 'status-paid' :
+              r.payment_status === 'Due' ? 'status-due' :
+              'status-live'
+            );
+            td.appendChild(span);
+          }else if(col.key === 'payment_mode'){
+            const span = document.createElement('span');
+            span.textContent = r.payment_mode || '';
+            td.appendChild(span);
+          }else{
+            td.textContent = r[col.key] || '';
           }
 
           tr.appendChild(td);
@@ -1832,13 +1802,10 @@
       cbPersonalCash.textContent = pCashLabel;
       cbPersonalUPI.textContent  = pUPILabel;
 
-      // opening cash local storage key
       openingCashKey = 'tbm_opening_cash_' + data.period.start + '_' + cat + '_' + br;
       if(openingCashInput && openingCashInput.value === ''){
         const stored = localStorage.getItem(openingCashKey);
-        if(stored !== null){
-          openingCashInput.value = stored;
-        }
+        if(stored !== null) openingCashInput.value = stored;
       }
     }
 
@@ -1854,9 +1821,9 @@
         }
       }else{
         p.set('period', rPeriod.value);
-        if(rPeriod.value==='daterange'){
-          if(rStart.value) p.set('start',rStart.value);
-          if(rEnd.value)   p.set('end',  rEnd.value);
+        if(rPeriod.value === 'daterange'){
+          if(rStart.value) p.set('start', rStart.value);
+          if(rEnd.value)   p.set('end',   rEnd.value);
         }
         if(rCategory?.value) p.set('category', rCategory.value);
         if(rBranch?.value?.trim()) p.set('branch', rBranch.value.trim());
@@ -1864,14 +1831,11 @@
         if(rStatus?.value)         p.set('payment_status', rStatus.value);
       }
 
-      const d = await fetchJSON('/api/sales/report?'+p.toString());
+      const d = await fetchJSON('/api/sales/report?' + p.toString());
       lastReportData = d;
 
       reportSummary.textContent = 'Total: ' + toMoney(d.total_sales) +
         ' (from ' + d.period.start + ' to ' + d.period.end + ')';
-
-      // Build favourites strip from this report
-      buildFavStrip(d.by_item || null);
 
       if(isMobile()){
         updateMobileCashBox(d);
@@ -1881,144 +1845,53 @@
     }
     runReportBtn.addEventListener('click', runReport);
 
-    // desktop inline status/mode editing
-    tblDetail?.addEventListener('change', async (e)=>{
-      const sel = e.target;
-      const tr  = sel.closest('tr');
-      if(!tr || !tr.dataset.saleId) return;
-      const id = tr.dataset.saleId;
-      const row = currentReportRows.find(r=> r.id === id);
-      if(!row) return;
-
-      let newStatus = row.payment_status || 'Live';
-      let newMode   = row.payment_mode || '';
-
-      if(sel.classList.contains('status-select')){
-        newStatus = sel.value;
-        const modeSel = tr.querySelector('select.mode-select');
-        if(modeSel){
-          if(newStatus !== 'Paid'){
-            modeSel.disabled = true;
-            newMode = '';
-            modeSel.value = '';
-          }else{
-            modeSel.disabled = false;
-          }
-        }
-      }else if(sel.classList.contains('mode-select')){
-        newMode = sel.value;
-      }
-
-      row.payment_status = newStatus;
-      row.payment_mode   = newMode;
-
-      try{
-        await fetchJSON('/api/sales/update_payment', {
-          method:'POST',
-          body: JSON.stringify({
-            id,
-            payment_status: newStatus,
-            payment_mode: newMode
-          })
-        });
-        await runReport();
-      }catch(err){
-        console.error(err);
-        await runReport();
-      }
-    });
-
-    // mobile opening cash persistence
     openingCashInput?.addEventListener('input', ()=>{
       if(!openingCashKey) return;
       localStorage.setItem(openingCashKey, openingCashInput.value || '');
     });
 
-    // mobile settle helpers
-    async function settlePersonal(fromMode, toMode){
-      if(!lastReportData) return;
-      const rows = (lastReportData.rows || []).filter(r=>{
-        return r.payment_status === 'Paid' && r.payment_mode === fromMode;
-      });
-      if(!rows.length){
-        alert('Nothing to settle for ' + fromMode + '.');
-        return;
-      }
-      if(!confirm('Convert ' + rows.length + ' ' + fromMode + ' payments to ' + toMode + '?')) return;
-
-      for(const r of rows){
-        try{
-          await fetchJSON('/api/sales/update_payment', {
-            method:'POST',
-            body: JSON.stringify({
-              id: r.id,
-              payment_status: 'Paid',
-              payment_mode: toMode
-            })
-          });
-        }catch(err){
-          console.error(err);
+    async function initOrderCounter(){
+      try{
+        const d = await fetchJSON('/api/sales');
+        const rows = d.rows || [];
+        let maxNum = 0;
+        rows.forEach(r=>{
+          const n = parseInt(r.order_id, 10);
+          if(!isNaN(n)) maxNum = Math.max(maxNum, n);
+        });
+        const stored = localStorage.getItem('tbm_last_order_id');
+        if(stored){
+          const sn = parseInt(stored, 10);
+          if(!isNaN(sn) && sn > maxNum) maxNum = sn;
         }
+        nextOrderId = maxNum + 1;
+      }catch(e){
+        nextOrderId = 1;
       }
-      await runReport();
+      updateOrderLabels();
     }
 
     settlePersonalCashBtn?.addEventListener('click', ()=>{
-      settlePersonal('PersonalCash','Cash');
+      alert('Bulk settle Personal Cash → Cash is not yet wired; we can add it next.');
     });
     settlePersonalUPIBtn?.addEventListener('click', ()=>{
-      settlePersonal('PersonalUPI','CurrentUPI');
+      alert('Bulk settle Personal UPI → Current UPI is not yet wired; we can add it next.');
     });
 
-    // ---------- Keyboard / form handling ----------
-    sForm.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      addCurrentItemToBill();
-    });
-    lockPrintBtn.addEventListener('click', lockAndPrint);
-    saveBillBtn.addEventListener('click', saveBill);
-
-    saleQty.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        addCurrentItemToBill();
-      }
-    });
-
-    // ---------- Smart defaults ----------
-    function applySavedDefaults(){
-      try{
-        const lastCat = localStorage.getItem('tbm_last_sale_category');
-        const lastBranch = localStorage.getItem('tbm_last_sale_branch');
-        const lastTable = localStorage.getItem('tbm_last_sale_table');
-        const lastPayMode = localStorage.getItem('tbm_last_pay_mode');
-        if(lastCat && Array.from(saleCategory.options).some(o=>o.value === lastCat)){
-          saleCategory.value = lastCat;
-        }
-        if(lastBranch && branchSelect){
-          branchSelect.value = lastBranch;
-          liveBranch.value = lastBranch;
-        }
-        if(lastTable && saleTable){
-          saleTable.value = lastTable;
-        }
-        if(lastPayMode && payMode){
-          payMode.value = lastPayMode;
-        }
-        toggleSFH();
-      }catch{}
-    }
+    // More details toggle
+    moreToggle.addEventListener('click', toggleMoreBody);
 
     // ---------- Init ----------
     (async function init(){
       try{ saleDate.valueAsDate = new Date(); }catch{}
-      await Promise.all([loadNextOrder(), loadReadyProducts(), loadBranches()]);
-      applySavedDefaults();
-      toggleSFH(); togglePay(); recalcBillTotals();
-      liveBranch.value = branchSelect.value || '';
+      await Promise.all([loadReadyProducts(), loadBranches()]);
+      await initOrderCounter();
+      applyCategoryDefaults();
+      togglePay();
       lockReportToTodayOnMobile();
       buildColumnChooser();
       await runReport();
+      liveBranch.value = branchSelect.value || '';
       if(liveBranch.value) loadLiveTables();
     })();
   </script>
