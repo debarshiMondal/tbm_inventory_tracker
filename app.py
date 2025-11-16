@@ -32,21 +32,22 @@ HEADERS = {
         "id", "name", "category", "item_category", "code",
         "unit", "unit_cost", "price", "quantity", "threshold"
     ],
-    "raw_inventory":  [
+    "raw_inventory": [
         "id", "name", "category", "subcategory", "unit",
         "unit_cost", "stock", "threshold"
     ],
-    "purchases":      [
+    "purchases": [
         "id", "date", "category", "subcategory", "item",
         "unit", "qty", "unit_cost", "total_cost", "notes"
     ],
     # Extended sales schema for POS
     "sales": [
-        "id","date","category","branch","order_id","item","unit","qty","unit_price",
-        "discount","total_price","customer_name","customer_phone","table_no",
-        "payment_status","payment_mode","payment_note","notes"
+        "id", "date", "category", "branch", "order_id", "item", "unit", "qty",
+        "unit_price", "discount", "total_price", "customer_name",
+        "customer_phone", "table_no", "payment_status", "payment_mode",
+        "payment_note", "notes"
     ],
-    "branches": ["id","name","is_active"],
+    "branches": ["id", "name", "is_active"],
 }
 
 
@@ -479,7 +480,8 @@ def update_ready_product_api(item_id: str, patch: ReadyProductUpdate):
         if raw:
             if len(raw) != 3 or not (raw[0].isdigit() and raw[1:].isalpha()):
                 raise HTTPException(
-                    400, "code must be exactly 3 chars: 1 digit + 2 letters (e.g. 1CM, 5CB)"
+                    400,
+                    "code must be exactly 3 chars: 1 digit + 2 letters (e.g. 1CM, 5CB)",
                 )
             for r in rows:
                 if r["id"] != item_id and (r.get("code") or "").upper() == raw:
@@ -900,12 +902,12 @@ def get_bill(sale_id: str):
         lines.append(f"Branch: {sale['branch']}")
     if sale.get("table_no"):
         lines.append(f"Table: {sale['table_no']}")
-    lines.append("-"*40)
+    lines.append("-" * 40)
     lines.append(f"Item: {sale['item']}  ({sale['unit']})")
     lines.append(f"Qty: {sale['qty']}  Unit Price: ₹{sale['unit_price']}")
     lines.append(f"Discount: ₹{sale['discount']}")
     lines.append(f"Total: ₹{sale['total_price']}")
-    lines.append("-"*40)
+    lines.append("-" * 40)
     if sale.get("customer_name") or sale.get("customer_phone"):
         lines.append(f"Customer: {sale.get('customer_name','')}  {sale.get('customer_phone','')}")
     lines.append(f"Payment: {sale.get('payment_status','')} {sale.get('payment_mode','')}")
@@ -923,7 +925,7 @@ def update_sale_payment(p: SalePaymentPatch):
     Update payment_status and/or payment_mode for a sale.
     Used by:
       - Desktop Detailed Records inline dropdowns
-      - Mobile settle buttons
+      - Mobile settle buttons (when wired)
     """
     rows = read_csv("sales")
     sale = None
