@@ -361,6 +361,21 @@
         <span class="kpi">Current Bill: <b id="billOrderLabel">#–</b></span>
       </h2>
 
+      <!-- SFH table info (with "Don't show again") -->
+      <div id="sfhTableTip" style="display:none; margin:6px 0 10px; padding:8px 10px; background:#fff8e1; border:1px solid #ffe0b2; border-radius:8px;">
+        <div style="font-size:12px; margin-bottom:6px;">
+          For <b>SFH</b>, <b>Table Number is only for dine-in</b>.  
+          For <b>Takeaway / Delivery</b> you can keep <b>Table</b> empty.
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <label style="font-size:11px; display:flex; align-items:center; gap:4px;">
+            <input type="checkbox" id="sfhTableTipHide">
+            Don't show again
+          </label>
+          <button type="button" id="sfhTableTipClose" class="btn-plain" style="height:32px; padding:0 12px;">OK</button>
+        </div>
+      </div>
+
       <!-- High-level: Category + Branch + Date -->
       <div class="pos-grid" style="margin-bottom:8px;">
         <div class="field w4">
@@ -535,7 +550,7 @@
             </div>
             <div class="hint">
               For Home Delivery, payment defaults to UPI and table stays hidden.  
-              For SFH, table is required, and payment defaults to Live.
+              For SFH, use table numbers for dine-in only. For Takeaway / Delivery you can keep Table Number empty.
             </div>
           </div>
         </div>
@@ -773,6 +788,11 @@
 
     const toastEl = document.getElementById('toast');
 
+    // SFH tip elements
+    const sfhTableTip      = document.getElementById('sfhTableTip');
+    const sfhTableTipHide  = document.getElementById('sfhTableTipHide');
+    const sfhTableTipClose = document.getElementById('sfhTableTipClose');
+
     // ---------- State ----------
     const DEFAULT_CATEGORIES = ['Home Delivery','Frozen Products','SFH'];
 
@@ -857,6 +877,20 @@
       localStorage.setItem('tbm_last_order_id', String(id));
       updateOrderLabels();
       return String(id);
+    }
+
+    // SFH table tip init
+    function initSfhTableTip(){
+      if(!sfhTableTip || !sfhTableTipClose || !sfhTableTipHide) return;
+      const KEY = 'tbm_sfh_table_tip_hide';
+      if(localStorage.getItem(KEY) === '1') return;
+      sfhTableTip.style.display = 'block';
+      sfhTableTipClose.addEventListener('click', ()=>{
+        if(sfhTableTipHide.checked){
+          localStorage.setItem(KEY, '1');
+        }
+        sfhTableTip.style.display = 'none';
+      });
     }
 
     // ---------- Ready Products & categories ----------
@@ -1078,12 +1112,25 @@
       const filterFn = (info)=>{
         if(filterCatExplicit && info.item_category !== filterCatExplicit) return false;
         if(catToken){
-          if(!info.item_category || info.item_category.toLowerCase().indexOf(catToken) === -1) return false;
+          if(!info.item_category || info.item_category.toLowerCase().indexOf(catToken) === -1){
+            // allow "momo" to match either category or name if only 1 token
+            if(parts.length === 1){
+              const lowerName = info.name.toLowerCase();
+              const code = (info.code || '').toLowerCase();
+              if(!lowerName.startsWith(catToken) && !code.startsWith(catToken)) return false;
+            }else{
+              return false;
+            }
+          }
         }
-        if(!nameToken) return true;
-        const lowerName = (info.name || '').toLowerCase();
-        const code = (info.code || '').toLowerCase();
-        return lowerName.startsWith(nameToken) || code.startsWith(nameToken);
+
+        if(nameToken){
+          const lowerName = info.name.toLowerCase();
+          const code = (info.code || '').toLowerCase();
+          if(!lowerName.startsWith(nameToken) && !code.startsWith(nameToken)) return false;
+        }
+
+        return true;
       };
 
       for(const key in readyIndexByName){
@@ -1602,11 +1649,6 @@
       const category = saleCategory.value || 'SFH';
       const branch = category === 'SFH' ? (branchSelect.value || '') : '';
       const date = saleDate.value || null;
-      if(category === 'SFH' && !saleTable.value.trim()){
-        alert('Table is required for SFH.');
-        saleTable.focus();
-        return;
-      }
 
       const orderId = reserveOrderId();
       const payloadBase = {
@@ -1890,6 +1932,7 @@
       togglePay();
       lockReportToTodayOnMobile();
       buildColumnChooser();
+      initSfhTableTip();
       await runReport();
       liveBranch.value = branchSelect.value || '';
       if(liveBranch.value) loadLiveTables();
