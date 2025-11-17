@@ -18,166 +18,177 @@
     }
 
     body{
-      font-size:14px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size:13px; /* smaller, Instagram-ish */
       color:var(--ink);
+      background:var(--bg);
     }
 
-    .site-header{ padding:10px 12px; gap:12px; }
-    .site-title{ font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .site-nav{ overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; }
-    .site-nav a{ padding-bottom:2px; }
+    .site-header{ padding:10px 12px; gap:8px; display:flex; align-items:center; border-bottom:1px solid #eee; background:#fff; position:sticky; top:0; z-index:40; }
+    .logo{ font-weight:700; font-size:16px; padding:4px 7px; border-radius:8px; background:#111; color:#fff; }
+    .site-title{ font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .site-nav{ margin-left:auto; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; font-size:12px; }
+    .site-nav a{ padding:2px 8px 4px; margin-left:6px; border-radius:999px; border:1px solid transparent; color:#444; }
+    .site-nav a.active{ border-color:var(--accent); color:var(--accent); background:#fff5f5; }
+
+    .page-wrap{ max-width:980px; margin:0 auto 40px; padding:10px 10px 80px; }
+
+    h1{ font-size:18px; margin:10px 0 8px; }
 
     .section-nav{
-      position:sticky; top:56px; z-index:15; background:var(--bg);
-      padding:8px 0; margin:8px 0 12px; border-bottom:1px dashed #ddd;
+      position:sticky; top:48px; z-index:35; background:var(--bg);
+      padding:6px 0; margin:4px 0 10px; border-bottom:1px dashed #ddd;
       overflow-x:auto; white-space:nowrap;
+      font-size:11px;
     }
     .section-nav a{
-      display:inline-block; margin-right:8px; font-size:12px; padding:6px 10px;
+      display:inline-block; margin-right:6px; padding:5px 10px;
       border:1px solid #e0e0e0; border-radius:999px; background:#fff;
     }
     .section-nav a:hover{ border-color:var(--accent); color:var(--accent); }
 
-    .card h2{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      font-size:16px;
-    }
-
-    .hint{
-      color:var(--muted);
-      font-size:11px;
-    }
-
-    .pos-grid{
-      display:grid;
-      grid-template-columns:repeat(12,1fr);
-      gap:10px 12px;
-    }
-    .field{ grid-column:span 12; }
-    .field.w2{ grid-column:span 6; }
-    .field.w3{ grid-column:span 12; }
-    .field.w4{ grid-column:span 12; }
-    .field.w6{ grid-column:span 12; }
-    .field.w8{ grid-column:span 12; }
-    .field.w12{ grid-column:span 12; }
-
-    .field label{
-      display:block;
-      margin:0 0 4px 2px;
-      font-size:12px;
-      color:#444;
-    }
-
-    .field input,
-    .field select,
-    .field textarea{
-      width:100%;
-      height:40px;
-      font-size:14px;
-      padding:6px 10px;
-    }
-
-    .kpi{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:4px 8px;
-      border-radius:999px;
-      background:#fff;
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:10px 10px 12px;
+      margin-bottom:12px;
+      box-shadow:0 1px 2px rgba(0,0,0,.03);
       border:1px solid #eee;
-      font-size:11px;
     }
+    .card h2{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:14px; margin:0 0 8px; }
+    .hint{ color:var(--muted); font-size:11px; }
+
+    .kpi{ display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:999px; background:#fff; border:1px solid #eee; font-size:11px; }
     .kpi b{ color:var(--accent); }
 
-    /* catalogue */
-    .catalog-wrap{
-      margin-top:8px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+    .pos-grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:8px 10px; }
+    .field{ grid-column:span 12; }
+    .field.w2{ grid-column:span 6; }
+    .field.w3{ grid-column:span 4; }
+    .field.w4{ grid-column:span 4; }
+    .field.w6{ grid-column:span 6; }
+    .field.w8{ grid-column:span 8; }
+    .field.w12{ grid-column:span 12; }
+    .field label{ display:block; margin:0 0 3px 2px; font-size:11px; color:#444; }
+    .field input,.field select,.field textarea{
+      width:100%; height:38px; font-size:13px; padding:6px 8px;
+      border-radius:8px; border:1px solid #ddd; background:#fff;
     }
+    .field textarea{ height:60px; resize:vertical; }
 
-    .search-row{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .search-row input{
-      flex:1;
-      height:40px;
+    /* Blinkit-style catalog */
+
+    .search-bar{
+      display:flex; align-items:center; gap:6px;
+      background:#f3f3f3;
       border-radius:999px;
-      border:1px solid #ddd;
-      padding:6px 12px;
+      padding:6px 10px;
+      border:1px solid #e0e0e0;
+      font-size:12px;
+    }
+    .search-bar input{
+      border:none;
+      background:transparent;
+      outline:none;
+      padding:0;
+      height:auto;
+      font-size:13px;
+      flex:1;
+    }
+    .search-icon{
       font-size:14px;
     }
-    .search-row button{
-      height:36px;
-      padding:0 14px;
+    .search-bar button{
+      border:none;
+      background:#fff;
       border-radius:999px;
-      font-size:13px;
+      padding:3px 10px;
+      font-size:11px;
+      border:1px solid #ddd;
+      cursor:pointer;
+    }
+    .search-bar button:hover{
+      border-color:var(--accent);
+      color:var(--accent);
     }
 
-    .cat-chips{
+    .category-strip{
+      margin-top:8px;
       display:flex;
-      gap:8px;
+      gap:6px;
       overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
       padding-bottom:4px;
+      -webkit-overflow-scrolling:touch;
     }
     .cat-chip{
       flex:0 0 auto;
       padding:6px 10px;
       border-radius:999px;
-      font-size:12px;
-      border:1px solid #ddd;
       background:#fff;
+      border:1px solid #e0e0e0;
+      font-size:12px;
       cursor:pointer;
       white-space:nowrap;
     }
     .cat-chip.active{
       border-color:var(--accent);
-      background:#ffecec;
+      background:#fff5f5;
       color:var(--accent);
     }
 
-    .cat-search-row{
-      margin-top:4px;
+    .item-list-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:8px;
+      margin-bottom:4px;
+      font-size:11px;
+      color:#555;
     }
-    .cat-search-row input{
-      height:34px;
+    .item-filter-search{
       border-radius:999px;
-      border:1px solid #eee;
-      padding:4px 10px;
-      font-size:12px;
+      border:1px solid #e0e0e0;
+      padding:3px 8px;
+      display:flex;
+      align-items:center;
+      gap:4px;
+      font-size:11px;
+    }
+    .item-filter-search input{
+      border:none;
+      background:transparent;
+      outline:none;
+      padding:0;
+      height:auto;
+      font-size:11px;
     }
 
     .item-list{
-      margin-top:4px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      max-height:320px;
+      max-height:280px;
       overflow-y:auto;
-    }
-    .item-row{
-      display:grid;
-      grid-template-columns:minmax(0,1.6fr) auto;
-      gap:8px;
-      align-items:center;
-      padding:8px 10px;
-      background:#fff;
       border-radius:10px;
       border:1px solid #eee;
+      background:#fafafa;
+      padding:4px;
+    }
+
+    .item-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:6px 6px;
+      margin-bottom:2px;
+      border-radius:8px;
+      background:#fff;
+      border:1px solid #eee;
+      font-size:12px;
     }
     .item-main{
       min-width:0;
     }
     .item-name{
-      font-size:13px;
-      font-weight:600;
+      font-size:12px;
+      font-weight:500;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -185,213 +196,183 @@
     .item-meta{
       font-size:11px;
       color:#777;
-      margin-top:2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
     }
-
-    .item-ctrl{
+    .item-actions{
       display:flex;
       align-items:center;
-      justify-content:flex-end;
-      gap:6px;
+      gap:4px;
+      font-size:11px;
     }
-    .btn-add{
+    .item-add-btn{
       border-radius:999px;
-      padding:6px 16px;
-      font-size:12px;
-      font-weight:600;
+      border:1px solid #ddd;
+      padding:4px 10px;
       background:#fff;
-      border:1px solid var(--accent);
-      color:var(--accent);
       cursor:pointer;
     }
-    .btn-add:hover{
-      background:var(--accent);
-      color:#fff;
+    .item-add-btn:hover{
+      border-color:var(--accent);
+      color:var(--accent);
     }
-
-    .qty-pill{
-      display:inline-flex;
+    .item-qty-control{
+      display:flex;
       align-items:center;
       border-radius:999px;
       border:1px solid #ddd;
       overflow:hidden;
-      font-size:12px;
-      background:#fff;
     }
-    .qty-pill button{
-      width:28px;
-      height:30px;
+    .item-qty-control button{
       border:none;
       background:#fff;
-      font-size:16px;
-      line-height:1;
+      width:24px;
+      height:24px;
+      padding:0;
       cursor:pointer;
     }
-    .qty-pill span{
-      width:30px;
+    .item-qty-control span{
+      min-width:24px;
       text-align:center;
-      font-weight:600;
+      font-size:12px;
     }
 
-    /* order / bill palette */
-    .order-pane,
-    .checkout-pane{
-      margin-top:10px;
-      border-top:1px dashed #eee;
-      padding-top:10px;
-    }
-    .order-pane h3,
-    .checkout-pane h3{
-      font-size:13px;
-      margin:0 0 6px;
-    }
+    /* Order review and finalize */
 
-    .bill-items{
+    .order-empty{
+      font-size:12px;
+      color:#777;
+      padding:6px;
+    }
+    .order-list{
+      max-height:260px;
+      overflow-y:auto;
       border-radius:10px;
       border:1px solid #eee;
       background:#fafafa;
-      padding:6px 6px 4px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      max-height:260px;
-      overflow-y:auto;
+      padding:4px;
     }
-    .bill-items-empty{
-      font-size:12px;
-      color:#777;
-      padding:4px 4px 6px;
-    }
-    .bill-line{
-      background:#fff;
-      border-radius:8px;
-      border:1px solid #e0e0e0;
-      padding:6px 8px;
+    .order-row{
       display:grid;
-      grid-template-columns:minmax(0,1.6fr) auto;
-      gap:6px;
+      grid-template-columns:minmax(0,1.6fr) auto auto;
+      gap:4px;
       align-items:center;
+      padding:6px 6px;
+      border-radius:8px;
+      background:#fff;
+      border:1px solid #eee;
+      font-size:12px;
+      margin-bottom:3px;
     }
-    .bill-line-title{
-      font-size:13px;
-      font-weight:600;
+    .order-main{
+      min-width:0;
+    }
+    .order-name{
+      font-size:12px;
+      font-weight:500;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .bill-line-sub{
+    .order-meta{
       font-size:11px;
       color:#777;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .bill-line-ctrl{
+    .order-qty{
       display:flex;
       align-items:center;
       justify-content:flex-end;
-      gap:4px;
     }
-    .bill-line-ctrl .qty-pill button{
-      height:28px;
-      width:26px;
+    .order-qty .item-qty-control{
+      transform:scale(.95);
     }
-    .disc-input{
-      width:60px;
-      height:28px;
-      font-size:11px;
-      padding:2px 4px;
+    .order-total{
+      text-align:right;
+      font-size:12px;
+      font-weight:600;
     }
-    .disc-label{
+    .order-total small{
+      display:block;
       font-size:10px;
       color:#777;
     }
+    .order-discount{
+      margin-top:3px;
+      font-size:11px;
+    }
+    .order-discount input{
+      width:70px;
+      height:26px;
+      font-size:11px;
+      padding:3px 5px;
+    }
 
     .totals{
-      margin-top:6px;
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:4px;
-      background:#fafafa;
-      border-radius:8px;
-      border:1px dashed #ddd;
-      padding:8px 10px;
-      font-size:12px;
+      display:grid; grid-template-columns:1fr auto; gap:4px; background:#fafafa; border:1px dashed #ddd; border-radius:8px; padding:8px 10px; font-size:12px;
     }
     .totals .v{ text-align:right; font-weight:600; }
     .totals .grand{ color:#000; font-size:15px; }
 
-    .order-actions{
-      margin-top:8px;
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .order-actions button{
-      flex:1;
-      height:40px;
-      border-radius:999px;
-      font-size:13px;
-    }
-
-    .chipbar{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-    }
+    .chipbar{ display:flex; flex-wrap:wrap; gap:6px; }
     .chip{
-      font-size:12px;
-      padding:6px 10px;
-      border:1px solid #ddd;
-      border-radius:999px;
-      background:#fff;
-      cursor:pointer;
-      user-select:none;
+      font-size:12px; padding:6px 10px; border:1px solid #ddd; border-radius:999px;
+      background:#fff; cursor:pointer; user-select:none;
     }
-    .chip.active{
-      border-color:var(--accent);
-      color:#fff;
-      background:var(--accent);
-    }
+    .chip.active{ border-color:var(--accent); color:#fff; background:var(--accent); }
 
     .float-bar{
-      position:sticky;
-      bottom:0;
-      z-index:20;
+      position:fixed; left:0; right:0; bottom:0; z-index:30;
       background:rgba(255,255,255,.96);
-      border-top:1px solid #eee;
-      backdrop-filter: blur(5px);
-      padding:6px 8px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:space-between;
+      border-top:1px solid #eee; backdrop-filter: blur(5px);
+      padding:6px 10px; display:flex; gap:8px; align-items:center; justify-content:space-between;
       font-size:12px;
     }
+    .float-bar .summary{ color:#333; }
     .float-bar .summary b{ color:#000; }
-    .float-bar button{
-      height:34px;
-      padding:0 12px;
+    .float-bar button{ height:34px; padding:0 14px; border-radius:999px; font-size:12px; }
+
+    button{
       border-radius:999px;
-      font-size:12px;
-    }
-    .btn-plain{
-      background:#fff;
-      color:var(--accent);
-      border:1px solid var(--accent);
-    }
-    .btn-plain:hover{
+      border:none;
       background:var(--accent);
       color:#fff;
+      padding:8px 14px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    button:disabled{
+      opacity:.4;
+      cursor:default;
+    }
+    .btn-plain{
+      background:#fff; color:var(--accent); border:1px solid var(--accent);
+    }
+    .btn-plain:hover{ background:var(--accent); color:#fff; }
+
+    .btn-ghost{
+      background:#fff;
+      border:1px solid #ddd;
+      color:#444;
+    }
+    .btn-ghost:hover{
+      border-color:var(--accent);
+      color:var(--accent);
     }
 
     .hide-on-mobile{ display:none; }
     .show-on-mobile{ display:block; }
 
-    /* status chips for report */
+    .ro{
+      background:#f7f7f7 !important; color:#333;
+      border-color:#e0e0e0 !important;
+      pointer-events:none;
+    }
+
+    /* More details collapsible (NOT used now but kept for future) */
     .status-chip{
       display:inline-flex;
       align-items:center;
@@ -413,65 +394,89 @@
       color:#2e7d32;
     }
 
-    .table-cards{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-    }
-    .tcard{
-      border:1px solid #eee;
-      border-radius:10px;
-      padding:10px 12px;
-      background:#fff;
-      cursor:pointer;
-    }
-    .tcard h3{
-      margin:0 0 6px;
-      font-size:13px;
-    }
-    .tcard .count{
-      font-size:18px;
-      font-weight:700;
-      color:var(--accent);
-    }
-    .tcard:hover{
-      box-shadow:0 2px 6px rgba(0,0,0,.12);
-    }
+    .table-cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+    .tcard{ border:1px solid #eee; border-radius:10px; padding:8px 10px; background:#fff; cursor:pointer; font-size:12px; }
+    .tcard h3{ margin:0 0 4px; font-size:13px; }
+    .tcard .count{ font-size:16px; font-weight:700; color:var(--accent); }
+    .tcard:hover{ box-shadow:0 2px 6px rgba(0,0,0,.12); }
 
     .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .table-scroll table{ min-width:820px; }
+    .table-scroll table{ min-width:820px; font-size:12px; border-collapse:collapse; width:100%; }
+    .table-scroll th, .table-scroll td{ padding:4px 6px; border-bottom:1px solid #eee; text-align:left; }
+    .table-scroll th{ background:#fafafa; font-weight:600; }
 
-    .col-chooser{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-    }
+    .col-chooser{ display:flex; flex-wrap:wrap; gap:6px; }
     .col-chooser label{
       font-size:11px;
       border:1px solid #ddd;
       border-radius:999px;
-      padding:4px 8px;
+      padding:3px 7px;
       background:#fff;
       cursor:pointer;
       user-select:none;
     }
     .col-chooser input{ margin-right:4px; }
 
-    button{
-      height:40px;
-      border-radius:8px;
+    .cashbox{
+      border-radius:10px;
+      border:1px solid #eee;
+      background:#fafafa;
+      padding:8px;
+      font-size:11px;
+    }
+    .cashbox-row{
+      display:flex;
+      justify-content:space-between;
+      margin:2px 0;
+    }
+    .cashbox-row strong{ font-weight:600; }
+    .cashbox-opening input{
+      height:32px;
+      font-size:12px;
+    }
+    .cashbox-settle{
+      margin-top:6px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .cashbox-settle button{
+      width:100%;
+      height:30px;
+      font-size:11px;
     }
 
+    .footer{
+      margin-top:10px;
+      font-size:11px;
+      color:#777;
+      text-align:center;
+    }
+
+    @media (min-width:768px){
+      body{ font-size:13px; }
+      .field.w2{ grid-column:span 2; }
+      .field.w3{ grid-column:span 3; }
+      .field.w4{ grid-column:span 4; }
+      .field.w6{ grid-column:span 6; }
+      .field.w8{ grid-column:span 8; }
+      .field.w12{ grid-column:span 12; }
+      .table-cards{ grid-template-columns:repeat(4,1fr); }
+      .hide-on-mobile{ display:block; }
+      .show-on-mobile{ display:none; }
+      .float-bar button{ height:34px; }
+    }
+
+    /* tiny toast */
     .toast{
       position:fixed;
-      left:50%;
-      bottom:80px;
+      left:50%; bottom:70px;
       transform:translateX(-50%);
       background:#000;
       color:#fff;
-      padding:8px 14px;
+      padding:7px 12px;
       border-radius:999px;
-      font-size:12px;
+      font-size:11px;
       opacity:0;
       pointer-events:none;
       transition:opacity .2s ease, transform .2s ease;
@@ -479,772 +484,1453 @@
     }
     .toast.show{
       opacity:0.95;
-      transform:translateX(-50%) translateY(-6px);
-    }
-
-    @media (min-width:768px){
-      .field.w2{ grid-column:span 2; }
-      .field.w3{ grid-column:span 3; }
-      .field.w4{ grid-column:span 4; }
-      .field.w6{ grid-column:span 6; }
-      .field.w8{ grid-column:span 8; }
-      .field.w12{ grid-column:span 12; }
-
-      .table-cards{ grid-template-columns:repeat(4,1fr); }
-
-      .hide-on-mobile{ display:block; }
-      .show-on-mobile{ display:none; }
-
-      body{ font-size:14px; }
+      transform:translateX(-50%) translateY(-4px);
     }
   </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="logo">TBM</div>
-  <div class="site-title">TBM Inventory and Sells Tracker</div>
-  <nav class="site-nav">
-    <a href="/" class="nav-home">Dashboard</a>
-    <a href="/ready-products" class="nav-ready">Ready Products</a>
-    <a href="/raw-materials" class="nav-raw">Raw Materials</a>
-    <a href="/sales" class="nav-sales">Sales</a>
-    <a href="/import" class="nav-import">CSV Import/Export</a>
-  </nav>
-</header>
+  <header class="site-header">
+    <div class="logo">TBM</div>
+    <div class="site-title">TBM Inventory and Sells Tracker</div>
+    <nav class="site-nav">
+      <a href="/" class="nav-home">Dashboard</a>
+      <a href="/ready-products" class="nav-ready">Ready Products</a>
+      <a href="/raw-materials" class="nav-raw">Raw Materials</a>
+      <a href="/sales" class="nav-sales active">Sales</a>
+      <a href="/import" class="nav-import">CSV Import/Export</a>
+    </nav>
+  </header>
 
-<div class="page-wrap">
-  <h1>Sales / POS</h1>
+  <div class="page-wrap">
+    <h1>Sales / POS</h1>
 
-  <div class="section-nav">
-    <a href="#add">Add Sale</a>
-    <a href="#live">Live Tables</a>
-    <a href="#report">Sales Report</a>
-  </div>
+    <div class="section-nav">
+      <a href="#add">Add Sale</a>
+      <a href="#live">Live Tables</a>
+      <a href="#report">Sales Report</a>
+    </div>
 
-  <!-- =================== ADD SALE / POS =================== -->
-  <section id="add" class="card">
-    <h2>
-      Add Sale
-      <span class="kpi">Current Bill: <b id="billOrderLabel">#–</b></span>
-    </h2>
+    <!-- =================== ADD SALE (Blinkit-style) =================== -->
+    <section id="add" class="card">
+      <h2>
+        Add Sale
+        <span class="kpi">Current Bill: <b id="billOrderLabel">#–</b></span>
+      </h2>
 
-    <!-- Top: Category / Branch / Date -->
-    <div class="pos-grid" style="margin-bottom:6px;">
-      <div class="field w4">
-        <label>Category</label>
-        <select id="saleCategory"></select>
-        <div class="hint">Stays fixed for new bills until you change it.</div>
-      </div>
-
-      <div class="field w4" id="sfhBranchWrap" style="display:none;">
-        <label>Branch (SFH)</label>
-        <div style="display:flex; gap:8px;">
-          <select id="branchSelect" style="flex:1 1 auto"></select>
-          <button class="btn-plain" type="button" id="addBranchBtn">Add</button>
+      <!-- SFH table info (with "Don't show again") -->
+      <div id="sfhTableTip" style="display:none; margin:4px 0 8px; padding:7px 10px; background:#fff8e1; border:1px solid #ffe0b2; border-radius:8px;">
+        <div style="font-size:11px; margin-bottom:5px;">
+          For <b>SFH</b>, <b>Table Number is only for dine-in</b>.  
+          For <b>Takeaway / Delivery</b> you can keep <b>Table</b> empty.
         </div>
-        <div class="hint">Quickly add new SFH branches.</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <label style="font-size:11px; display:flex; align-items:center; gap:4px;">
+            <input type="checkbox" id="sfhTableTipHide">
+            Don't show again
+          </label>
+          <button type="button" id="sfhTableTipClose" class="btn-plain" style="height:26px; padding:0 10px; font-size:11px;">OK</button>
+        </div>
       </div>
 
-      <div class="field w4">
-        <label>Date</label>
-        <input id="saleDate" type="date">
-      </div>
-    </div>
+      <!-- Sticky basic selectors (Category / Branch / Date) -->
+      <div class="pos-grid" style="margin-bottom:6px;">
+        <div class="field w4">
+          <label>Category</label>
+          <select id="saleCategory">
+            <!-- pre-fill so it's never empty even if JS fails -->
+            <option value="Home Delivery">Home Delivery</option>
+            <option value="Frozen Products">Frozen Products</option>
+            <option value="SFH" selected>SFH</option>
+          </select>
+          <div class="hint">New categories from Ready Products auto-appear here.</div>
+        </div>
 
-    <!-- Step 1: Catalogue & item selection -->
-    <div id="browsePane" class="catalog-wrap">
-      <div class="search-row">
-        <input id="saleItem" placeholder="Search by name or 3-char code (e.g. 1CM)…">
-        <button type="button" id="searchAddBtn">Add</button>
-      </div>
-      <div class="hint">Type and hit Add/Enter to drop items directly into the order. Default quantity = 1.</div>
+        <div class="field w4" id="sfhBranchWrap" style="display:none;">
+          <label>Branch (SFH)</label>
+          <div style="display:flex; gap:6px;">
+            <select id="branchSelect" style="flex:1 1 auto"></select>
+            <button class="btn-plain" type="button" id="addBranchBtn" style="height:32px; font-size:11px;">Add</button>
+          </div>
+          <div class="hint">Tap “Add” to create a new branch quickly.</div>
+        </div>
 
-      <div class="cat-chips" id="itemCategoryChips">
-        <!-- filled from ready products -->
+        <div class="field w4">
+          <label>Date</label>
+          <input id="saleDate" type="date">
+        </div>
       </div>
 
-      <div class="cat-search-row">
-        <input id="catSearchInput" placeholder="Search inside selected category…">
+      <!-- STEP 1: Browse & Add Items (Blinkit style) -->
+      <div id="stepBrowse">
+        <div class="field w12">
+          <label>Search item (name / 3-char code)</label>
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input id="itemSearchInput" placeholder="Type item name or code (e.g. 1CM)…">
+            <button type="button" id="itemSearchAddBtn">Add</button>
+          </div>
+          <div class="hint">
+            Type exact <b>3-char code</b> (1 digit + 2 letters, e.g. <code>1CM</code>) or part of the name.  
+            Enter / Add = add directly to bill.
+          </div>
+        </div>
+
+        <div class="field w12">
+          <label>Item Categories</label>
+          <div id="itemCategoryChips" class="category-strip">
+            <!-- dynamic chips from item_category -->
+          </div>
+          <div class="hint">Tap a category to browse items like Blinkit.</div>
+        </div>
+
+        <div class="field w12">
+          <div class="item-list-header">
+            <span id="itemListTitle">Items</span>
+            <div class="item-filter-search">
+              <span>Filter</span>
+              <input id="itemFilterInput" placeholder="Type to narrow in this category">
+            </div>
+          </div>
+          <div id="itemList" class="item-list">
+            <div class="order-empty">Select a category above to see items.</div>
+          </div>
+        </div>
+
+        <div class="field w12">
+          <div class="totals">
+            <div>Subtotal</div><div class="v" id="tSubtotal">₹0.00</div>
+            <div>Total Discount</div><div class="v" id="tDiscount">₹0.00</div>
+            <div class="grand">Grand Total</div><div class="v grand" id="tTotal">₹0.00</div>
+          </div>
+        </div>
+
+        <div class="field w12" style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
+          <button type="button" class="btn-ghost" id="browseViewOrderBtn">View Order</button>
+        </div>
       </div>
 
-      <div id="itemList" class="item-list">
-        <!-- items appear here -->
-      </div>
-    </div>
+      <!-- STEP 2: Review Order -->
+      <div id="stepReview" style="display:none; margin-top:4px;">
+        <div class="field w12">
+          <label>Order items</label>
+          <div id="orderList" class="order-list">
+            <div class="order-empty">No items yet. Add from catalog above.</div>
+          </div>
+        </div>
 
-    <!-- Step 2: Order view -->
-    <div id="orderPane" class="order-pane" style="display:none;">
-      <h3>Order Items</h3>
-      <div id="billItems" class="bill-items">
-        <div class="bill-items-empty">No items yet. Add from search or category list.</div>
-      </div>
-      <div class="totals">
-        <div>Subtotal</div><div class="v" id="tSubtotal">₹0.00</div>
-        <div>Total Discount</div><div class="v" id="tDiscount">₹0.00</div>
-        <div class="grand">Grand Total</div><div class="v grand" id="tTotal">₹0.00</div>
-      </div>
-      <div class="order-actions">
-        <button type="button" class="btn-plain" id="backToBrowseBtn">← Back to items</button>
-        <button type="button" id="lockOrderBtn">Lock Order</button>
-      </div>
-    </div>
+        <div class="field w12">
+          <div class="totals">
+            <div>Subtotal</div><div class="v" id="tSubtotal2">₹0.00</div>
+            <div>Total Discount</div><div class="v" id="tDiscount2">₹0.00</div>
+            <div class="grand">Grand Total</div><div class="v grand" id="tTotal2">₹0.00</div>
+          </div>
+        </div>
 
-    <!-- Step 3: Checkout -->
-    <div id="checkoutPane" class="checkout-pane" style="display:none;">
-      <h3>Checkout</h3>
+        <div class="field w12" style="display:flex; justify-content:space-between; gap:8px; margin-top:4px;">
+          <button type="button" class="btn-ghost" id="backToBrowseBtn">Back to items</button>
+          <button type="button" id="lockOrderBtn">Lock Order</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Finalize & Payment -->
+      <div id="stepFinalize" style="display:none; margin-top:4px;">
+        <div class="pos-grid">
+          <div class="field w12">
+            <label>Order Type</label>
+            <div class="chipbar" id="orderTypeChips">
+              <div class="chip active" data-type="DineIn">Dine In</div>
+              <div class="chip" data-type="Takeaway">Takeaway</div>
+              <div class="chip" data-type="Delivery">Delivery</div>
+            </div>
+          </div>
+
+          <div class="field w4" id="tableRowFinalize">
+            <label>Table Number (for Dine In in SFH)</label>
+            <input id="saleTable" placeholder="">
+          </div>
+
+          <div class="field w4">
+            <label>Customer Name</label>
+            <input id="saleCustName" placeholder="">
+          </div>
+
+          <div class="field w4">
+            <label>Customer Phone</label>
+            <input id="saleCustPhone" placeholder="" inputmode="tel">
+          </div>
+
+          <div class="field w12">
+            <label>Payment Status</label>
+            <div class="chipbar" id="payChips">
+              <div class="chip active" data-status="Live">Live</div>
+              <div class="chip" data-status="Due">Due</div>
+              <div class="chip" data-status="Paid">Paid</div>
+            </div>
+          </div>
+
+          <div class="field w6" id="payModeRow" style="display:none;">
+            <label>Payment Mode (if Paid)</label>
+            <select id="payMode">
+              <option value="">Select</option>
+              <option value="CurrentUPI">Current a/c UPI</option>
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+              <option value="PersonalUPI">Personal UPI</option>
+              <option value="PersonalCash">Personal Cash</option>
+            </select>
+          </div>
+
+          <div class="field w6" id="payNoteRow" style="display:none;">
+            <label>Payment Note</label>
+            <input id="payNote" placeholder="Owner / keeper (for Personal)">
+          </div>
+
+          <div class="field w12">
+            <label>Notes (bill)</label>
+            <input id="saleNotes" placeholder="Any remarks…">
+          </div>
+
+          <div class="field w12">
+            <div class="totals">
+              <div>Subtotal</div><div class="v" id="tSubtotal3">₹0.00</div>
+              <div>Total Discount</div><div class="v" id="tDiscount3">₹0.00</div>
+              <div class="grand">Grand Total</div><div class="v grand" id="tTotal3">₹0.00</div>
+            </div>
+          </div>
+
+          <div class="field w12" style="display:flex; justify-content:space-between; gap:8px; margin-top:4px;">
+            <button type="button" class="btn-ghost" id="backToReviewBtn">Back to order</button>
+            <button type="button" id="saveBillBtn">Save Bill &amp; Print</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== LIVE TABLES (SFH) =================== -->
+    <section id="live" class="card">
+      <h2>Live Tables (SFH)</h2>
+      <div class="pos-grid" style="margin-bottom:6px;">
+        <div class="field w6">
+          <label>Branch</label>
+          <select id="liveBranch"></select>
+        </div>
+        <div class="field w6">
+          <label>&nbsp;</label>
+          <button id="refreshLive" class="btn-plain" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="liveWrap">
+        <div class="hint">Pick an SFH branch to see current live orders per table.</div>
+      </div>
+    </section>
+
+    <!-- =================== SALES REPORT =================== -->
+    <section id="report" class="card">
+      <h2>Sales Records &amp; Report</h2>
+
+      <div class="show-on-mobile hint" style="margin-bottom:6px;">
+        Mobile view shows <b>Today</b> only for the currently selected Category / Branch.
+      </div>
 
       <div class="pos-grid">
-        <div class="field w12">
-          <label>Order Type</label>
-          <div class="chipbar" id="orderTypeChips">
-            <div class="chip active" data-type="DineIn">Dine In</div>
-            <div class="chip" data-type="Takeaway">Takeaway</div>
-            <div class="chip" data-type="Delivery">Delivery</div>
-          </div>
-        </div>
-
-        <div class="field w4" id="tableField">
-          <label>Table Number (for Dine In, SFH)</label>
-          <input id="saleTable" placeholder="">
-        </div>
-
-        <div class="field w4">
-          <label>Customer Name</label>
-          <input id="saleCustName" placeholder="">
-        </div>
-
-        <div class="field w4">
-          <label>Customer Phone</label>
-          <input id="saleCustPhone" placeholder="" inputmode="tel">
-        </div>
-
-        <div class="field w12">
-          <label>Payment Status</label>
-          <div class="chipbar" id="payChips">
-            <div class="chip active" data-status="Live">Live</div>
-            <div class="chip" data-status="Due">Due</div>
-            <div class="chip" data-status="Paid">Paid</div>
-          </div>
-        </div>
-
-        <div class="field w6" id="payModeRow" style="display:none;">
-          <label>Payment Mode (if Paid)</label>
-          <select id="payMode">
-            <option value="">Select</option>
-            <option value="CurrentUPI">Current a/c UPI</option>
-            <option value="Cash">Cash</option>
-            <option value="Card">Card</option>
-            <option value="PersonalUPI">Personal UPI</option>
-            <option value="PersonalCash">Personal Cash</option>
+        <div class="field w3">
+          <label>Period</label>
+          <select id="rPeriod">
+            <option value="last30">Last 30 days</option>
+            <option value="last90">Last 90 days</option>
+            <option value="last180">Last 180 days</option>
+            <option value="month">This month</option>
+            <option value="week">This week</option>
+            <option value="today" selected>Today</option>
+            <option value="daterange">Date range…</option>
           </select>
         </div>
+        <div class="field w3 hide-on-mobile">
+          <label>Start</label>
+          <input id="rStart" type="date">
+        </div>
+        <div class="field w3 hide-on-mobile">
+          <label>End</label>
+          <input id="rEnd" type="date">
+        </div>
+        <div class="field w3 hide-on-mobile">
+          <label>Category</label>
+          <select id="rCategory">
+            <option value="">(All)</option>
+          </select>
+        </div>
+        <div class="field w4 hide-on-mobile">
+          <label>Branch (SFH)</label>
+          <input id="rBranch" placeholder="">
+        </div>
+        <div class="field w4 hide-on-mobile">
+          <label>Item</label>
+          <input id="rItem" placeholder="">
+        </div>
+        <div class="field w4 hide-on-mobile">
+          <label>Status</label>
+          <select id="rStatus">
+            <option value="">(All)</option>
+            <option>Live</option>
+            <option>Due</option>
+            <option>Paid</option>
+          </select>
+        </div>
+        <div class="field w12">
+          <button id="runReport" type="button">Run</button>
+        </div>
 
-        <div class="field w6" id="payNoteRow" style="display:none;">
-          <label>Payment Note</label>
-          <input id="payNote" placeholder="Owner / keeper (for Personal)">
+        <!-- Mobile cash / summary box -->
+        <div class="field w12 show-on-mobile">
+          <div id="mobileCashBox" class="cashbox">
+            <div class="cashbox-opening">
+              <label for="openingCash">Opening Cash</label>
+              <input id="openingCash" type="number" step="0.01" inputmode="decimal" placeholder="0.00">
+            </div>
+            <div class="cashbox-row"><span>Category</span><strong id="cbCategory">–</strong></div>
+            <div class="cashbox-row"><span>Branch</span><strong id="cbBranch">–</strong></div>
+            <div class="cashbox-row total-row"><span>Total Sales</span><strong id="cbTotalSales">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Due</span><strong id="cbDue">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Paid</span><strong id="cbPaid">₹0.00</strong></div>
+            <hr>
+            <div class="cashbox-row"><span>Cash</span><strong id="cbCash">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Current a/c UPI</span><strong id="cbCurrentUPI">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Card</span><strong id="cbCard">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Personal Cash</span><strong id="cbPersonalCash">₹0.00</strong></div>
+            <div class="cashbox-row"><span>Personal UPI</span><strong id="cbPersonalUPI">₹0.00</strong></div>
+            <div class="cashbox-settle">
+              <button type="button" id="settlePersonalCashBtn" class="btn-plain">Settle Personal Cash → Cash</button>
+              <button type="button" id="settlePersonalUPIBtn" class="btn-plain">Settle Personal UPI → Current UPI</button>
+            </div>
+          </div>
         </div>
 
         <div class="field w12">
-          <label>Notes (bill)</label>
-          <input id="saleNotes" placeholder="Any remarks…">
+          <div class="kpi" id="reportSummary">Total: ₹0.00</div>
         </div>
-      </div>
 
-      <div class="order-actions">
-        <button type="button" class="btn-plain" id="backToOrderBtn">← Back to order</button>
-        <button type="button" id="saveBillBtn">Save Bill &amp; Print</button>
-      </div>
-    </div>
+        <div class="field w12 hide-on-mobile">
+          <label>Columns to show</label>
+          <div id="detailColChooser" class="col-chooser"></div>
+        </div>
 
-    <!-- bottom sticky bar -->
-    <div class="float-bar" id="floatBar">
-      <div class="summary">
-        Bill <b id="floatOrder">#–</b> • Items <b id="floatItems">0</b> • Total <b id="floatTotal">₹0.00</b>
-      </div>
-      <div style="display:flex; gap:6px;">
-        <button type="button" class="btn-plain" id="clearFormBtn">New Bill</button>
-        <button type="button" id="viewOrderBtn">View Order</button>
-      </div>
-    </div>
-
-    <p class="hint">
-      Flow: pick Category &amp; Branch → tap items like Blinkit (ADD / − 1 +) → View Order → Lock Order → choose Dine In / Takeaway / Delivery → set payment → Save &amp; Print.
-    </p>
-  </section>
-
-  <!-- =================== LIVE TABLES (SFH) =================== -->
-  <section id="live" class="card">
-    <h2>Live Tables (SFH)</h2>
-    <div class="pos-grid" style="margin-bottom:8px;">
-      <div class="field w6">
-        <label>Branch</label>
-        <select id="liveBranch"></select>
-      </div>
-      <div class="field w6">
-        <label>&nbsp;</label>
-        <button id="refreshLive" class="btn-plain" type="button">Refresh</button>
-      </div>
-    </div>
-
-    <div id="liveWrap">
-      <div class="hint">Pick an SFH branch to see current live orders per table.</div>
-    </div>
-  </section>
-
-  <!-- =================== SALES REPORT =================== -->
-  <section id="report" class="card">
-    <h2>Sales Records &amp; Report</h2>
-
-    <div class="show-on-mobile hint" style="margin-bottom:8px;">
-      Mobile view shows <b>Today</b> only for the currently selected Category / Branch.
-    </div>
-
-    <div class="pos-grid">
-      <div class="field w3">
-        <label>Period</label>
-        <select id="rPeriod">
-          <option value="last30">Last 30 days</option>
-          <option value="last90">Last 90 days</option>
-          <option value="last180">Last 180 days</option>
-          <option value="month">This month</option>
-          <option value="week">This week</option>
-          <option value="today" selected>Today</option>
-          <option value="daterange">Date range…</option>
-        </select>
-      </div>
-      <div class="field w3 hide-on-mobile">
-        <label>Start</label>
-        <input id="rStart" type="date">
-      </div>
-      <div class="field w3 hide-on-mobile">
-        <label>End</label>
-        <input id="rEnd" type="date">
-      </div>
-      <div class="field w3 hide-on-mobile">
-        <label>Category</label>
-        <select id="rCategory">
-          <option value="">(All)</option>
-        </select>
-      </div>
-      <div class="field w4 hide-on-mobile">
-        <label>Branch (SFH)</label>
-        <input id="rBranch" placeholder="">
-      </div>
-      <div class="field w4 hide-on-mobile">
-        <label>Item</label>
-        <input id="rItem" placeholder="">
-      </div>
-      <div class="field w4 hide-on-mobile">
-        <label>Status</label>
-        <select id="rStatus">
-          <option value="">(All)</option>
-          <option>Live</option>
-          <option>Due</option>
-          <option>Paid</option>
-        </select>
-      </div>
-      <div class="field w12">
-        <button id="runReport" type="button">Run</button>
-      </div>
-
-      <!-- Mobile cash / summary box (kept from previous version) -->
-      <div class="field w12 show-on-mobile">
-        <div id="mobileCashBox" class="cashbox">
-          <div class="cashbox-opening">
-            <label for="openingCash">Opening Cash</label>
-            <input id="openingCash" type="number" step="0.01" inputmode="decimal" placeholder="0.00">
-          </div>
-          <div class="cashbox-row"><span>Category</span><strong id="cbCategory">–</strong></div>
-          <div class="cashbox-row"><span>Branch</span><strong id="cbBranch">–</strong></div>
-          <div class="cashbox-row total-row"><span>Total Sales</span><strong id="cbTotalSales">₹0.00</strong></div>
-          <div class="cashbox-row"><span>Due</span><strong id="cbDue">₹0.00</strong></div>
-          <div class="cashbox-row"><span>Paid</span><strong id="cbPaid">₹0.00</strong></div>
-          <hr>
-          <div class="cashbox-row"><span>Cash</span><strong id="cbCash">₹0.00</strong></div>
-          <div class="cashbox-row"><span>Current a/c UPI</span><strong id="cbCurrentUPI">₹0.00</strong></div>
-          <div class="cashbox-row"><span>Card</span><strong id="cbCard">₹0.00</strong></div>
-          <div class="cashbox-row"><span>Personal Cash</span><strong id="cbPersonalCash">₹0.00</strong></div>
-          <div class="cashbox-row"><span>Personal UPI</span><strong id="cbPersonalUPI">₹0.00</strong></div>
-          <div class="cashbox-settle">
-            <button type="button" id="settlePersonalCashBtn" class="btn-plain">Settle Personal Cash → Cash</button>
-            <button type="button" id="settlePersonalUPIBtn" class="btn-plain">Settle Personal UPI → Current UPI</button>
+        <div class="field w12 hide-on-mobile" id="detailBlock">
+          <h3 style="margin:6px 0 4px; font-size:13px;">Detailed Records</h3>
+          <div class="table-scroll">
+            <table id="tblDetail"></table>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="field w12">
-        <div class="kpi" id="reportSummary">Total: ₹0.00</div>
-      </div>
+    <div class="footer">TBM Inventory and Sells Tracker — CSV based, simple, fast.</div>
+  </div>
 
-      <div class="field w12 hide-on-mobile">
-        <label>Columns to show</label>
-        <div id="detailColChooser" class="col-chooser"></div>
-      </div>
+  <div id="toast" class="toast"></div>
 
-      <div class="field w12 hide-on-mobile" id="detailBlock">
-        <h3 style="margin:10px 0 6px;">Detailed Records</h3>
-        <div class="table-scroll">
-          <table id="tblDetail"></table>
-        </div>
-      </div>
+  <div class="float-bar" id="floatBar">
+    <div class="summary">
+      Bill <b id="floatOrder">#–</b> • Items <b id="floatItems">0</b> • Total <b id="floatTotal">₹0.00</b>
     </div>
-  </section>
+    <div style="display:flex; gap:6px;">
+      <button class="btn-plain" type="button" id="clearFormBtn">New Bill</button>
+      <button type="button" id="saveBillBtnFloat">Save &amp; Print</button>
+    </div>
+  </div>
 
-  <div class="footer">TBM Inventory and Sells Tracker — CSV based, simple, fast.</div>
-</div>
+  <script src="/static/ui.js"></script>
+  <script>
+    document.querySelector('.nav-sales')?.classList.add('active');
 
-<div id="toast" class="toast"></div>
+    // ---------- Elements ----------
+    const billOrderLabel = document.getElementById('billOrderLabel');
+    const floatOrder     = document.getElementById('floatOrder');
+    const floatItems     = document.getElementById('floatItems');
+    const floatTotal     = document.getElementById('floatTotal');
 
-<script src="/static/ui.js"></script>
-<script>
-  document.querySelector('.nav-sales')?.classList.add('active');
+    const saleCategory   = document.getElementById('saleCategory');
+    const sfhBranchWrap  = document.getElementById('sfhBranchWrap');
+    const branchSelect   = document.getElementById('branchSelect');
+    const addBranchBtn   = document.getElementById('addBranchBtn');
+    const saleDate       = document.getElementById('saleDate');
 
-  // ---------- Elements ----------
-  const billOrderLabel = document.getElementById('billOrderLabel');
-  const floatOrder     = document.getElementById('floatOrder');
-  const floatItems     = document.getElementById('floatItems');
-  const floatTotal     = document.getElementById('floatTotal');
+    const itemSearchInput  = document.getElementById('itemSearchInput');
+    const itemSearchAddBtn = document.getElementById('itemSearchAddBtn');
+    const itemCategoryChips = document.getElementById('itemCategoryChips');
+    const itemList         = document.getElementById('itemList');
+    const itemListTitle    = document.getElementById('itemListTitle');
+    const itemFilterInput  = document.getElementById('itemFilterInput');
 
-  const saleCategory   = document.getElementById('saleCategory');
-  const sfhBranchWrap  = document.getElementById('sfhBranchWrap');
-  const branchSelect   = document.getElementById('branchSelect');
-  const addBranchBtn   = document.getElementById('addBranchBtn');
-  const saleDate       = document.getElementById('saleDate');
+    const browseViewOrderBtn = document.getElementById('browseViewOrderBtn');
+    const stepBrowse   = document.getElementById('stepBrowse');
+    const stepReview   = document.getElementById('stepReview');
+    const stepFinalize = document.getElementById('stepFinalize');
 
-  const saleItem       = document.getElementById('saleItem');
-  const searchAddBtn   = document.getElementById('searchAddBtn');
-  const itemCategoryChips = document.getElementById('itemCategoryChips');
-  const catSearchInput = document.getElementById('catSearchInput');
-  const itemList       = document.getElementById('itemList');
+    const orderList       = document.getElementById('orderList');
+    const backToBrowseBtn = document.getElementById('backToBrowseBtn');
+    const lockOrderBtn    = document.getElementById('lockOrderBtn');
+    const backToReviewBtn = document.getElementById('backToReviewBtn');
 
-  const browsePane     = document.getElementById('browsePane');
-  const orderPane      = document.getElementById('orderPane');
-  const checkoutPane   = document.getElementById('checkoutPane');
+    const orderTypeChips  = document.getElementById('orderTypeChips');
+    const saleTable       = document.getElementById('saleTable');
+    const tableRowFinalize= document.getElementById('tableRowFinalize');
 
-  const billItemsEl    = document.getElementById('billItems');
-  const tSub           = document.getElementById('tSubtotal');
-  const tDisc          = document.getElementById('tDiscount');
-  const tTotal         = document.getElementById('tTotal');
+    const saleCustName    = document.getElementById('saleCustName');
+    const saleCustPhone   = document.getElementById('saleCustPhone');
+    const saleNotes       = document.getElementById('saleNotes');
 
-  const backToBrowseBtn = document.getElementById('backToBrowseBtn');
-  const lockOrderBtn    = document.getElementById('lockOrderBtn');
+    const payChips       = document.getElementById('payChips');
+    const payModeRow     = document.getElementById('payModeRow');
+    const payNoteRow     = document.getElementById('payNoteRow');
+    const payMode        = document.getElementById('payMode');
+    const payNote        = document.getElementById('payNote');
 
-  const orderTypeChips  = document.getElementById('orderTypeChips');
-  const tableField      = document.getElementById('tableField');
-  const saleTable       = document.getElementById('saleTable');
-  const saleCustName    = document.getElementById('saleCustName');
-  const saleCustPhone   = document.getElementById('saleCustPhone');
-  const saleNotes       = document.getElementById('saleNotes');
+    const tSub1   = document.getElementById('tSubtotal');
+    const tDisc1  = document.getElementById('tDiscount');
+    const tTot1   = document.getElementById('tTotal');
+    const tSub2   = document.getElementById('tSubtotal2');
+    const tDisc2  = document.getElementById('tDiscount2');
+    const tTot2   = document.getElementById('tTotal2');
+    const tSub3   = document.getElementById('tSubtotal3');
+    const tDisc3  = document.getElementById('tDiscount3');
+    const tTot3   = document.getElementById('tTotal3');
 
-  const payChips        = document.getElementById('payChips');
-  const payModeRow      = document.getElementById('payModeRow');
-  const payNoteRow      = document.getElementById('payNoteRow');
-  const payMode         = document.getElementById('payMode');
-  const payNote         = document.getElementById('payNote');
+    const floatBar       = document.getElementById('floatBar');
+    const clearFormBtn   = document.getElementById('clearFormBtn');
+    const saveBillBtn    = document.getElementById('saveBillBtn');
+    const saveBillBtnFloat = document.getElementById('saveBillBtnFloat');
 
-  const backToOrderBtn  = document.getElementById('backToOrderBtn');
-  const saveBillBtn     = document.getElementById('saveBillBtn');
+    const liveBranch     = document.getElementById('liveBranch');
+    const refreshLive    = document.getElementById('refreshLive');
+    const liveWrap       = document.getElementById('liveWrap');
 
-  const floatBar        = document.getElementById('floatBar');
-  const clearFormBtn    = document.getElementById('clearFormBtn');
-  const viewOrderBtn    = document.getElementById('viewOrderBtn');
+    const rPeriod        = document.getElementById('rPeriod');
+    const rStart         = document.getElementById('rStart');
+    const rEnd           = document.getElementById('rEnd');
+    const rCategory      = document.getElementById('rCategory');
+    const rBranch        = document.getElementById('rBranch');
+    const rItem          = document.getElementById('rItem');
+    const rStatus        = document.getElementById('rStatus');
+    const runReportBtn   = document.getElementById('runReport');
+    const reportSummary  = document.getElementById('reportSummary');
+    const tblDetail      = document.getElementById('tblDetail');
+    const detailColChooser = document.getElementById('detailColChooser');
 
-  const liveBranch      = document.getElementById('liveBranch');
-  const refreshLive     = document.getElementById('refreshLive');
-  const liveWrap        = document.getElementById('liveWrap');
+    const mobileCashBox      = document.getElementById('mobileCashBox');
+    const openingCashInput   = document.getElementById('openingCash');
+    const cbCategory         = document.getElementById('cbCategory');
+    const cbBranch           = document.getElementById('cbBranch');
+    const cbTotalSales       = document.getElementById('cbTotalSales');
+    const cbDue              = document.getElementById('cbDue');
+    const cbPaid             = document.getElementById('cbPaid');
+    const cbCash             = document.getElementById('cbCash');
+    const cbCurrentUPI       = document.getElementById('cbCurrentUPI');
+    const cbCard             = document.getElementById('cbCard');
+    const cbPersonalCash     = document.getElementById('cbPersonalCash');
+    const cbPersonalUPI      = document.getElementById('cbPersonalUPI');
+    const settlePersonalCashBtn = document.getElementById('settlePersonalCashBtn');
+    const settlePersonalUPIBtn  = document.getElementById('settlePersonalUPIBtn');
 
-  const rPeriod         = document.getElementById('rPeriod');
-  const rStart          = document.getElementById('rStart');
-  const rEnd            = document.getElementById('rEnd');
-  const rCategory       = document.getElementById('rCategory');
-  const rBranch         = document.getElementById('rBranch');
-  const rItem           = document.getElementById('rItem');
-  const rStatus         = document.getElementById('rStatus');
-  const runReportBtn    = document.getElementById('runReport');
-  const reportSummary   = document.getElementById('reportSummary');
-  const tblDetail       = document.getElementById('tblDetail');
-  const detailColChooser= document.getElementById('detailColChooser');
+    const toastEl = document.getElementById('toast');
 
-  const mobileCashBox   = document.getElementById('mobileCashBox');
-  const openingCashInput= document.getElementById('openingCash');
-  const cbCategory      = document.getElementById('cbCategory');
-  const cbBranch        = document.getElementById('cbBranch');
-  const cbTotalSales    = document.getElementById('cbTotalSales');
-  const cbDue           = document.getElementById('cbDue');
-  const cbPaid          = document.getElementById('cbPaid');
-  const cbCash          = document.getElementById('cbCash');
-  const cbCurrentUPI    = document.getElementById('cbCurrentUPI');
-  const cbCard          = document.getElementById('cbCard');
-  const cbPersonalCash  = document.getElementById('cbPersonalCash');
-  const cbPersonalUPI   = document.getElementById('cbPersonalUPI');
-  const settlePersonalCashBtn = document.getElementById('settlePersonalCashBtn');
-  const settlePersonalUPIBtn  = document.getElementById('settlePersonalUPIBtn');
+    // SFH tip elements
+    const sfhTableTip      = document.getElementById('sfhTableTip');
+    const sfhTableTipHide  = document.getElementById('sfhTableTipHide');
+    const sfhTableTipClose = document.getElementById('sfhTableTipClose');
 
-  const toastEl         = document.getElementById('toast');
+    // ---------- State ----------
+    const DEFAULT_CATEGORIES = ['Home Delivery','Frozen Products','SFH'];
+    const PAYMENT_STATUSES = ['Live','Due','Paid'];
+    const PAYMENT_MODES    = ['', 'CurrentUPI','Cash','Card','PersonalUPI','PersonalCash'];
 
-  // ---------- State ----------
-  const DEFAULT_CATEGORIES = ['Home Delivery','Frozen Products','SFH'];
-  const PAYMENT_STATUSES   = ['Live','Due','Paid'];
-  const PAYMENT_MODES      = ['', 'CurrentUPI','Cash','Card','PersonalUPI','PersonalCash'];
+    const detailColumns = [
+      { key: 'date',           label: 'Date' },
+      { key: 'category',       label: 'Category' },
+      { key: 'branch',         label: 'Branch' },
+      { key: 'order_id',       label: 'Order' },
+      { key: 'item',           label: 'Item' },
+      { key: 'unit',           label: 'Unit' },
+      { key: 'qty',            label: 'Qty' },
+      { key: 'unit_price',     label: 'Unit Price' },
+      { key: 'discount',       label: 'Discount' },
+      { key: 'total_price',    label: 'Total' },
+      { key: 'customer_name',  label: 'Customer' },
+      { key: 'customer_phone', label: 'Phone' },
+      { key: 'table_no',       label: 'Table' },
+      { key: 'payment_status', label: 'Status' },
+      { key: 'payment_mode',   label: 'Mode' },
+      { key: 'payment_note',   label: 'Pay Note' },
+      { key: 'notes',          label: 'Notes' },
+    ];
+    let visibleDetailCols = new Set(detailColumns.map(c => c.key));
 
-  let readyRows = [];
-  let readyIndexByName = {}; // name_lower -> info
-  let readyIndexByCode = {}; // code_upper -> info
-  let allCategories = new Set();
-  let itemCategories = [];   // from item_category
+    let readyRows = [];
+    let readyIndexByName = {};   // name_lower -> info
+    let readyIndexByCode = {};   // code_upper -> info
+    let allCategories = new Set();
+    let allItemCategories = new Set();
 
-  let currentItemCategory = ''; // item_category selected
-  let currentItemFilter   = ''; // inside-category search
+    let payStatus  = 'Live';
+    let orderType  = 'DineIn';   // DineIn / Takeaway / Delivery
+    let cartItems  = [];         // [{id,name,code,item_category,unit,unit_price,qty,discount}]
 
-  let billItems = [];  // [{name, code, item_category, unit, qty, unit_price, discount}]
-  let payStatus = 'Live';
-  let orderType = 'DineIn'; // DineIn / Takeaway / Delivery
-  let nextOrderId = 1;
+    let nextOrderId = 1;
+    let lastReportData = null;
+    let currentReportRows = [];
+    let openingCashKey = null;
 
-  let lastReportData = null;
-  let currentReportRows = [];
-  let visibleDetailCols = new Set();
-  let openingCashKey = null;
+    let currentStep = 1; // 1=Browse,2=Review,3=Finalize
 
-  const detailColumns = [
-    { key: 'date',           label: 'Date' },
-    { key: 'category',       label: 'Category' },
-    { key: 'branch',         label: 'Branch' },
-    { key: 'order_id',       label: 'Order' },
-    { key: 'item',           label: 'Item' },
-    { key: 'unit',           label: 'Unit' },
-    { key: 'qty',            label: 'Qty' },
-    { key: 'unit_price',     label: 'Unit Price' },
-    { key: 'discount',       label: 'Discount' },
-    { key: 'total_price',    label: 'Total' },
-    { key: 'customer_name',  label: 'Customer' },
-    { key: 'customer_phone', label: 'Phone' },
-    { key: 'table_no',       label: 'Table' },
-    { key: 'payment_status', label: 'Status' },
-    { key: 'payment_mode',   label: 'Mode' },
-    { key: 'payment_note',   label: 'Pay Note' },
-    { key: 'notes',          label: 'Notes' },
-  ];
-  visibleDetailCols = new Set(detailColumns.map(c => c.key));
+    const toMoney = (n)=> '₹' + (Number(n||0).toFixed(2));
+    const isMobile = ()=> window.matchMedia('(max-width: 767px)').matches;
 
-  // ---------- Utils ----------
-  const toMoney = (n)=> '₹' + (Number(n||0).toFixed(2));
-  const isMobile = ()=> window.matchMedia('(max-width: 767px)').matches;
+    function isThreeCharCode(val){
+      return /^[0-9][A-Za-z]{2}$/.test(val);
+    }
 
-  function showToast(msg){
-    if(!toastEl) return;
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    setTimeout(()=> toastEl.classList.remove('show'), 1700);
-  }
+    function showToast(msg){
+      if(!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(()=> toastEl.classList.remove('show'), 1600);
+    }
 
-  async function fetchJSON(url, opts){
-    const res = await fetch(url, Object.assign({
-      headers:{'Content-Type':'application/json'}
-    }, opts || {}));
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.json();
-  }
+    async function fetchJSON(url, opts){
+      const res = await fetch(url, Object.assign({
+        headers: {'Content-Type':'application/json'}
+      }, opts || {}));
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
+    }
 
-  function isThreeCharCode(v){
-    return /^[0-9][A-Za-z]{2}$/.test((v||'').trim());
-  }
+    function updateOrderLabels(){
+      billOrderLabel.textContent = '#' + nextOrderId;
+      floatOrder.textContent     = '#' + nextOrderId;
+    }
 
-  function updateOrderLabels(){
-    billOrderLabel.textContent = '#' + nextOrderId;
-    floatOrder.textContent     = '#' + nextOrderId;
-  }
+    function reserveOrderId(){
+      const id = nextOrderId;
+      nextOrderId += 1;
+      localStorage.setItem('tbm_last_order_id', String(id));
+      updateOrderLabels();
+      return String(id);
+    }
 
-  function reserveOrderId(){
-    const id = nextOrderId;
-    nextOrderId += 1;
-    localStorage.setItem('tbm_last_order_id', String(id));
-    updateOrderLabels();
-    return String(id);
-  }
-
-  function setChipsActive(container, value, attr){
-    container.querySelectorAll('.chip').forEach(ch=>{
-      ch.classList.toggle('active', ch.getAttribute(attr) === value);
-    });
-  }
-
-  // ---------- Ready products & categories ----------
-  function rebuildCategorySelects(){
-    const cats = new Set(DEFAULT_CATEGORIES);
-    allCategories.forEach(c => cats.add(c));
-    const sorted = Array.from(cats).filter(Boolean).sort();
-
-    const catSelects = [saleCategory, rCategory];
-    catSelects.forEach(sel=>{
-      if(!sel) return;
-      const prev = sel.value;
-      sel.innerHTML = '';
-      if(sel === rCategory){
-        const optAll = document.createElement('option');
-        optAll.value = '';
-        optAll.textContent = '(All)';
-        sel.appendChild(optAll);
-      }
-      sorted.forEach(c=>{
-        const o = document.createElement('option');
-        o.value = c;
-        o.textContent = c;
-        sel.appendChild(o);
+    // SFH table tip init
+    function initSfhTableTip(){
+      if(!sfhTableTip || !sfhTableTipClose || !sfhTableTipHide) return;
+      const KEY = 'tbm_sfh_table_tip_hide';
+      if(localStorage.getItem(KEY) === '1') return;
+      sfhTableTip.style.display = 'block';
+      sfhTableTipClose.addEventListener('click', ()=>{
+        if(sfhTableTipHide.checked){
+          localStorage.setItem(KEY, '1');
+        }
+        sfhTableTip.style.display = 'none';
       });
-      if(prev && sorted.includes(prev)){
-        sel.value = prev;
-      }else if(sel === saleCategory){
-        sel.value = 'SFH';
-      }
-    });
-  }
-
-  function buildItemCategories(){
-    const set = new Set();
-    readyRows.forEach(r=>{
-      const ic = (r.item_category || '').trim();
-      if(ic) set.add(ic);
-    });
-    itemCategories = Array.from(set).sort();
-    itemCategoryChips.innerHTML = '';
-    if(!itemCategories.length){
-      const span = document.createElement('div');
-      span.className = 'hint';
-      span.textContent = 'Define item categories in Ready Products to see them here.';
-      itemCategoryChips.appendChild(span);
-      currentItemCategory = '';
-      return;
     }
 
-    itemCategories.forEach((cat, idx)=>{
-      const chip = document.createElement('div');
-      chip.className = 'cat-chip';
-      chip.textContent = cat;
-      chip.dataset.cat = cat;
-      if(idx === 0) {
-        chip.classList.add('active');
-        currentItemCategory = cat;
-      }
-      chip.addEventListener('click', ()=>{
-        currentItemCategory = cat;
-        itemCategoryChips.querySelectorAll('.cat-chip').forEach(c=>c.classList.toggle('active', c.dataset.cat === cat));
-        renderItemList();
+    // ---------- Ready Products & categories ----------
+    function rebuildCategorySelects(){
+      const cats = new Set(DEFAULT_CATEGORIES);
+      allCategories.forEach(c => cats.add(c));
+      const sorted = Array.from(cats).filter(Boolean).sort();
+
+      const catSelects = [saleCategory, rCategory];
+      catSelects.forEach(sel=>{
+        if(!sel) return;
+        const prev = sel.value;
+        sel.innerHTML = '';
+        if(sel === rCategory){
+          const optAll = document.createElement('option');
+          optAll.value = '';
+          optAll.textContent = '(All)';
+          sel.appendChild(optAll);
+        }
+        sorted.forEach(c=>{
+          const o = document.createElement('option');
+          o.value = c;
+          o.textContent = c;
+          sel.appendChild(o);
+        });
+        if(prev && sorted.includes(prev)){
+          sel.value = prev;
+        }else if(sel === saleCategory){
+          sel.value = 'SFH'; // default for your cafe
+        }
       });
-      itemCategoryChips.appendChild(chip);
-    });
-  }
+    }
 
-  async function loadReadyProducts(){
-    const d = await fetchJSON('/api/ready_products');
-    readyRows = d.rows || [];
-    readyIndexByName = {};
-    readyIndexByCode = {};
-    allCategories = new Set();
-
-    readyRows.forEach(r=>{
-      const name = (r.name || '').trim();
-      if(!name) return;
-      const info = {
-        name,
-        unit: r.unit,
-        price: parseFloat(r.price || 0),
-        category: r.category,
-        item_category: (r.item_category || '').trim(),
-        code: (r.code || '').trim().toUpperCase()
-      };
-      readyIndexByName[name.toLowerCase()] = info;
-      if(info.code && isThreeCharCode(info.code)){
-        readyIndexByCode[info.code] = info;
+    function rebuildItemCategoryChips(){
+      itemCategoryChips.innerHTML = '';
+      const cats = Array.from(allItemCategories).filter(Boolean).sort();
+      if(!cats.length){
+        const ph = document.createElement('div');
+        ph.className = 'hint';
+        ph.textContent = 'No item categories yet. Add item_category in Ready Products.';
+        itemCategoryChips.appendChild(ph);
+        return;
       }
-      if(info.category) allCategories.add(info.category);
-    });
-
-    rebuildCategorySelects();
-    buildItemCategories();
-    renderItemList();
-  }
-
-  // ---------- Branches & live tables ----------
-  async function loadBranches(){
-    const d = await fetchJSON('/api/branches');
-    const rows = d.rows || [];
-    [branchSelect, liveBranch].forEach(sel=>{
-      if(!sel) return;
-      sel.innerHTML = '';
-      const ph = document.createElement('option');
-      ph.value = '';
-      ph.textContent = '(Select)';
-      sel.appendChild(ph);
-    });
-    rows.forEach(r=>{
-      const opt = document.createElement('option');
-      opt.value = r.name;
-      opt.textContent = r.name + (r.is_active==='0'?' (inactive)':'');
-      branchSelect.appendChild(opt.cloneNode(true));
-      liveBranch.appendChild(opt);
-    });
-  }
-
-  async function loadLiveTables(){
-    const br = liveBranch.value || branchSelect.value || '';
-    if(!br){
-      liveWrap.innerHTML = '<div class="hint">Select branch to view tables.</div>';
-      return;
-    }
-    const p = new URLSearchParams();
-    p.set('period','today');
-    p.set('category','SFH');
-    p.set('branch', br);
-    p.set('payment_status','Live');
-
-    const d = await fetchJSON('/api/sales/report?' + p.toString());
-    const rows = d.rows || [];
-    const counts = {};
-    rows.forEach(r=>{
-      const tn = (r.table_no || '—');
-      counts[tn] = (counts[tn] || 0) + 1;
-    });
-    const entries = Object.entries(counts);
-    if(!entries.length){
-      liveWrap.innerHTML = '<div class="hint">No live orders right now.</div>';
-      return;
-    }
-    const grid = document.createElement('div');
-    grid.className = 'table-cards';
-    entries.forEach(([table_no,count])=>{
-      const card = document.createElement('div');
-      card.className = 'tcard';
-      card.innerHTML = '<h3>Table ' + table_no + '</h3>' +
-                       '<div class="count">' + count + '</div>' +
-                       '<div class="hint">Tap to see details (later)</div>';
-      grid.appendChild(card);
-    });
-    liveWrap.innerHTML = '';
-    liveWrap.appendChild(grid);
-  }
-
-  // ---------- POS: helpers ----------
-  function getBillLineForInfo(info){
-    return billItems.find(l =>
-      l.name === info.name &&
-      l.unit === info.unit &&
-      Number(l.unit_price) === Number(info.price)
-    ) || null;
-  }
-
-  function getBillQtyForInfo(info){
-    const l = getBillLineForInfo(info);
-    return l ? Number(l.qty || 0) : 0;
-  }
-
-  function changeItemQty(info, delta){
-    let line = getBillLineForInfo(info);
-    if(!line && delta > 0){
-      line = {
-        name: info.name,
-        code: info.code,
-        item_category: info.item_category,
-        unit: info.unit,
-        qty: 0,
-        unit_price: Number(info.price || 0),
-        discount: 0
-      };
-      billItems.push(line);
-    }
-    if(!line) return;
-
-    line.qty = Number(line.qty || 0) + delta;
-    if(line.qty <= 0){
-      billItems = billItems.filter(l => l !== line);
-    }
-    renderBillItems();
-    renderItemList();
-    updateTotals();
-    updateFloatSummary();
-  }
-
-  function renderItemList(){
-    itemList.innerHTML = '';
-    if(!readyRows.length){
-      itemList.innerHTML = '<div class="hint">No ready products yet.</div>';
-      return;
-    }
-    const cat = currentItemCategory;
-    const term = (currentItemFilter || '').toLowerCase();
-
-    const rows = readyRows.filter(r=>{
-      if(cat && (r.item_category || '').trim() !== cat) return false;
-      if(!term) return true;
-      const name = (r.name || '').toLowerCase();
-      const code = (r.code || '').toLowerCase();
-      return name.includes(term) || code.includes(term);
-    });
-
-    if(!rows.length){
-      itemList.innerHTML = '<div class="hint">No items match this filter.</div>';
-      return;
+      cats.forEach((cat, idx)=>{
+        const chip = document.createElement('div');
+        chip.className = 'cat-chip' + (idx===0 ? ' active':'');
+        chip.dataset.cat = cat;
+        chip.textContent = cat;
+        itemCategoryChips.appendChild(chip);
+      });
+      if(cats.length){
+        renderItemList(cats[0], '');
+      }
     }
 
-    rows.forEach(r=>{
-      const info = readyIndexByName[(r.name || '').toLowerCase()];
-      if(!info) return;
-      const qty = getBillQtyForInfo(info);
+    async function loadReadyProducts(){
+      const d = await fetchJSON('/api/ready_products');
+      readyRows = d.rows || [];
+      readyIndexByName = {};
+      readyIndexByCode = {};
+      allCategories = new Set();
+      allItemCategories = new Set();
 
-      const row = document.createElement('div');
-      row.className = 'item-row';
+      readyRows.forEach(r=>{
+        const name = (r.name || '').trim();
+        if(!name) return;
+        const keyName = name.toLowerCase();
+        const info = {
+          name,
+          unit: r.unit,
+          price: parseFloat(r.price || 0),
+          category: r.category,
+          item_category: (r.item_category || '').trim(),
+          code: (r.code || '').trim().toUpperCase()
+        };
+        readyIndexByName[keyName] = info;
+        if(info.code && isThreeCharCode(info.code)){
+          readyIndexByCode[info.code] = info;
+        }
+        if(info.category)      allCategories.add(info.category);
+        if(info.item_category) allItemCategories.add(info.item_category);
+      });
 
-      const main = document.createElement('div');
-      main.className = 'item-main';
-      const nm = document.createElement('div');
-      nm.className = 'item-name';
-      nm.textContent = info.name;
-      const meta = document.createElement('div');
-      meta.className = 'item-meta';
-      const bits = [];
-      if(info.code) bits.push(info.code);
-      if(info.unit) bits.push(info.unit);
-      bits.push(toMoney(info.price));
-      if(info.item_category) bits.push(info.item_category);
-      meta.textContent = bits.join(' • ');
+      rebuildCategorySelects();
+      rebuildItemCategoryChips();
+      applyCategoryDefaults();
+    }
 
-      main.appendChild(nm);
-      main.appendChild(meta);
+    // ---------- Branches & Live tables ----------
+    async function loadBranches(){
+      const d = await fetchJSON('/api/branches');
+      const rows = d.rows || [];
+      [branchSelect, liveBranch].forEach(sel=>{
+        if(!sel) return;
+        sel.innerHTML = '';
+        const ph = document.createElement('option');
+        ph.value = '';
+        ph.textContent = '(Select)';
+        sel.appendChild(ph);
+      });
+      rows.forEach(r=>{
+        const opt = document.createElement('option');
+        opt.value = r.name;
+        opt.textContent = r.name + (r.is_active==='0'?' (inactive)':'');
+        branchSelect.appendChild(opt.cloneNode(true));
+        liveBranch.appendChild(opt);
+      });
+    }
 
-      const ctrl = document.createElement('div');
-      ctrl.className = 'item-ctrl';
+    async function loadLiveTables(){
+      const br = liveBranch.value || branchSelect.value || '';
+      if(!br){
+        liveWrap.innerHTML = '<div class="hint">Select branch to view tables.</div>';
+        return;
+      }
+      const p = new URLSearchParams();
+      p.set('period','today');
+      p.set('category','SFH');
+      p.set('branch', br);
+      p.set('payment_status','Live');
 
-      if(qty > 0){
-        const pill = document.createElement('div');
-        pill.className = 'qty-pill';
+      const d = await fetchJSON('/api/sales/report?' + p.toString());
+      const rows = d.rows || [];
+      const counts = {};
+      rows.forEach(r=>{
+        const tn = (r.table_no || '—');
+        counts[tn] = (counts[tn] || 0) + 1;
+      });
+
+      const entries = Object.entries(counts);
+      if(!entries.length){
+        liveWrap.innerHTML = '<div class="hint">No live orders right now.</div>';
+        return;
+      }
+      const grid = document.createElement('div');
+      grid.className = 'table-cards';
+      entries.forEach(([table_no,count])=>{
+        const card = document.createElement('div');
+        card.className = 'tcard';
+        card.innerHTML = '<h3>Table ' + table_no + '</h3>' +
+                         '<div class="count">' + count + '</div>' +
+                         '<div class="hint">Tap to see details (later enhancement)</div>';
+        grid.appendChild(card);
+      });
+      liveWrap.innerHTML = '';
+      liveWrap.appendChild(grid);
+    }
+
+    // ---------- Smart item lookup ----------
+    function findItemInfoBySmartQuery(raw){
+      const val = (raw || '').trim();
+      if(!val) return null;
+
+      if(isThreeCharCode(val)){
+        const info = readyIndexByCode[val.toUpperCase()];
+        if(info) return info;
+      }
+
+      const parts = val.toLowerCase().split(/\s+/).filter(Boolean);
+      const nameToken = parts.join(' ');
+      let best = null;
+
+      for(const key in readyIndexByName){
+        const info = readyIndexByName[key];
+        const lowerName = info.name.toLowerCase();
+        const code = (info.code || '').toLowerCase();
+        if(lowerName.includes(nameToken) || code.startsWith(nameToken)){
+          best = info;
+          break;
+        }
+      }
+      return best;
+    }
+
+    // ---------- Cart & totals ----------
+    function recalcTotals(){
+      let sub = 0;
+      let disc = 0;
+      cartItems.forEach(line=>{
+        const lineSub = Number(line.qty || 0) * Number(line.unit_price || 0);
+        const lineDisc = Number(line.discount || 0);
+        sub  += lineSub;
+        disc += lineDisc;
+      });
+      const tot = Math.max(0, sub - disc);
+
+      tSub1.textContent = toMoney(sub);
+      tDisc1.textContent= toMoney(disc);
+      tTot1.textContent = toMoney(tot);
+
+      tSub2.textContent = toMoney(sub);
+      tDisc2.textContent= toMoney(disc);
+      tTot2.textContent = toMoney(tot);
+
+      tSub3.textContent = toMoney(sub);
+      tDisc3.textContent= toMoney(disc);
+      tTot3.textContent = toMoney(tot);
+
+      floatTotal.textContent = toMoney(tot);
+      floatItems.textContent = String(cartItems.length);
+    }
+
+    function getCartQtyForName(name){
+      const line = cartItems.find(l => l.name === name);
+      return line ? Number(line.qty || 0) : 0;
+    }
+
+    function incrementItem(info, delta){
+      if(!info || !info.name) return;
+      const existing = cartItems.find(l =>
+        l.name === info.name &&
+        l.unit === info.unit &&
+        Number(l.unit_price) === Number(info.price)
+      );
+      if(existing){
+        existing.qty = Math.max(0, Number(existing.qty || 0) + delta);
+        if(existing.qty === 0){
+          cartItems = cartItems.filter(l => l !== existing);
+        }
+      }else if(delta > 0){
+        cartItems.push({
+          id: 'BL' + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+          name: info.name,
+          code: info.code,
+          item_category: info.item_category,
+          unit: info.unit,
+          unit_price: Number(info.price || 0),
+          qty: delta,
+          discount: 0
+        });
+      }
+      recalcTotals();
+      renderItemList(getActiveItemCategory(), itemFilterInput.value || '');
+      renderOrderList();
+    }
+
+    function getActiveItemCategory(){
+      const active = itemCategoryChips.querySelector('.cat-chip.active');
+      return active ? active.dataset.cat : '';
+    }
+
+    function renderItemList(cat, filterText){
+      const catName = cat || '(All)';
+      itemListTitle.textContent = cat ? ('Items · ' + cat) : 'Items';
+      itemList.innerHTML = '';
+
+      const ft = (filterText || '').toLowerCase();
+      const rows = readyRows.filter(r=>{
+        const ic = (r.item_category || '').trim();
+        if(cat && ic !== cat) return false;
+        const name = (r.name || '').trim();
+        const code = (r.code || '').toUpperCase();
+        if(ft){
+          const s = name.toLowerCase() + ' ' + code.toLowerCase();
+          if(!s.includes(ft)) return false;
+        }
+        return !!name;
+      });
+
+      if(!rows.length){
+        const empty = document.createElement('div');
+        empty.className = 'order-empty';
+        empty.textContent = 'No items for this filter.';
+        itemList.appendChild(empty);
+        return;
+      }
+
+      rows.forEach(r=>{
+        const name = (r.name || '').trim();
+        const unit = (r.unit || '').trim();
+        const code = (r.code || '').trim().toUpperCase();
+        const price = Number(r.price || 0);
+        const ic   = (r.item_category || '').trim();
+        const info = {
+          name,
+          unit,
+          code,
+          price,
+          item_category: ic
+        };
+
+        const row = document.createElement('div');
+        row.className = 'item-row';
+
+        const main = document.createElement('div');
+        main.className = 'item-main';
+        const nameEl = document.createElement('div');
+        nameEl.className = 'item-name';
+        nameEl.textContent = name;
+        const meta = document.createElement('div');
+        meta.className = 'item-meta';
+
+        if(unit){
+          const s1 = document.createElement('span');
+          s1.textContent = unit;
+          meta.appendChild(s1);
+        }
+        const s2 = document.createElement('span');
+        s2.textContent = toMoney(price);
+        meta.appendChild(s2);
+        if(code){
+          const s3 = document.createElement('span');
+          s3.textContent = code;
+          meta.appendChild(s3);
+        }
+
+        main.appendChild(nameEl);
+        main.appendChild(meta);
+
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+
+        const currentQty = getCartQtyForName(name);
+        if(currentQty <= 0){
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'item-add-btn';
+          btn.textContent = 'ADD';
+          btn.addEventListener('click', ()=>{
+            incrementItem(info, 1);
+            showToast('Added ' + name);
+          });
+          actions.appendChild(btn);
+        }else{
+          const ctl = document.createElement('div');
+          ctl.className = 'item-qty-control';
+          const btnMinus = document.createElement('button');
+          btnMinus.type = 'button';
+          btnMinus.textContent = '–';
+          btnMinus.addEventListener('click', ()=> incrementItem(info, -1));
+          const spanQty = document.createElement('span');
+          spanQty.textContent = String(currentQty);
+          const btnPlus = document.createElement('button');
+          btnPlus.type = 'button';
+          btnPlus.textContent = '+';
+          btnPlus.addEventListener('click', ()=> incrementItem(info, +1));
+          ctl.appendChild(btnMinus);
+          ctl.appendChild(spanQty);
+          ctl.appendChild(btnPlus);
+          actions.appendChild(ctl);
+        }
+
+        row.appendChild(main);
+        row.appendChild(actions);
+        itemList.appendChild(row);
+      });
+    }
+
+    function renderOrderList(){
+      orderList.innerHTML = '';
+      if(!cartItems.length){
+        const empty = document.createElement('div');
+        empty.className = 'order-empty';
+        empty.textContent = 'No items yet. Add from catalog.';
+        orderList.appendChild(empty);
+        return;
+      }
+
+      cartItems.forEach(line=>{
+        const row = document.createElement('div');
+        row.className = 'order-row';
+        row.dataset.id = line.id;
+
+        const main = document.createElement('div');
+        main.className = 'order-main';
+        const title = document.createElement('div');
+        title.className = 'order-name';
+        title.textContent = line.name;
+        const sub = document.createElement('div');
+        sub.className = 'order-meta';
+        const bits = [];
+        if(line.code) bits.push(line.code);
+        if(line.item_category) bits.push(line.item_category);
+        if(line.unit) bits.push(line.unit);
+        bits.push(toMoney(line.unit_price) + '/u');
+        sub.textContent = bits.join(' • ');
+        main.appendChild(title);
+        main.appendChild(sub);
+
+        const qtyCol = document.createElement('div');
+        qtyCol.className = 'order-qty';
+        const ctl = document.createElement('div');
+        ctl.className = 'item-qty-control';
         const btnMinus = document.createElement('button');
         btnMinus.type = 'button';
         btnMinus.textContent = '–';
-        btnMinus.addEventListener('click', ()=> changeItemQty(info, -1));
-        const span = document.createElement('span');
-        span.textContent = qty;
+        btnMinus.addEventListener('click', ()=>{
+          line.qty = Math.max(0, Number(line.qty || 0) - 1);
+          if(line.qty === 0){
+            cartItems = cartItems.filter(l => l.id !== line.id);
+          }
+          recalcTotals();
+          renderItemList(getActiveItemCategory(), itemFilterInput.value || '');
+          renderOrderList();
+        });
+        const spanQty = document.createElement('span');
+        spanQty.textContent = String(line.qty);
         const btnPlus = document.createElement('button');
         btnPlus.type = 'button';
         btnPlus.textContent = '+';
-        btnPlus.addEventListener('click', ()=> changeItemQty(info, +1));
-        pill.appendChild(btnMinus);
-        pill.appendChild(span);
-        pill.appendChild(btnPlus);
-        ctrl.appendChild(pill);
+        btnPlus.addEventListener('click', ()=>{
+          line.qty = Number(line.qty || 0) + 1;
+          recalcTotals();
+          renderItemList(getActiveItemCategory(), itemFilterInput.value || '');
+          renderOrderList();
+        });
+        ctl.appendChild(btnMinus);
+        ctl.appendChild(spanQty);
+        ctl.appendChild(btnPlus);
+        qtyCol.appendChild(ctl);
+
+        const totalCol = document.createElement('div');
+        totalCol.className = 'order-total';
+        const lineSub = Number(line.qty || 0) * Number(line.unit_price || 0);
+        const lineDisc = Number(line.discount || 0);
+        const lineTot = Math.max(0, lineSub - lineDisc);
+        totalCol.innerHTML = toMoney(lineTot) +
+          '<small>Disc: ' + toMoney(line.discount || 0) + '</small>';
+
+        const discWrap = document.createElement('div');
+        discWrap.className = 'order-discount';
+        const lbl = document.createElement('span');
+        lbl.textContent = 'Discount (₹): ';
+        const inp = document.createElement('input');
+        inp.type = 'number';
+        inp.step = '0.01';
+        inp.value = String(line.discount || 0);
+        inp.addEventListener('input', ()=>{
+          line.discount = Number(inp.value || 0);
+          recalcTotals();
+          renderOrderList();
+        });
+        discWrap.appendChild(lbl);
+        discWrap.appendChild(inp);
+        main.appendChild(discWrap);
+
+        row.appendChild(main);
+        row.appendChild(qtyCol);
+        row.appendChild(totalCol);
+        orderList.appendChild(row);
+      });
+    }
+
+    function setStep(step){
+      currentStep = step;
+      stepBrowse.style.display   = (step === 1 ? '' : 'none');
+      stepReview.style.display   = (step === 2 ? '' : 'none');
+      stepFinalize.style.display = (step === 3 ? '' : 'none');
+    }
+
+    // ---------- Payment & defaults ----------
+    function togglePay(){
+      const paid = (payStatus === 'Paid');
+      payModeRow.style.display = paid ? '' : 'none';
+      const needsNote = paid && (payMode.value==='PersonalUPI' || payMode.value==='PersonalCash');
+      payNoteRow.style.display = needsNote ? '' : 'none';
+    }
+
+    function applyCategoryDefaults(){
+      const cat = saleCategory.value || 'SFH';
+      if(cat === 'Home Delivery'){
+        sfhBranchWrap.style.display = 'none';
+        tableRowFinalize.style.display = 'none';
+      }else if(cat === 'Frozen Products'){
+        sfhBranchWrap.style.display = 'none';
+        tableRowFinalize.style.display = 'none';
+      }else if(cat === 'SFH'){
+        sfhBranchWrap.style.display = '';
+        tableRowFinalize.style.display = '';
+      }
+    }
+
+    function lockReportToTodayOnMobile(){
+      if(!isMobile()) return;
+      rPeriod.value = 'today';
+      rPeriod.disabled = true;
+      if(rStart) rStart.disabled = true;
+      if(rEnd)   rEnd.disabled = true;
+      if(rCategory) rCategory.disabled = true;
+      if(rBranch)   rBranch.disabled = true;
+      if(rItem)     rItem.disabled = true;
+      if(rStatus)   rStatus.disabled = true;
+    }
+
+    function buildColumnChooser(){
+      if(!detailColChooser) return;
+      detailColChooser.innerHTML = '';
+      detailColumns.forEach(col=>{
+        const lbl = document.createElement('label');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = col.key;
+        cb.checked = visibleDetailCols.has(col.key);
+        cb.addEventListener('change', ()=>{
+          if(cb.checked) visibleDetailCols.add(col.key);
+          else visibleDetailCols.delete(col.key);
+          renderDetailTable(currentReportRows);
+        });
+        lbl.appendChild(cb);
+        lbl.appendChild(document.createTextNode(' ' + col.label));
+        detailColChooser.appendChild(lbl);
+      });
+    }
+
+    function renderDetailTable(rows){
+      currentReportRows = rows || [];
+      if(!tblDetail) return;
+      tblDetail.innerHTML = '';
+
+      const headerTr = document.createElement('tr');
+      detailColumns.forEach(col=>{
+        if(!visibleDetailCols.has(col.key)) return;
+        const th = document.createElement('th');
+        th.textContent = col.label;
+        headerTr.appendChild(th);
+      });
+      tblDetail.appendChild(headerTr);
+
+      currentReportRows.forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.dataset.saleId = r.id;
+        detailColumns.forEach(col=>{
+          if(!visibleDetailCols.has(col.key)) return;
+          const td = document.createElement('td');
+
+          if(col.key === 'payment_status'){
+            const span = document.createElement('span');
+            span.textContent = r.payment_status || 'Live';
+            span.className = 'status-chip ' + (
+              r.payment_status === 'Paid' ? 'status-paid' :
+              r.payment_status === 'Due' ? 'status-due' :
+              'status-live'
+            );
+            td.appendChild(span);
+          }else{
+            td.textContent = r[col.key] || '';
+          }
+          tr.appendChild(td);
+        });
+        tblDetail.appendChild(tr);
+      });
+    }
+
+    function updateMobileCashBox(data){
+      if(!isMobile() || !mobileCashBox) return;
+      const rows = data.rows || [];
+
+      const cat = saleCategory.value || '(All)';
+      const br  = (saleCategory.value === 'SFH' && branchSelect.value) ? branchSelect.value : '—';
+
+      cbCategory.textContent = cat;
+      cbBranch.textContent   = br;
+
+      let totalSales = 0;
+      let dueAmt     = 0;
+      let paidAmt    = 0;
+      let cashAmt    = 0;
+      let currUPIAmt = 0;
+      let cardAmt    = 0;
+      let pCashAmt   = 0;
+      let pUPIAmt    = 0;
+
+      const pCashNames = new Set();
+      const pUPINames  = new Set();
+
+      rows.forEach(r=>{
+        const amt = Number(r.total_price || 0);
+        totalSales += amt;
+
+        if(r.payment_status === 'Due'){
+          dueAmt += amt;
+        } else if(r.payment_status === 'Paid'){
+          paidAmt += amt;
+          const mode = r.payment_mode || '';
+          if(mode === 'Cash') cashAmt += amt;
+          else if(mode === 'CurrentUPI') currUPIAmt += amt;
+          else if(mode === 'Card') cardAmt += amt;
+          else if(mode === 'PersonalCash'){
+            pCashAmt += amt;
+            if(r.payment_note) pCashNames.add(r.payment_note);
+          } else if(mode === 'PersonalUPI'){
+            pUPIAmt += amt;
+            if(r.payment_note) pUPINames.add(r.payment_note);
+          }
+        }
+      });
+
+      cbTotalSales.textContent = toMoney(totalSales);
+      cbDue.textContent        = toMoney(dueAmt);
+      cbPaid.textContent       = toMoney(paidAmt);
+      cbCash.textContent       = toMoney(cashAmt);
+      cbCurrentUPI.textContent = toMoney(currUPIAmt);
+      cbCard.textContent       = toMoney(cardAmt);
+
+      const pCashLabel = toMoney(pCashAmt) + (pCashNames.size ? ' (' + Array.from(pCashNames).join(', ') + ')' : '');
+      const pUPILabel  = toMoney(pUPIAmt)  + (pUPINames.size  ? ' (' + Array.from(pUPINames).join(', ') + ')' : '');
+      cbPersonalCash.textContent = pCashLabel;
+      cbPersonalUPI.textContent  = pUPILabel;
+
+      openingCashKey = 'tbm_opening_cash_' + data.period.start + '_' + cat + '_' + br;
+      if(openingCashInput && openingCashInput.value === ''){
+        const stored = localStorage.getItem(openingCashKey);
+        if(stored !== null) openingCashInput.value = stored;
+      }
+    }
+
+    async function runReport(){
+      const p = new URLSearchParams();
+
+      if(isMobile()){
+        p.set('period','today');
+        const cat = saleCategory.value || '';
+        if(cat) p.set('category', cat);
+        if(cat === 'SFH' && branchSelect.value){
+          p.set('branch', branchSelect.value.trim());
+        }
       }else{
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn-add';
-        btn.textContent = 'ADD';
-        btn.addEventListener('click', ()=> changeItemQty(info, +1));
-        ctrl.appendChild(btn);
+        p.set('period', rPeriod.value);
+        if(rPeriod.value === 'daterange'){
+          if(rStart.value) p.set('start', rStart.value);
+          if(rEnd.value)   p.set('end',   rEnd.value);
+        }
+        if(rCategory?.value) p.set('category', rCategory.value);
+        if(rBranch?.value?.trim()) p.set('branch', rBranch.value.trim());
+        if(rItem?.value?.trim())   p.set('item',   rItem.value.trim());
+        if(rStatus?.value)         p.set('payment_status', rStatus.value);
       }
 
-      row.appendChild(main);
-      row.appendChild(ctrl);
-      itemList.appendChild(row);
-    });
-  }
+      const d = await fetchJSON('/api/sales/report?' + p.toString());
+      lastReportData = d;
 
-  function renderBillItems(){
-    billItemsEl
+      reportSummary.textContent = 'Total: ' + toMoney(d.total_sales) +
+        ' (from ' + d.period.start + ' to ' + d.period.end + ')';
+
+      if(isMobile()){
+        updateMobileCashBox(d);
+      }else{
+        renderDetailTable(d.rows || []);
+      }
+    }
+
+    openingCashInput?.addEventListener('input', ()=>{
+      if(!openingCashKey) return;
+      localStorage.setItem(openingCashKey, openingCashInput.value || '');
+    });
+
+    // ---------- Events ----------
+
+    saleCategory.addEventListener('change', ()=>{
+      applyCategoryDefaults();
+      if(isMobile()){
+        runReport();
+      }
+    });
+
+    itemCategoryChips.addEventListener('click', (e)=>{
+      const chip = e.target.closest('.cat-chip');
+      if(!chip) return;
+      itemCategoryChips.querySelectorAll('.cat-chip').forEach(c=>{
+        c.classList.toggle('active', c === chip);
+      });
+      renderItemList(chip.dataset.cat, itemFilterInput.value || '');
+    });
+
+    itemFilterInput.addEventListener('input', ()=>{
+      renderItemList(getActiveItemCategory(), itemFilterInput.value || '');
+    });
+
+    itemSearchAddBtn.addEventListener('click', ()=>{
+      const raw = itemSearchInput.value || '';
+      if(!raw.trim()){
+        alert('Type item name or code.');
+        return;
+      }
+      const info = findItemInfoBySmartQuery(raw);
+      if(!info){
+        alert('Item not found in Ready Products.');
+        return;
+      }
+      incrementItem(info, 1);
+      itemSearchInput.value = '';
+      showToast('Added ' + info.name);
+    });
+
+    itemSearchInput.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        itemSearchAddBtn.click();
+      }
+    });
+
+    browseViewOrderBtn.addEventListener('click', ()=>{
+      if(!cartItems.length){
+        alert('No items in bill.');
+        return;
+      }
+      setStep(2);
+    });
+
+    backToBrowseBtn.addEventListener('click', ()=>{
+      setStep(1);
+    });
+
+    lockOrderBtn.addEventListener('click', ()=>{
+      if(!cartItems.length){
+        alert('No items in bill.');
+        return;
+      }
+      setStep(3);
+    });
+
+    backToReviewBtn.addEventListener('click', ()=>{
+      setStep(2);
+    });
+
+    // Order type
+    orderTypeChips.addEventListener('click', (e)=>{
+      const chip = e.target.closest('.chip'); if(!chip) return;
+      orderTypeChips.querySelectorAll('.chip').forEach(c=> c.classList.remove('active'));
+      chip.classList.add('active');
+      orderType = chip.dataset.type;
+      // For Takeaway / Delivery, table is optional; we enforce only in saveBill
+    });
+
+    // Payment chips
+    payChips.addEventListener('click', (e)=>{
+      const c = e.target.closest('.chip'); if(!c) return;
+      payStatus = c.dataset.status;
+      payChips.querySelectorAll('.chip').forEach(x=> x.classList.remove('active'));
+      c.classList.add('active');
+      togglePay();
+    });
+    payMode.addEventListener('change', togglePay);
+
+    // Branches / live tables
+    addBranchBtn.addEventListener('click', async ()=>{
+      const name = prompt('New branch name?'); if(!name) return;
+      await fetchJSON('/api/branches', {method:'POST', body: JSON.stringify({name, is_active:true})});
+      await loadBranches();
+      branchSelect.value = name;
+      liveBranch.value = name;
+      loadLiveTables();
+      if(isMobile()){
+        runReport();
+      }
+    });
+
+    liveBranch.addEventListener('change', loadLiveTables);
+    refreshLive.addEventListener('click', loadLiveTables);
+
+    // Report
+    runReportBtn.addEventListener('click', runReport);
+
+    settlePersonalCashBtn?.addEventListener('click', ()=>{
+      alert('Bulk settle Personal Cash → Cash is not yet wired; we can add it next.');
+    });
+    settlePersonalUPIBtn?.addEventListener('click', ()=>{
+      alert('Bulk settle Personal UPI → Current UPI is not yet wired; we can add it next.');
+    });
+
+    // ---------- Save / clear bill ----------
+
+    async function initOrderCounter(){
+      try{
+        const d = await fetchJSON('/api/sales');
+        const rows = d.rows || [];
+        let maxNum = 0;
+        rows.forEach(r=>{
+          const n = parseInt(r.order_id, 10);
+          if(!isNaN(n)) maxNum = Math.max(maxNum, n);
+        });
+        const stored = localStorage.getItem('tbm_last_order_id');
+        if(stored){
+          const sn = parseInt(stored, 10);
+          if(!isNaN(sn) && sn > maxNum) maxNum = sn;
+        }
+        nextOrderId = maxNum + 1;
+      }catch(e){
+        nextOrderId = 1;
+      }
+      updateOrderLabels();
+    }
+
+    function clearBillButKeepContext(){
+      cartItems = [];
+      recalcTotals();
+      renderItemList(getActiveItemCategory(), itemFilterInput.value || '');
+      renderOrderList();
+      saleCustName.value = '';
+      saleCustPhone.value = '';
+      saleNotes.value = '';
+      saleTable.value = '';
+      // keep Category / Branch / Date as-is
+      payStatus = 'Live';
+      payChips.querySelectorAll('.chip').forEach(x=>{
+        x.classList.toggle('active', x.dataset.status === 'Live');
+      });
+      payMode.value = '';
+      payNote.value = '';
+      togglePay();
+      orderType = 'DineIn';
+      orderTypeChips.querySelectorAll('.chip').forEach(x=>{
+        x.classList.toggle('active', x.dataset.type === 'DineIn');
+      });
+      setStep(1);
+    }
+
+    clearFormBtn.addEventListener('click', ()=>{
+      clearBillButKeepContext();
+    });
+
+    async function saveBill(){
+      if(!cartItems.length){
+        alert('No items in bill.');
+        return;
+      }
+
+      const category = saleCategory.value || 'SFH';
+      const branch = category === 'SFH' ? (branchSelect.value || '') : '';
+      const date = saleDate.value || null;
+
+      if(category === 'SFH' && orderType === 'DineIn' && !saleTable.value.trim()){
+        alert('Table number is required for Dine In in SFH.');
+        return;
+      }
+
+      const orderId = reserveOrderId();
+
+      // encode order type into notes (safe without changing backend schema)
+      let notes = (saleNotes.value || '').trim();
+      if(orderType){
+        notes = '[OrderType=' + orderType + '] ' + notes;
+      }
+
+      const payloadBase = {
+        date,
+        category,
+        branch,
+        table_no: (saleTable.value || '').trim(),
+        customer_name: (saleCustName.value || '').trim(),
+        customer_phone: (saleCustPhone.value || '').trim(),
+        payment_status: payStatus,
+        payment_mode: payStatus === 'Paid' ? (payMode.value || '') : '',
+        payment_note: (payNote.value || '').trim(),
+        notes,
+        order_id: orderId
+      };
+
+      try{
+        let firstBillUrl = null;
+        for(const line of cartItems){
+          const payload = Object.assign({}, payloadBase, {
+            item: line.name,
+            unit: line.unit,
+            qty: Number(line.qty || 0),
+            unit_price: line.unit_price,
+            discount: Number(line.discount || 0)
+          });
+          const res = await fetchJSON('/api/sales', {method:'POST', body: JSON.stringify(payload)});
+          if(!firstBillUrl && res.bill_url){
+            firstBillUrl = res.bill_url;
+          }
+        }
+        if(firstBillUrl){
+          window.open(firstBillUrl, '_blank');
+        }
+        showToast('Bill #' + orderId + ' saved');
+        clearBillButKeepContext();
+        await runReport();
+        await initOrderCounter();
+      }catch(err){
+        console.error(err);
+        alert('Error while saving bill. Check console/logs.');
+      }
+    }
+
+    saveBillBtn.addEventListener('click', saveBill);
+    saveBillBtnFloat.addEventListener('click', saveBill);
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.ctrlKey && e.key === 'Enter'){
+        e.preventDefault();
+        saveBill();
+      }
+    });
+
+    // ---------- Init ----------
+    (async function init(){
+      try{ saleDate.valueAsDate = new Date(); }catch{}
+      await Promise.all([loadReadyProducts(), loadBranches()]);
+      await initOrderCounter();
+      applyCategoryDefaults();
+      togglePay();
+      lockReportToTodayOnMobile();
+      buildColumnChooser();
+      initSfhTableTip();
+      await runReport();
+      liveBranch.value = branchSelect.value || '';
+      if(liveBranch.value) loadLiveTables();
+      recalcTotals();
+      renderOrderList();
+    })();
+  </script>
+</body>
+</html>
