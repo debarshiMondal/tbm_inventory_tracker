@@ -6,7 +6,11 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict
 from datetime import date, datetime, timedelta
 from pathlib import Path
-import shutil, csv, uuid, os, io
+import shutil
+import csv
+import uuid
+import os
+import io
 
 APP_ROOT = Path(__file__).parent
 DATA_ROOT = APP_ROOT / "data"
@@ -19,39 +23,85 @@ ORDER_SEQ_FILE = CONF_DIR / "order_seq.txt"
 CATEGORIES = ["Home Delivery", "Frozen Products", "SFH"]
 UNITS = ["KG", "GM", "Pieces", "Batch", "Plates", "Portion"]
 SUBCATEGORIES = [
-    "Infrastructure", "Meat and Fish", "Veggies", "Grocery", "Dairy", "Bakery",
-    "Kitchen Tool", "Fuel", "Serving Dish", "Operating Supplies", "Packaging",
+    "Infrastructure",
+    "Meat and Fish",
+    "Veggies",
+    "Grocery",
+    "Dairy",
+    "Bakery",
+    "Kitchen Tool",
+    "Fuel",
+    "Serving Dish",
+    "Operating Supplies",
+    "Packaging",
 ]
 
 PAYMENT_STATUSES = ["Live", "Due", "Paid"]
 PAYMENT_MODES = ["CurrentUPI", "Cash", "Card", "PersonalUPI", "PersonalCash"]
 
 HEADERS = {
-    # Added item_category + code so codes persist in CSV
+    # Ready products now have item_category + code so codes persist in CSV
     "ready_products": [
-        "id", "name", "category", "item_category", "code",
-        "unit", "unit_cost", "price", "quantity", "threshold"
+        "id",
+        "name",
+        "category",
+        "item_category",
+        "code",
+        "unit",
+        "unit_cost",
+        "price",
+        "quantity",
+        "threshold",
     ],
     "raw_inventory": [
-        "id", "name", "category", "subcategory", "unit",
-        "unit_cost", "stock", "threshold"
+        "id",
+        "name",
+        "category",
+        "subcategory",
+        "unit",
+        "unit_cost",
+        "stock",
+        "threshold",
     ],
     "purchases": [
-        "id", "date", "category", "subcategory", "item",
-        "unit", "qty", "unit_cost", "total_cost", "notes"
+        "id",
+        "date",
+        "category",
+        "subcategory",
+        "item",
+        "unit",
+        "qty",
+        "unit_cost",
+        "total_cost",
+        "notes",
     ],
     # Extended sales schema for POS
     "sales": [
-        "id", "date", "category", "branch", "order_id", "item", "unit", "qty",
-        "unit_price", "discount", "total_price", "customer_name",
-        "customer_phone", "table_no", "payment_status", "payment_mode",
-        "payment_note", "notes"
+        "id",
+        "date",
+        "category",
+        "branch",
+        "order_id",
+        "item",
+        "unit",
+        "qty",
+        "unit_price",
+        "discount",
+        "total_price",
+        "customer_name",
+        "customer_phone",
+        "table_no",
+        "payment_status",
+        "payment_mode",
+        "payment_note",
+        "notes",
     ],
     "branches": ["id", "name", "is_active"],
 }
 
 
 # ---- Config ----
+
 
 def load_config() -> Dict:
     cfg = {"full_invent": False}
@@ -184,6 +234,7 @@ def convert_qty(qty: float, from_unit: str, to_unit: str) -> float:
 
 # ---- Order sequence ----
 
+
 def _scan_max_order_id() -> int:
     """Best-effort: read today's sales and return max order_id seen."""
     try:
@@ -261,6 +312,7 @@ def get_config():
 
 
 # ---- Models ----
+
 
 class ReadyProductIn(BaseModel):
     name: str
@@ -367,6 +419,7 @@ def _ensure_subcategory(s: str):
 
 # ---- Ready Products ----
 
+
 def _generate_ready_code(name: str, item_category: str, rows: List[Dict]) -> str:
     """
     Generate a 3-character code: <digit><letter><letter>, e.g. 1CM / 5CB.
@@ -437,7 +490,8 @@ def add_ready_product_api(item: ReadyProductIn):
             incoming_code[0].isdigit() and incoming_code[1:].isalpha()
         ):
             raise HTTPException(
-                400, "code must be exactly 3 chars: 1 digit + 2 letters (e.g. 1CM, 5CB)"
+                400,
+                "code must be exactly 3 chars: 1 digit + 2 letters (e.g. 1CM, 5CB)",
             )
         # uniqueness check
         for r in rows:
@@ -535,6 +589,7 @@ def adjust_ready_stock_api(item_id: str, delta: float = Form(...)):
 
 # ---- Raw Inventory ----
 
+
 @app.get("/api/raw_inventory")
 def list_raw_inventory_api():
     rows = read_csv("raw_inventory")
@@ -604,6 +659,7 @@ def delete_raw_item_api(item_id: str):
 
 # ---- Branches (for SFH) ----
 
+
 @app.get("/api/branches")
 def list_branches():
     rows = read_csv("branches")
@@ -636,6 +692,7 @@ def branch_table_summary(branch: str, status: str = "Live"):
 
 
 # ---- Purchases ----
+
 
 @app.post("/api/purchases", response_model=PurchaseResp)
 def add_purchase_api(p: PurchaseIn):
@@ -712,6 +769,7 @@ def delete_purchase_api(purchase_id: str):
 
 # ---- Spend report (purchases) ----
 
+
 def _date_range(period: str, start: Optional[str], end: Optional[str]):
     today = date.today()
     if period == "today":
@@ -778,6 +836,7 @@ def get_spend(
 
 # ---- Alerts ----
 
+
 @app.get("/api/alerts/low/ready")
 def low_ready():
     rows = read_csv("ready_products")
@@ -804,6 +863,7 @@ def low_raw():
 
 # ---- Sales (POS) ----
 
+
 @app.get("/api/sales")
 def list_sales():
     return {"rows": read_csv("sales")}
@@ -823,7 +883,10 @@ def add_sale_api(s: SaleIn):
     ready = read_csv("ready_products")
     target = None
     for r in ready:
-        if r["name"].strip().lower() == s.item.strip().lower() and r.get("category") == s.category:
+        if (
+            r["name"].strip().lower() == s.item.strip().lower()
+            and r.get("category") == s.category
+        ):
             target = r
             break
     if not target:
@@ -831,10 +894,14 @@ def add_sale_api(s: SaleIn):
 
     prod_unit = target.get("unit") or ""
     if s.unit != prod_unit:
-        raise HTTPException(400, f"Sale unit '{s.unit}' must match product unit '{prod_unit}'")
+        raise HTTPException(
+            400, f"Sale unit '{s.unit}' must match product unit '{prod_unit}'"
+        )
 
     # price & totals
-    price = s.unit_price if s.unit_price is not None else float(target.get("price") or 0.0)
+    price = s.unit_price if s.unit_price is not None else float(
+        target.get("price") or 0.0
+    )
     qty = float(s.qty)
     discount = float(s.discount or 0.0)
     if discount < 0:
@@ -882,7 +949,7 @@ def add_sale_api(s: SaleIn):
         "id": row["id"],
         "order_id": oid,
         "remaining_stock": float(target["quantity"]),
-        "bill_url": f"/api/sales/{row['id']}/bill"
+        "bill_url": f"/api/sales/{row['id']}/bill",
     }
 
 
@@ -909,8 +976,12 @@ def get_bill(sale_id: str):
     lines.append(f"Total: ₹{sale['total_price']}")
     lines.append("-" * 40)
     if sale.get("customer_name") or sale.get("customer_phone"):
-        lines.append(f"Customer: {sale.get('customer_name','')}  {sale.get('customer_phone','')}")
-    lines.append(f"Payment: {sale.get('payment_status','')} {sale.get('payment_mode','')}")
+        lines.append(
+            f"Customer: {sale.get('customer_name','')}  {sale.get('customer_phone','')}"
+        )
+    lines.append(
+        f"Payment: {sale.get('payment_status','')} {sale.get('payment_mode','')}"
+    )
     if sale.get("payment_note"):
         lines.append(f"Note: {sale['payment_note']}")
     if sale.get("notes"):
@@ -939,13 +1010,17 @@ def update_sale_payment(p: SalePaymentPatch):
 
     if p.payment_status is not None:
         if p.payment_status not in PAYMENT_STATUSES:
-            raise HTTPException(400, f"payment_status must be one of {PAYMENT_STATUSES}")
+            raise HTTPException(
+                400, f"payment_status must be one of {PAYMENT_STATUSES}"
+            )
         sale["payment_status"] = p.payment_status
 
     if p.payment_mode is not None:
         mode = p.payment_mode or ""
         if mode and mode not in PAYMENT_MODES:
-            raise HTTPException(400, f"payment_mode must be one of {PAYMENT_MODES + ['(empty)']}")
+            raise HTTPException(
+                400, f"payment_mode must be one of {PAYMENT_MODES + ['(empty)']}"
+            )
         # if not Paid, force blank mode
         if sale.get("payment_status") != "Paid":
             sale["payment_mode"] = ""
@@ -957,6 +1032,7 @@ def update_sale_payment(p: SalePaymentPatch):
 
 
 # ---- Sales report ----
+
 
 @app.get("/api/sales/report")
 def sales_report(
@@ -998,7 +1074,8 @@ def sales_report(
         total += amt
         by_cat[r["category"]] = by_cat.get(r["category"], 0.0) + amt
         by_item[r["item"]] = by_item.get(r["item"], 0.0) + amt
-        by_branch[r.get("branch") or ""] = by_branch.get(r.get("branch") or "", 0.0) + amt
+        bkey = r.get("branch") or ""
+        by_branch[bkey] = by_branch.get(bkey, 0.0) + amt
         filtered.append(r)
 
     return {
@@ -1013,6 +1090,7 @@ def sales_report(
 
 # ---- CSV Download / Import ----
 
+
 @app.get("/download/{name}")
 def download_csv(name: str):
     if name not in HEADERS:
@@ -1023,23 +1101,31 @@ def download_csv(name: str):
 
 @app.post("/import")
 async def import_csv(kind: str = Form(...), file: UploadFile = File(...)):
+    """
+    Import a CSV and replace today's CSV for that kind.
+    Columns are normalised to HEADERS[kind].
+    """
     if kind not in HEADERS:
         raise HTTPException(400, f"kind must be one of {list(HEADERS.keys())}")
-    data = await file.read()
-    today_dir = get_today_dir()
-    dest = today_dir / f"{kind}.csv"
 
-    text = data.decode("utf-8").splitlines()
-    reader = csv.reader(text)
-    header = next(reader, [])
-    if [h.strip() for h in header] != HEADERS[kind]:
-        raise HTTPException(400, f"CSV headers must be: {HEADERS[kind]}")
+    raw = await file.read()
+    # try utf-8, fall back to latin-1
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        text = raw.decode("latin-1")
 
-    with dest.open("wb") as fp:
-        fp.write(data)
+    f = io.StringIO(text)
+    reader = csv.DictReader(f)
+    rows: List[Dict] = []
+    headers = HEADERS[kind]
 
-    return {"ok": True, "saved": dest.name}
+    for r in reader:
+        norm = {h: (r.get(h, "") or "") for h in headers}
+        # make sure id exists; generate if missing
+        if "id" in headers and not norm.get("id"):
+            norm["id"] = gen_id()
+        rows.append(norm)
 
-
-# Ensure today's folder & CSVs exist on startup
-get_today_dir()
+    write_csv(kind, rows)
+    return {"ok": True, "rows": len(rows)}
